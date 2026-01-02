@@ -7,11 +7,11 @@ function isValidPageKey(key: string | undefined): key is PageKey {
     'about',
     'connect',
     'gallery',
+    'alumni-day',
     'events',
     'reunion',
     'faq',
     'contact',
-    'donate',
     'home',
   ];
   return key !== undefined && validKeys.includes(key as PageKey);
@@ -30,22 +30,22 @@ function initApp(): void {
     about: document.getElementById('page-about'),
     connect: document.getElementById('page-connect'),
     gallery: document.getElementById('page-gallery'),
+    'alumni-day': document.getElementById('page-alumni-day'),
     events: document.getElementById('page-events'),
     reunion: document.getElementById('page-reunion'),
     faq: document.getElementById('page-faq'),
     contact: document.getElementById('page-contact'),
-    donate: document.getElementById('page-donate'),
   };
 
   const heroTitles: Record<PageKey, string> = {
     about: 'ABOUT NSM',
     connect: 'NSM ALUMNI CONNECT',
     gallery: 'PHOTO GALLERY',
+    'alumni-day': 'NSM ALUMNI DAY',
     events: 'NSM ALUMNI EVENTS',
     reunion: 'RE-UNION',
     faq: "FAQ'S",
     contact: 'CONTACT US',
-    donate: 'DONATE TO NSM',
     home: 'NSM ALUMNI ASSOCIATION',
   };
 
@@ -86,17 +86,6 @@ function initApp(): void {
     if (pageKey === 'home') {
       setTimeout(() => {
         initImageSliders();
-      }, 100);
-    }
-
-    // Initialize connect tabs when connect page is shown
-    if (pageKey === 'connect') {
-      setTimeout(() => {
-        initConnectTabs();
-        // Update user profile if logged in
-        if (typeof (window as any).updateUserProfile === 'function') {
-          (window as any).updateUserProfile();
-        }
       }, 100);
     }
   }
@@ -156,6 +145,8 @@ function initApp(): void {
                 if (subpage === 'photo-gallery') galleryType = 'photo';
                 else if (subpage === 'video-gallery') galleryType = 'video';
                 else if (subpage === 'chapter-gallery') galleryType = 'chapter';
+                else if (subpage === 'nostalgia-gallery') galleryType = 'nostalgia';
+                else if (subpage === 'shop-gallery') galleryType = 'shop';
                 
                 if (galleryType) {
                   const galleryTabs = document.querySelectorAll<HTMLButtonElement>('.gallery-tab');
@@ -228,137 +219,8 @@ function initApp(): void {
     });
   });
 
-  // Handle connect dropdown menu items
-  const connectDropdownItems = document.querySelectorAll<HTMLAnchorElement>(
-    '.connect-dropdown .dropdown-item[data-connect-subpage]',
-  );
-  connectDropdownItems.forEach((link) => {
-    link.addEventListener('click', (e: MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const connectSubpage = link.dataset.connectSubpage;
-      
-      if (!connectSubpage) return;
-
-      // Navigate to connect page
-      setActivePage('connect');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-      // Activate the corresponding tab and section
-      setTimeout(() => {
-        const connectTabs = document.querySelectorAll<HTMLButtonElement>('.gallery-tab[data-connect-type]');
-        const connectSections = document.querySelectorAll<HTMLElement>('.connect-section');
-
-        // Update active tab
-        connectTabs.forEach((tab) => {
-          if (tab.dataset.connectType === connectSubpage) {
-            tab.classList.add('active');
-          } else {
-            tab.classList.remove('active');
-          }
-        });
-
-        // Update active section
-        connectSections.forEach((section) => section.classList.remove('active'));
-        const targetSectionId = connectSubpage + '-connect-section';
-        const targetSection = document.getElementById(targetSectionId);
-        if (targetSection) {
-          targetSection.classList.add('active');
-        } else {
-          console.warn(`Connect section not found: ${targetSectionId}`);
-        }
-      }, 150);
-    });
-  });
-
-  // Handle footer quick links
-  const footerLinks = document.querySelectorAll<HTMLAnchorElement>(
-    '.footer-links a[data-page]',
-  );
-  footerLinks.forEach((link) => {
-    link.addEventListener('click', (e: MouseEvent) => {
-      e.preventDefault();
-      const pageKey = link.dataset.page;
-      const subpage = link.dataset.subpage;
-      
-      if (isValidPageKey(pageKey)) {
-        setActivePage(pageKey);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        
-        // Handle gallery subpages - activate the correct tab
-        if (pageKey === 'gallery' && subpage) {
-          setTimeout(() => {
-            // Map subpage to gallery type
-            let galleryType = '';
-            if (subpage === 'photo-gallery') galleryType = 'photo';
-            else if (subpage === 'video-gallery') galleryType = 'video';
-            else if (subpage === 'chapter-gallery') galleryType = 'chapter';
-            
-            if (galleryType) {
-              const galleryTabs = document.querySelectorAll<HTMLButtonElement>('.gallery-tab');
-              const gallerySections = document.querySelectorAll<HTMLElement>('.gallery-section');
-              
-              // Update active tab
-              galleryTabs.forEach((tab) => {
-                if (tab.dataset.galleryType === galleryType) {
-                  tab.classList.add('active');
-                } else {
-                  tab.classList.remove('active');
-                }
-              });
-              
-              // Update active section
-              gallerySections.forEach((section) => section.classList.remove('active'));
-              const targetSection = document.getElementById(`${galleryType}-gallery-section`);
-              if (targetSection) {
-                targetSection.classList.add('active');
-                
-                // If video gallery, populate videos
-                if (galleryType === 'video') {
-                  setTimeout(() => {
-                    populateVideoGallery();
-                  }, 100);
-                }
-              }
-            }
-          }, 150);
-        }
-
-        // Handle about subpages - activate the correct subsection
-        if (pageKey === 'about' && subpage) {
-          setTimeout(() => {
-            const aboutSubsections = document.querySelectorAll<HTMLElement>('.about-subsection');
-            aboutSubsections.forEach((section) => section.classList.remove('active'));
-            
-            let targetSectionId = '';
-            if (subpage === 'chapters') {
-              targetSectionId = 'chapters-section';
-            } else if (subpage === 'about-overview') {
-              targetSectionId = 'about-overview-section';
-            } else if (subpage === 'president') {
-              targetSectionId = 'president-section';
-            } else if (subpage === 'executive-committee') {
-              targetSectionId = 'executive-committee-section';
-            } else if (subpage === 'benefits') {
-              targetSectionId = 'benefits-section';
-            } else if (subpage === 'annual-reports') {
-              targetSectionId = 'annual-reports-section';
-            }
-            
-            if (targetSectionId) {
-              const targetSection = document.getElementById(targetSectionId);
-              if (targetSection) {
-                targetSection.classList.add('active');
-              }
-            }
-          }, 150);
-        }
-      }
-    });
-  });
-
-  // Initialize with 'home' page
-  setActivePage('home');
+  // Initialize with 'about' page
+  setActivePage('about');
 }
 
 // Slider state
@@ -493,85 +355,6 @@ function initImageSliders(): void {
           clearInterval(centerSliderInterval);
         }
         centerSliderInterval = window.setInterval(nextCenterSlide, 4000);
-      });
-    }
-  }
-
-  // Home Photo Gallery Slider
-  const gallerySlides = document.querySelectorAll<HTMLElement>('.gallery-slide');
-  const galleryDots = document.querySelectorAll<HTMLElement>('.gallery-dot');
-  const prevGallery = document.querySelector<HTMLElement>('.gallery-prev');
-  const nextGallery = document.querySelector<HTMLElement>('.gallery-next');
-  
-  if (gallerySlides.length > 0) {
-    let gallerySliderInterval: number | null = null;
-    let gallerySlideIndex = 0;
-
-    // Clear any existing interval
-    if (gallerySliderInterval !== null) {
-      clearInterval(gallerySliderInterval);
-    }
-
-    const totalGallerySlides = gallerySlides.length;
-
-    function showGallerySlide(index: number): void {
-      gallerySlides.forEach((slide) => slide.classList.remove('active'));
-      galleryDots.forEach((dot) => dot.classList.remove('active'));
-
-      if (gallerySlides[index]) {
-        gallerySlides[index].classList.add('active');
-      }
-      if (galleryDots[index]) {
-        galleryDots[index].classList.add('active');
-      }
-    }
-
-    function nextGallerySlide(): void {
-      gallerySlideIndex = (gallerySlideIndex + 1) % totalGallerySlides;
-      showGallerySlide(gallerySlideIndex);
-    }
-
-    function prevGallerySlide(): void {
-      gallerySlideIndex = (gallerySlideIndex - 1 + totalGallerySlides) % totalGallerySlides;
-      showGallerySlide(gallerySlideIndex);
-    }
-
-    // Show first slide
-    showGallerySlide(0);
-
-    // Auto-advance slider every 4 seconds
-    gallerySliderInterval = window.setInterval(nextGallerySlide, 4000);
-
-    // Add click handlers for dots
-    galleryDots.forEach((dot, index) => {
-      dot.addEventListener('click', () => {
-        gallerySlideIndex = index;
-        showGallerySlide(gallerySlideIndex);
-        if (gallerySliderInterval !== null) {
-          clearInterval(gallerySliderInterval);
-        }
-        gallerySliderInterval = window.setInterval(nextGallerySlide, 4000);
-      });
-    });
-
-    // Add click handlers for navigation arrows
-    if (nextGallery) {
-      nextGallery.addEventListener('click', () => {
-        nextGallerySlide();
-        if (gallerySliderInterval !== null) {
-          clearInterval(gallerySliderInterval);
-        }
-        gallerySliderInterval = window.setInterval(nextGallerySlide, 4000);
-      });
-    }
-
-    if (prevGallery) {
-      prevGallery.addEventListener('click', () => {
-        prevGallerySlide();
-        if (gallerySliderInterval !== null) {
-          clearInterval(gallerySliderInterval);
-        }
-        gallerySliderInterval = window.setInterval(nextGallerySlide, 4000);
       });
     }
   }
@@ -822,47 +605,27 @@ function initReunionTabs(): void {
   });
 }
 
-let connectTabsInitialized = false;
-
 function initConnectTabs(): void {
   const connectTabs = document.querySelectorAll<HTMLButtonElement>('.gallery-tab[data-connect-type]');
   const connectSections = document.querySelectorAll<HTMLElement>('.connect-section');
 
-  if (connectTabs.length === 0) {
-    console.warn('No connect tabs found');
-    return;
-  }
+  connectTabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const connectType = tab.dataset.connectType;
 
-  // Only add event listeners once
-  if (!connectTabsInitialized) {
-    connectTabs.forEach((tab) => {
-      tab.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const connectType = tab.dataset.connectType;
+      // Update active tab
+      connectTabs.forEach((t) => t.classList.remove('active'));
+      tab.classList.add('active');
 
-        if (!connectType) {
-          console.warn('Connect tab missing data-connect-type attribute');
-          return;
-        }
-
-        // Update active tab
-        connectTabs.forEach((t) => t.classList.remove('active'));
-        tab.classList.add('active');
-
-        // Update active section
-        connectSections.forEach((section) => section.classList.remove('active'));
-        const targetSectionId = connectType + '-connect-section';
-        const targetSection = document.getElementById(targetSectionId);
-        if (targetSection) {
-          targetSection.classList.add('active');
-        } else {
-          console.warn(`Connect section not found: ${targetSectionId}`);
-        }
-      });
+      // Update active section
+      connectSections.forEach((section) => section.classList.remove('active'));
+      const targetSectionId = connectType + '-connect-section';
+      const targetSection = document.getElementById(targetSectionId);
+      if (targetSection) {
+        targetSection.classList.add('active');
+      }
     });
-    connectTabsInitialized = true;
-  }
+  });
 }
 
 // Chapter Type Tab Switching
@@ -994,14 +757,7 @@ function initYearPhotoGallery(): void {
     photos.forEach((photoUrl, index) => {
       const photoItem = document.createElement('div');
       photoItem.className = 'year-photo-item';
-      photoItem.setAttribute('data-photo-index', index.toString());
       photoItem.innerHTML = `<img src="${photoUrl}" alt="NSM ${year} Photo ${index + 1}" loading="lazy">`;
-      
-      // Add click event to open photo in lightbox
-      photoItem.addEventListener('click', () => {
-        openPhotoLightbox(photos, index);
-      });
-      
       photosGrid.appendChild(photoItem);
     });
 
@@ -1062,118 +818,6 @@ function initYearPhotoGallery(): void {
       closeYearModal();
     }
   });
-}
-
-// Photo Lightbox Functionality
-function openPhotoLightbox(photos: string[], currentIndex: number): void {
-  // Create lightbox if it doesn't exist
-  let lightbox = document.getElementById('photo-lightbox');
-  if (!lightbox) {
-    lightbox = document.createElement('div');
-    lightbox.id = 'photo-lightbox';
-    lightbox.className = 'photo-lightbox';
-    lightbox.innerHTML = `
-      <div class="photo-lightbox-content">
-        <button class="photo-lightbox-close" id="photo-lightbox-close">
-          <i class="fas fa-times"></i>
-        </button>
-        <button class="photo-lightbox-nav photo-lightbox-prev" id="photo-lightbox-prev">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <img class="photo-lightbox-img" id="photo-lightbox-img" src="" alt="Photo">
-        <button class="photo-lightbox-nav photo-lightbox-next" id="photo-lightbox-next">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-        <div class="photo-lightbox-counter" id="photo-lightbox-counter"></div>
-      </div>
-    `;
-    document.body.appendChild(lightbox);
-    
-    // Add event listeners
-    const closeBtn = document.getElementById('photo-lightbox-close');
-    const prevBtn = document.getElementById('photo-lightbox-prev');
-    const nextBtn = document.getElementById('photo-lightbox-next');
-    const lightboxImg = document.getElementById('photo-lightbox-img') as HTMLImageElement;
-    const counter = document.getElementById('photo-lightbox-counter');
-    
-    let currentPhotoIndex = currentIndex;
-    
-    function updateLightbox() {
-      if (lightboxImg && photos[currentPhotoIndex]) {
-        lightboxImg.src = photos[currentPhotoIndex];
-        if (counter) {
-          counter.textContent = `${currentPhotoIndex + 1} / ${photos.length}`;
-        }
-      }
-    }
-    
-    function closeLightbox() {
-      if (lightbox) {
-        lightbox.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-    }
-    
-    function navigatePhoto(direction: 'prev' | 'next') {
-      if (direction === 'prev') {
-        currentPhotoIndex = currentPhotoIndex > 0 ? currentPhotoIndex - 1 : photos.length - 1;
-      } else {
-        currentPhotoIndex = currentPhotoIndex < photos.length - 1 ? currentPhotoIndex + 1 : 0;
-      }
-      updateLightbox();
-    }
-    
-    if (closeBtn) {
-      closeBtn.addEventListener('click', closeLightbox);
-    }
-    
-    if (prevBtn) {
-      prevBtn.addEventListener('click', () => navigatePhoto('prev'));
-    }
-    
-    if (nextBtn) {
-      nextBtn.addEventListener('click', () => navigatePhoto('next'));
-    }
-    
-    // Close on overlay click
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) {
-        closeLightbox();
-      }
-    });
-    
-    // Keyboard navigation
-    document.addEventListener('keydown', function lightboxKeyHandler(e) {
-      if (!lightbox?.classList.contains('active')) return;
-      
-      if (e.key === 'Escape') {
-        closeLightbox();
-        document.removeEventListener('keydown', lightboxKeyHandler);
-      } else if (e.key === 'ArrowLeft') {
-        navigatePhoto('prev');
-      } else if (e.key === 'ArrowRight') {
-        navigatePhoto('next');
-      }
-    });
-  }
-  
-  // Update and show lightbox
-  const lightboxImg = document.getElementById('photo-lightbox-img') as HTMLImageElement;
-  const counter = document.getElementById('photo-lightbox-counter');
-  
-  if (lightboxImg && photos[currentIndex]) {
-    lightboxImg.src = photos[currentIndex];
-    if (counter) {
-      counter.textContent = `${currentIndex + 1} / ${photos.length}`;
-    }
-  }
-  
-  // Store photos array and current index for navigation
-  (lightbox as any).photos = photos;
-  (lightbox as any).currentIndex = currentIndex;
-  
-  lightbox.classList.add('active');
-  document.body.style.overflow = 'hidden';
 }
 
 // Video Gallery - Direct Display Functionality
@@ -1351,14 +995,7 @@ function initYearChapterGallery(): void {
     photos.forEach((photoUrl, index) => {
       const photoItem = document.createElement('div');
       photoItem.className = 'year-photo-item';
-      photoItem.setAttribute('data-photo-index', index.toString());
       photoItem.innerHTML = `<img src="${photoUrl}" alt="NSM ${chapterTypeName} ${year} Photo ${index + 1}" loading="lazy">`;
-      
-      // Add click event to open photo in lightbox
-      photoItem.addEventListener('click', () => {
-        openPhotoLightbox(photos, index);
-      });
-      
       photosGrid.appendChild(photoItem);
     });
 
@@ -1569,14 +1206,7 @@ function initYearReunionGallery(): void {
     photos.forEach((photoUrl, index) => {
       const photoItem = document.createElement('div');
       photoItem.className = 'year-photo-item';
-      photoItem.setAttribute('data-photo-index', index.toString());
       photoItem.innerHTML = `<img src="${photoUrl}" alt="NSM Reunion ${year} Photo ${index + 1}" loading="lazy">`;
-      
-      // Add click event to open photo in lightbox
-      photoItem.addEventListener('click', () => {
-        openPhotoLightbox(photos, index);
-      });
-      
       photosGrid.appendChild(photoItem);
     });
 
@@ -1786,7 +1416,6 @@ if (document.readyState === 'loading') {
     initYearShopGallery();
     initYearReunionGallery();
     initContactForm();
-    initDonatePage();
   });
 } else {
   initApp();
@@ -1801,112 +1430,6 @@ if (document.readyState === 'loading') {
   initYearShopGallery();
   initYearReunionGallery();
   initContactForm();
-  initDonatePage();
-}
-
-// Donate Page Functionality
-function initDonatePage(): void {
-  const donateTabBtns = document.querySelectorAll<HTMLButtonElement>('.donate-tab-btn');
-  const donateFormSections = document.querySelectorAll<HTMLElement>('.donate-form-section');
-  const amountBtns = document.querySelectorAll<HTMLButtonElement>('.amount-btn');
-  const nsmForm = document.getElementById('nsm-donation-form') as HTMLFormElement;
-  const generalForm = document.getElementById('general-donation-form') as HTMLFormElement;
-
-  // Tab switching
-  donateTabBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const donateType = btn.dataset.donateType;
-      
-      // Update active tab
-      donateTabBtns.forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
-      
-      // Show corresponding form
-      donateFormSections.forEach((section) => {
-        section.classList.remove('active');
-      });
-      
-      if (donateType === 'nsm') {
-        const nsmSection = document.getElementById('nsm-donate-form');
-        if (nsmSection) nsmSection.classList.add('active');
-      } else if (donateType === 'general') {
-        const generalSection = document.getElementById('general-donate-form');
-        if (generalSection) generalSection.classList.add('active');
-      }
-    });
-  });
-
-  // Amount button selection
-  amountBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      // Remove selected from all buttons in the same form
-      const formSection = btn.closest('.donate-form-section');
-      if (formSection) {
-        formSection.querySelectorAll('.amount-btn').forEach((b) => {
-          b.classList.remove('selected');
-        });
-      }
-      
-      // Add selected to clicked button
-      btn.classList.add('selected');
-      
-      // Set custom amount input value
-      const formSectionId = btn.closest('.donate-form-section')?.id;
-      const amount = btn.dataset.amount || '';
-      if (formSectionId === 'nsm-donate-form') {
-        const customInput = document.getElementById('nsm-custom-amount') as HTMLInputElement;
-        if (customInput) customInput.value = amount;
-      } else if (formSectionId === 'general-donate-form') {
-        const customInput = document.getElementById('general-custom-amount') as HTMLInputElement;
-        if (customInput) customInput.value = amount;
-      }
-    });
-  });
-
-  // Form submissions
-  if (nsmForm) {
-    nsmForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const formData = new FormData(nsmForm);
-      const customAmount = (document.getElementById('nsm-custom-amount') as HTMLInputElement)?.value;
-      const amount = customAmount || formData.get('customAmount') || '5000';
-      
-      // Show payment options (reuse existing payment modal)
-      const paymentOptionsSection = document.getElementById('payment-options-section');
-      if (paymentOptionsSection) {
-        paymentOptionsSection.style.display = 'block';
-        // Update donation amount input
-        const donationAmountInput = document.getElementById('donation-amount') as HTMLInputElement;
-        if (donationAmountInput) {
-          donationAmountInput.value = amount;
-        }
-        // Scroll to payment section
-        paymentOptionsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    });
-  }
-
-  if (generalForm) {
-    generalForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const formData = new FormData(generalForm);
-      const customAmount = (document.getElementById('general-custom-amount') as HTMLInputElement)?.value;
-      const amount = customAmount || formData.get('customAmount') || '1000';
-      
-      // Show payment options
-      const paymentOptionsSection = document.getElementById('payment-options-section');
-      if (paymentOptionsSection) {
-        paymentOptionsSection.style.display = 'block';
-        // Update donation amount input
-        const donationAmountInput = document.getElementById('donation-amount') as HTMLInputElement;
-        if (donationAmountInput) {
-          donationAmountInput.value = amount;
-        }
-        // Scroll to payment section
-        paymentOptionsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    });
-  }
 }
 
 

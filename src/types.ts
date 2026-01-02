@@ -2,11 +2,11 @@ export type PageKey =
   | 'about'
   | 'connect'
   | 'gallery'
+  | 'alumni-day'
   | 'events'
   | 'reunion'
   | 'faq'
   | 'contact'
-  | 'donate'
   | 'home';
 
 export interface PageSection {

@@ -12,6 +12,7 @@ function isValidPageKey(key: string | undefined): key is PageKey {
     'reunion',
     'faq',
     'contact',
+    'donate',
     'home',
   ];
   return key !== undefined && validKeys.includes(key as PageKey);
@@ -35,6 +36,7 @@ function initApp(): void {
     reunion: document.getElementById('page-reunion'),
     faq: document.getElementById('page-faq'),
     contact: document.getElementById('page-contact'),
+    donate: document.getElementById('page-donate'),
   };
 
   const heroTitles: Record<PageKey, string> = {
@@ -46,10 +48,11 @@ function initApp(): void {
     reunion: 'RE-UNION',
     faq: "FAQ'S",
     contact: 'CONTACT US',
-    home: 'NSM ALUMNI ASSOCIATION',
+    donate: 'DONATE',
+    home: 'NSM OLD STUDENTS ASSOCIATION',
   };
 
-  function setActivePage(pageKey: PageKey): void {
+  function setActivePage(pageKey: PageKey, category?: string): void {
     // Update navigation links
     navLinks.forEach((link) => {
       const parent = link.closest<HTMLElement>('.nav-item');
@@ -86,6 +89,30 @@ function initApp(): void {
     if (pageKey === 'home') {
       setTimeout(() => {
         initImageSliders();
+      }, 100);
+    }
+
+    // If navigating to FAQ with a category, filter to that category
+    if (pageKey === 'faq' && category) {
+      setTimeout(() => {
+        const categoryBtn = document.querySelector<HTMLButtonElement>(`.faq-category-btn[data-category="${category}"]`);
+        if (categoryBtn) {
+          // Remove active from all category buttons
+          document.querySelectorAll<HTMLButtonElement>('.faq-category-btn').forEach((btn) => {
+            btn.classList.remove('active');
+          });
+          // Add active to the target category
+          categoryBtn.classList.add('active');
+          // Trigger click to filter
+          categoryBtn.click();
+          // Scroll to FAQ section after a short delay
+          setTimeout(() => {
+            const faqSection = document.getElementById('page-faq');
+            if (faqSection) {
+              faqSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 300);
+        }
       }, 100);
     }
   }
@@ -219,9 +246,274 @@ function initApp(): void {
     });
   });
 
+  // Handle connect dropdown subpage links (separate handler for data-connect-subpage)
+  const connectDropdownLinks = document.querySelectorAll<HTMLAnchorElement>(
+    '.dropdown-item[data-connect-subpage]',
+  );
+  connectDropdownLinks.forEach((link) => {
+    link.addEventListener('click', (e: MouseEvent) => {
+      e.preventDefault();
+      const parentNav = link.closest<HTMLElement>('.nav-item');
+      if (parentNav) {
+        const mainLink = parentNav.querySelector<HTMLAnchorElement>('a[data-page]');
+        if (mainLink) {
+          const pageKey = mainLink.dataset.page;
+          if (isValidPageKey(pageKey)) {
+            setActivePage(pageKey);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Handle connect subpages - activate the correct tab
+            const connectSubpage = link.dataset.connectSubpage;
+            if (pageKey === 'connect' && connectSubpage) {
+              setTimeout(() => {
+                const connectTabs = document.querySelectorAll<HTMLButtonElement>('.gallery-tab[data-connect-type]');
+                const connectSections = document.querySelectorAll<HTMLElement>('.connect-section');
+                
+                // Map subpage to connect type
+                let connectType = connectSubpage;
+                
+                // Update active tab
+                connectTabs.forEach((tab) => {
+                  if (tab.dataset.connectType === connectType) {
+                    tab.classList.add('active');
+                  } else {
+                    tab.classList.remove('active');
+                  }
+                });
+                
+                // Update active section
+                connectSections.forEach((section) => section.classList.remove('active'));
+                const targetSectionId = `${connectType}-connect-section`;
+                const targetSection = document.getElementById(targetSectionId);
+                if (targetSection) {
+                  targetSection.classList.add('active');
+                }
+              }, 100);
+            }
+          }
+        }
+      }
+    });
+  });
+
+  // Handle footer quick links navigation
+  const footerLinks = document.querySelectorAll<HTMLAnchorElement>(
+    '.footer-links-modern a[data-page]',
+  );
+  footerLinks.forEach((link) => {
+    link.addEventListener('click', (e: MouseEvent) => {
+      e.preventDefault();
+      const pageKey = link.dataset.page;
+      const subpage = link.dataset.subpage;
+      const connectSubpage = link.dataset.connectSubpage;
+
+      if (isValidPageKey(pageKey)) {
+        setActivePage(pageKey);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Handle gallery subpages (Photo Gallery, Video Gallery)
+        if (pageKey === 'gallery' && subpage) {
+          setTimeout(() => {
+            // Map subpage to gallery type
+            let galleryType = '';
+            if (subpage === 'photo-gallery') galleryType = 'photo';
+            else if (subpage === 'video-gallery') galleryType = 'video';
+            else if (subpage === 'chapter-gallery') galleryType = 'chapter';
+
+            if (galleryType) {
+              const galleryTabs = document.querySelectorAll<HTMLButtonElement>(
+                '.gallery-tab',
+              );
+              const gallerySections =
+                document.querySelectorAll<HTMLElement>('.gallery-section');
+
+              // Update active tab
+              galleryTabs.forEach((tab) => {
+                if (tab.dataset.galleryType === galleryType) {
+                  tab.classList.add('active');
+                } else {
+                  tab.classList.remove('active');
+                }
+              });
+
+              // Update active section
+              gallerySections.forEach((section) =>
+                section.classList.remove('active'),
+              );
+              const targetSection = document.getElementById(
+                `${galleryType}-gallery-section`,
+              );
+              if (targetSection) {
+                targetSection.classList.add('active');
+
+                // If video gallery is activated, populate videos
+                if (galleryType === 'video') {
+                  setTimeout(() => {
+                    populateVideoGallery();
+                  }, 100);
+                }
+              }
+            }
+          }, 100);
+        }
+
+        // Handle about subsections (Alumni Chapter)
+        if (pageKey === 'about') {
+          const aboutSubsection = link.dataset.aboutSubsection;
+          if (aboutSubsection) {
+            setTimeout(() => {
+              // Call the showAboutSubsection function if it exists
+              const showAboutSubsectionFunc = (window as any).showAboutSubsection;
+              if (typeof showAboutSubsectionFunc === 'function') {
+                showAboutSubsectionFunc(aboutSubsection);
+              } else {
+                // Fallback: manually show the subsection
+                const allSubsections = document.querySelectorAll('.about-subsection');
+                allSubsections.forEach((section) => section.classList.remove('active'));
+                const targetSection = document.getElementById(aboutSubsection);
+                if (targetSection) {
+                  targetSection.classList.add('active');
+                }
+              }
+            }, 100);
+          }
+        }
+
+        // Handle connect subpages
+        if (pageKey === 'connect' && connectSubpage) {
+          setTimeout(() => {
+            const connectTabs = document.querySelectorAll<HTMLButtonElement>(
+              '.gallery-tab[data-connect-type]',
+            );
+            const connectSections = document.querySelectorAll<HTMLElement>(
+              '.connect-section',
+            );
+
+            // Map subpage to connect type
+            let connectType = connectSubpage;
+
+            // Update active tab
+            connectTabs.forEach((tab) => {
+              if (tab.dataset.connectType === connectType) {
+                tab.classList.add('active');
+              } else {
+                tab.classList.remove('active');
+              }
+            });
+
+            // Update active section
+            connectSections.forEach((section) =>
+              section.classList.remove('active'),
+            );
+            const targetSectionId = `${connectType}-connect-section`;
+            const targetSection = document.getElementById(targetSectionId);
+            if (targetSection) {
+              targetSection.classList.add('active');
+            }
+          }, 100);
+        }
+      }
+    });
+  });
+
   // Initialize with 'about' page
-  setActivePage('about');
+  setActivePage('home');
 }
+
+// NSM School photos - all images from public/images/NSM School folder
+const nsmSchoolImages = [
+  '/images/NSM School/AE2P9912.JPG',
+  '/images/NSM School/AE2P9913.JPG',
+  '/images/NSM School/AE2P9925.JPG',
+  '/images/NSM School/DJI_0184.JPG',
+  '/images/NSM School/DJI_0186.JPG',
+  '/images/NSM School/DJI_0211.JPG',
+  '/images/NSM School/DJI_0213.JPG',
+  '/images/NSM School/DSC07151.JPG',
+  '/images/NSM School/DSC07152.JPG',
+  '/images/NSM School/DSC07157.JPG',
+  '/images/NSM School/DSC07158.JPG',
+  '/images/NSM School/DSC07159.JPG',
+  '/images/NSM School/DSC07160.JPG',
+  '/images/NSM School/DSC07161.JPG',
+  '/images/NSM School/IMG_6713.JPG',
+  '/images/NSM School/IMG_6714.JPG',
+  '/images/NSM School/IMG_6716.JPG',
+  '/images/NSM School/IMG_8640.JPG',
+  '/images/NSM School/IMG_8641.JPG',
+  '/images/NSM School/Q64A9800.JPG',
+  '/images/NSM School/Q64A9801.JPG',
+  '/images/NSM School/RHL_5968.JPG',
+  '/images/NSM School/RHL_5982.JPG',
+  '/images/NSM School/RHL_6044.JPG',
+  '/images/NSM School/RHL_6057.JPG',
+  '/images/NSM School/RHL_6092.JPG',
+  '/images/NSM School/RHL_6110.JPG',
+  '/images/NSM School/RHL_6171.JPG',
+  '/images/NSM School/RHL_6180.JPG',
+  '/images/NSM School/RHL_6825.JPG',
+  '/images/NSM School/RHL_6830.JPG',
+  '/images/NSM School/RHL_6834.JPG',
+  '/images/NSM School/RHL_6852.JPG',
+  '/images/NSM School/RHL_6874.JPG',
+  '/images/NSM School/RHL_6937.JPG',
+  '/images/NSM School/RHL_6942.JPG',
+  '/images/NSM School/RHL_7721.JPG',
+  '/images/NSM School/RHL_7722.JPG',
+  '/images/NSM School/RHL_7742.JPG',
+  '/images/NSM School/RHL_7750.JPG',
+  '/images/NSM School/RHL_7752.JPG',
+  '/images/NSM School/RHL_7760.JPG',
+  '/images/NSM School/RHL_7761.JPG',
+  '/images/NSM School/RHL_7767.JPG',
+  '/images/NSM School/RHL_8096.JPG',
+  '/images/NSM School/RHL_8097.JPG',
+  '/images/NSM School/RHL_8392.JPG',
+  '/images/NSM School/RHL_8393.JPG',
+  '/images/NSM School/RHL_8401.JPG',
+  // Drone selected images
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0020.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0022.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0029.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0030.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0034.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0035.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0037.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0039.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0040.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0041.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0042.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0044.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0048.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0050.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0052.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0053.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0055.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0057.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0058.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0059.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0060.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0061.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0062.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0064.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0065.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0067.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0068.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0069.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0070.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0071.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0072.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0073.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0074.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0075.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0076.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0077.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0078.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0079.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0080.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0081.JPG',
+  '/images/NSM School/NSM School  Dron - sELECTED/DJI_0082.JPG',
+];
 
 // Slider state
 let sliderInterval: number | null = null;
@@ -533,7 +825,6 @@ function initImageSliders(): void {
 function initGalleryTabs(): void {
   const galleryTabs = document.querySelectorAll<HTMLButtonElement>('.gallery-tab[data-gallery-type]');
   const gallerySections = document.querySelectorAll<HTMLElement>('.gallery-section');
-  const videosGrid = document.getElementById('videos-direct-grid');
 
   galleryTabs.forEach((tab) => {
     tab.addEventListener('click', () => {
@@ -680,64 +971,31 @@ function initYearPhotoGallery(): void {
 
   let currentYear = 2025;
 
-  // Photo URLs for different years (using different Unsplash images for variety)
-  const yearPhotos: Record<number, string[]> = {
-    2025: [
-      'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1529390079861-591de354faf5?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&q=95&auto=format&fit=crop',
-    ],
-    2024: [
-      'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&q=95&auto=format&fit=crop',
-    ],
-    2023: [
-      'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1529390079861-591de354faf5?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&q=95&auto=format&fit=crop',
-    ],
-  };
-
   // Generate photos for all years (1993-2025)
   function generateYearPhotos(year: number): string[] {
-    // If specific photos exist, use them
-    if (yearPhotos[year]) {
-      return yearPhotos[year];
+    // Check for admin-uploaded photos first
+    const adminPhotos = (window as any).adminGalleryPhotos?.[year];
+    if (adminPhotos && adminPhotos.length > 0) {
+      return adminPhotos;
     }
     
-    // Otherwise, generate different photos based on year
-    // Using different image IDs to ensure variety
-    const baseImages = [
-      '1523050854058-8df90110c9f1',
-      '1516321318423-f06f85e504b3',
-      '1522202176988-66273c2fd55f',
-      '1529390079861-591de354faf5',
-      '1541339907198-e08756dedf3f',
-      '1509062522246-3755977927d7',
-      '1517486808906-6ca8b3f04846',
-      '1497633762265-9d179a990aa6',
-      '1503676260728-1c00da094a0b',
-      '1517245386807-bb43f82c33c4',
-      '1524178232363-1fb2b075b655',
-      '1511578314322-379afb476865',
-    ];
+    // Distribute NSM School images across years (1993-2025 = 33 years)
+    // Each year gets a subset of images, cycling through the array
+    const imagesPerYear = 6; // Show 6 images per year
+    const yearRange = 2025 - 1993 + 1; // 33 years
+    const yearIndex = year - 1993; // Convert to 0-based index
     
-    // Use year to determine which images to show (ensures different photos per year)
-    const yearOffset = year % baseImages.length;
-    return baseImages.map((imgId, index) => {
-      const selectedIndex = (index + yearOffset) % baseImages.length;
-      return `https://images.unsplash.com/photo-${baseImages[selectedIndex]}?w=800&q=95&auto=format&fit=crop`;
-    });
+    // Calculate starting index for this year
+    const startIndex = (yearIndex * imagesPerYear) % nsmSchoolImages.length;
+    
+    // Get images for this year (cycling through the array)
+    const yearImages: string[] = [];
+    for (let i = 0; i < imagesPerYear; i++) {
+      const imageIndex = (startIndex + i) % nsmSchoolImages.length;
+      yearImages.push(nsmSchoolImages[imageIndex]);
+    }
+    
+    return yearImages;
   }
 
   function openYearModal(year: number): void {
@@ -757,15 +1015,36 @@ function initYearPhotoGallery(): void {
     photos.forEach((photoUrl, index) => {
       const photoItem = document.createElement('div');
       photoItem.className = 'year-photo-item';
-      photoItem.innerHTML = `<img src="${photoUrl}" alt="NSM ${year} Photo ${index + 1}" loading="lazy">`;
+      photoItem.innerHTML = `<img src="${photoUrl}" alt="NSM ${year} Photo ${index + 1}" loading="lazy" data-photo-index="${index}" data-photo-url="${photoUrl}">`;
       photosGrid.appendChild(photoItem);
     });
 
+    // Add click handlers to photos for full screen view using event delegation
+    const photoItems = photosGrid.querySelectorAll<HTMLImageElement>('.year-photo-item img');
+    const allPhotos = Array.from(photoItems).map((i) => i.dataset.photoUrl || i.src);
+    
+    // Use event delegation on the grid container instead of individual images
+    photosGrid.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const img = target.closest('img');
+      if (img && img.parentElement?.classList.contains('year-photo-item') && !isLightboxOpen) {
+        e.preventDefault();
+        e.stopPropagation();
+        const currentIndex = parseInt(img.dataset.photoIndex || '0', 10);
+        openPhotoLightbox(allPhotos, currentIndex);
+      }
+    });
+    
+    // Set cursor style
+    photoItems.forEach((img) => {
+      img.style.cursor = 'pointer';
+    });
+
     // Update navigation buttons
-    if (prevYearBtn) {
+    if (prevYearBtn && prevYearBtn instanceof HTMLButtonElement) {
       prevYearBtn.disabled = year <= 1993;
     }
-    if (nextYearBtn) {
+    if (nextYearBtn && nextYearBtn instanceof HTMLButtonElement) {
       nextYearBtn.disabled = year >= 2025;
     }
 
@@ -887,92 +1166,35 @@ function initYearChapterGallery(): void {
   let currentYear = 2025;
   let currentChapterType = 'all';
 
-  // Different photos for India vs International chapters
-  // India: summits, awards, events, seating arrangements
-  const indiaChapterPhotos: Record<number, string[]> = {
-    2025: [
-      'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=95&auto=format&fit=crop', // Award ceremony
-      'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=95&auto=format&fit=crop', // Group meeting
-      'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=95&auto=format&fit=crop', // Conference
-      'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&q=95&auto=format&fit=crop', // Seminar
-      'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&q=95&auto=format&fit=crop', // Event
-      'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=95&auto=format&fit=crop', // Summit
-    ],
-    2024: [
-      'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=95&auto=format&fit=crop',
-    ],
-  };
-
-  // International: similar but different photos
-  const internationalChapterPhotos: Record<number, string[]> = {
-    2025: [
-      'https://images.unsplash.com/photo-1529390079861-591de354faf5?w=800&q=95&auto=format&fit=crop', // Graduation
-      'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=95&auto=format&fit=crop', // Award
-      'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=95&auto=format&fit=crop', // Meeting
-      'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=95&auto=format&fit=crop', // Conference
-      'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&q=95&auto=format&fit=crop', // Seminar
-      'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&q=95&auto=format&fit=crop', // Event
-    ],
-    2024: [
-      'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=95&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&q=95&auto=format&fit=crop',
-    ],
-  };
-
   // Generate photos for all years (2016-2025)
   function generateChapterPhotos(year: number, chapterType: string): string[] {
-    const baseImages = [
-      '1516321318423-f06f85e504b3',
-      '1522202176988-66273c2fd55f',
-      '1523050854058-8df90110c9f1',
-      '1541339907198-e08756dedf3f',
-      '1509062522246-3755977927d7',
-      '1517486808906-6ca8b3f04846',
-      '1497633762265-9d179a990aa6',
-      '1503676260728-1c00da094a0b',
-      '1517245386807-bb43f82c33c4',
-      '1524178232363-1fb2b075b655',
-      '1511578314322-379afb476865',
-      '1529390079861-591de354faf5',
-    ];
-
+    // Distribute NSM School images across years for all chapter types
+    // Each year gets a subset of images, cycling through the array
+    const imagesPerYear = 6; // Show 6 images per year
+    const yearRange = 2025 - 2016 + 1; // 10 years (2016-2025)
+    const yearIndex = year - 2016; // Convert to 0-based index
+    
+    // Calculate starting index for this year
+    // Use different offsets for different chapter types to show variety
+    let baseOffset = 0;
     if (chapterType === 'india') {
-      if (indiaChapterPhotos[year]) {
-        return indiaChapterPhotos[year];
-      }
-      // Generate India-specific photos
-      const yearOffset = year % baseImages.length;
-      return baseImages.map((imgId, index) => {
-        const selectedIndex = (index + yearOffset) % baseImages.length;
-        return `https://images.unsplash.com/photo-${baseImages[selectedIndex]}?w=800&q=95&auto=format&fit=crop`;
-      });
+      baseOffset = 0;
     } else if (chapterType === 'international') {
-      if (internationalChapterPhotos[year]) {
-        return internationalChapterPhotos[year];
-      }
-      // Generate International-specific photos (different order)
-      const yearOffset = (year + 5) % baseImages.length;
-      return baseImages.map((imgId, index) => {
-        const selectedIndex = (index + yearOffset + 3) % baseImages.length;
-        return `https://images.unsplash.com/photo-${baseImages[selectedIndex]}?w=800&q=95&auto=format&fit=crop`;
-      });
+      baseOffset = Math.floor(nsmSchoolImages.length / 3); // Start from 1/3 of images
     } else {
-      // All chapters - mix of both
-      const yearOffset = year % baseImages.length;
-      return baseImages.map((imgId, index) => {
-        const selectedIndex = (index + yearOffset) % baseImages.length;
-        return `https://images.unsplash.com/photo-${baseImages[selectedIndex]}?w=800&q=95&auto=format&fit=crop`;
-      });
+      baseOffset = Math.floor(nsmSchoolImages.length / 2); // Start from middle for 'all'
     }
+    
+    const startIndex = (baseOffset + yearIndex * imagesPerYear) % nsmSchoolImages.length;
+    
+    // Get images for this year (cycling through the array)
+    const yearImages: string[] = [];
+    for (let i = 0; i < imagesPerYear; i++) {
+      const imageIndex = (startIndex + i) % nsmSchoolImages.length;
+      yearImages.push(nsmSchoolImages[imageIndex]);
+    }
+    
+    return yearImages;
   }
 
   function openYearModal(year: number, chapterType: string): void {
@@ -995,15 +1217,36 @@ function initYearChapterGallery(): void {
     photos.forEach((photoUrl, index) => {
       const photoItem = document.createElement('div');
       photoItem.className = 'year-photo-item';
-      photoItem.innerHTML = `<img src="${photoUrl}" alt="NSM ${chapterTypeName} ${year} Photo ${index + 1}" loading="lazy">`;
+      photoItem.innerHTML = `<img src="${photoUrl}" alt="NSM ${chapterTypeName} ${year} Photo ${index + 1}" loading="lazy" data-photo-index="${index}" data-photo-url="${photoUrl}">`;
       photosGrid.appendChild(photoItem);
     });
 
+    // Add click handlers to photos for full screen view using event delegation
+    const photoItems = photosGrid.querySelectorAll<HTMLImageElement>('.year-photo-item img');
+    const allPhotos = Array.from(photoItems).map((i) => i.dataset.photoUrl || i.src);
+    
+    // Use event delegation on the grid container instead of individual images
+    photosGrid.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const img = target.closest('img');
+      if (img && img.parentElement?.classList.contains('year-photo-item') && !isLightboxOpen) {
+        e.preventDefault();
+        e.stopPropagation();
+        const currentIndex = parseInt(img.dataset.photoIndex || '0', 10);
+        openPhotoLightbox(allPhotos, currentIndex);
+      }
+    });
+    
+    // Set cursor style
+    photoItems.forEach((img) => {
+      img.style.cursor = 'pointer';
+    });
+
     // Update navigation buttons
-    if (prevYearBtn) {
+    if (prevYearBtn && prevYearBtn instanceof HTMLButtonElement) {
       prevYearBtn.disabled = year <= 2016;
     }
-    if (nextYearBtn) {
+    if (nextYearBtn && nextYearBtn instanceof HTMLButtonElement) {
       nextYearBtn.disabled = year >= 2025;
     }
 
@@ -1091,7 +1334,7 @@ function initYearNostalgiaGallery(): void {
     ];
 
     const yearOffset = nostalgiaType === 'india' ? year % baseImages.length : (year + 7) % baseImages.length;
-    return baseImages.map((imgId, index) => {
+    return baseImages.map((_imgId, index) => {
       const selectedIndex = (index + yearOffset) % baseImages.length;
       return `https://images.unsplash.com/photo-${baseImages[selectedIndex]}?w=800&q=95&auto=format&fit=crop`;
     });
@@ -1116,8 +1359,8 @@ function initYearNostalgiaGallery(): void {
       photosGrid.appendChild(photoItem);
     });
 
-    if (prevYearBtn) prevYearBtn.disabled = year <= 1993;
-    if (nextYearBtn) nextYearBtn.disabled = year >= 2025;
+    if (prevYearBtn && prevYearBtn instanceof HTMLButtonElement) prevYearBtn.disabled = year <= 1993;
+    if (nextYearBtn && nextYearBtn instanceof HTMLButtonElement) nextYearBtn.disabled = year >= 2025;
 
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -1172,6 +1415,12 @@ function initYearReunionGallery(): void {
   const availableYears = [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, 2002, 2001, 2000, 1999, 1998, 1997, 1996, 1995, 1994, 1993];
 
   function generateReunionPhotos(year: number): string[] {
+    // Check for admin-uploaded photos first
+    const adminPhotos = (window as any).adminReunionPhotos?.[year];
+    if (adminPhotos && adminPhotos.length > 0) {
+      return adminPhotos;
+    }
+    
     // Reunion-specific photos - people gathering, celebrations, group photos
     const baseImages = [
       '1522202176988-66273c2fd55f', // Group meeting
@@ -1189,7 +1438,7 @@ function initYearReunionGallery(): void {
     ];
 
     const yearOffset = year % baseImages.length;
-    return baseImages.map((imgId, index) => {
+    return baseImages.map((_imgId, index) => {
       const selectedIndex = (index + yearOffset) % baseImages.length;
       return `https://images.unsplash.com/photo-${baseImages[selectedIndex]}?w=800&q=95&auto=format&fit=crop`;
     });
@@ -1206,13 +1455,34 @@ function initYearReunionGallery(): void {
     photos.forEach((photoUrl, index) => {
       const photoItem = document.createElement('div');
       photoItem.className = 'year-photo-item';
-      photoItem.innerHTML = `<img src="${photoUrl}" alt="NSM Reunion ${year} Photo ${index + 1}" loading="lazy">`;
+      photoItem.innerHTML = `<img src="${photoUrl}" alt="NSM Reunion ${year} Photo ${index + 1}" loading="lazy" data-photo-index="${index}" data-photo-url="${photoUrl}">`;
       photosGrid.appendChild(photoItem);
     });
 
+    // Add click handlers to photos for full screen view using event delegation
+    const photoItems = photosGrid.querySelectorAll<HTMLImageElement>('.year-photo-item img');
+    const allPhotos = Array.from(photoItems).map((i) => i.dataset.photoUrl || i.src);
+    
+    // Use event delegation on the grid container instead of individual images
+    photosGrid.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const img = target.closest('img');
+      if (img && img.parentElement?.classList.contains('year-photo-item') && !isLightboxOpen) {
+        e.preventDefault();
+        e.stopPropagation();
+        const currentIndex = parseInt(img.dataset.photoIndex || '0', 10);
+        openPhotoLightbox(allPhotos, currentIndex);
+      }
+    });
+    
+    // Set cursor style
+    photoItems.forEach((img) => {
+      img.style.cursor = 'pointer';
+    });
+
     const currentIndex = availableYears.indexOf(year);
-    if (prevYearBtn) prevYearBtn.disabled = currentIndex <= 0;
-    if (nextYearBtn) nextYearBtn.disabled = currentIndex >= availableYears.length - 1;
+    if (prevYearBtn && prevYearBtn instanceof HTMLButtonElement) prevYearBtn.disabled = currentIndex <= 0;
+    if (nextYearBtn && nextYearBtn instanceof HTMLButtonElement) nextYearBtn.disabled = currentIndex >= availableYears.length - 1;
 
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -1254,6 +1524,141 @@ function initYearReunionGallery(): void {
   });
 }
 
+// Photo Lightbox Functionality - Global state to prevent multiple listeners
+let lightboxKeyboardHandler: ((e: KeyboardEvent) => void) | null = null;
+let isLightboxOpen = false;
+
+function openPhotoLightbox(photos: string[], currentIndex: number): void {
+  // Prevent opening if already open
+  if (isLightboxOpen) return;
+  
+  const lightbox = document.getElementById('photo-lightbox');
+  const lightboxImage = document.getElementById('lightbox-image') as HTMLImageElement;
+  const lightboxCounter = document.getElementById('lightbox-counter');
+  const lightboxCloseBtn = document.getElementById('lightbox-close-btn');
+  const lightboxPrevBtn = document.getElementById('lightbox-prev-btn');
+  const lightboxNextBtn = document.getElementById('lightbox-next-btn');
+  const lightboxOverlay = lightbox?.querySelector<HTMLElement>('.lightbox-overlay');
+
+  if (!lightbox || !lightboxImage) return;
+
+  let currentPhotoIndex = currentIndex;
+  const totalPhotos = photos.length;
+
+  function updateLightboxImage(): void {
+    if (lightboxImage && photos[currentPhotoIndex]) {
+      // Show loading state
+      lightboxImage.style.opacity = '0.5';
+      
+      // Preload image before setting src to prevent hanging
+      const img = new Image();
+      img.onload = () => {
+        if (lightboxImage && photos[currentPhotoIndex]) {
+          lightboxImage.src = photos[currentPhotoIndex];
+          lightboxImage.style.opacity = '1';
+        }
+      };
+      img.onerror = () => {
+        if (lightboxImage) {
+          lightboxImage.style.opacity = '1';
+        }
+      };
+      img.src = photos[currentPhotoIndex];
+      
+      // Update UI immediately
+      if (lightboxCounter) {
+        lightboxCounter.textContent = `${currentPhotoIndex + 1} / ${totalPhotos}`;
+      }
+      if (lightboxPrevBtn) {
+        lightboxPrevBtn.style.display = currentPhotoIndex === 0 ? 'none' : 'flex';
+      }
+      if (lightboxNextBtn) {
+        lightboxNextBtn.style.display = currentPhotoIndex === totalPhotos - 1 ? 'none' : 'flex';
+      }
+    }
+  }
+
+  function showNextPhoto(): void {
+    if (currentPhotoIndex < totalPhotos - 1) {
+      currentPhotoIndex++;
+      updateLightboxImage();
+    }
+  }
+
+  function showPrevPhoto(): void {
+    if (currentPhotoIndex > 0) {
+      currentPhotoIndex--;
+      updateLightboxImage();
+    }
+  }
+
+  function closeLightbox(): void {
+    if (!lightbox || !isLightboxOpen) return;
+    
+    isLightboxOpen = false;
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+    
+    // Remove keyboard listener
+    if (lightboxKeyboardHandler) {
+      document.removeEventListener('keydown', lightboxKeyboardHandler);
+      lightboxKeyboardHandler = null;
+    }
+    
+    // Clear image src to free memory
+    if (lightboxImage) {
+      lightboxImage.src = '';
+    }
+  }
+
+  // Mark as open
+  isLightboxOpen = true;
+
+  // Open lightbox
+  updateLightboxImage();
+  if (lightbox) {
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Remove old event listeners and add new ones
+  if (lightboxCloseBtn) {
+    lightboxCloseBtn.onclick = closeLightbox;
+  }
+  if (lightboxOverlay) {
+    lightboxOverlay.onclick = closeLightbox;
+  }
+  if (lightboxNextBtn) {
+    lightboxNextBtn.onclick = showNextPhoto;
+  }
+  if (lightboxPrevBtn) {
+    lightboxPrevBtn.onclick = showPrevPhoto;
+  }
+
+  // Remove old keyboard listener if exists
+  if (lightboxKeyboardHandler) {
+    document.removeEventListener('keydown', lightboxKeyboardHandler);
+  }
+
+  // Keyboard navigation - single handler
+  lightboxKeyboardHandler = (e: KeyboardEvent): void => {
+    if (!isLightboxOpen || !lightbox.classList.contains('active')) return;
+    
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeLightbox();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      showNextPhoto();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      showPrevPhoto();
+    }
+  };
+
+  document.addEventListener('keydown', lightboxKeyboardHandler, { once: false });
+}
+
 // Year Shop@1925 Gallery Functionality
 function initYearShopGallery(): void {
   const viewLinks = document.querySelectorAll<HTMLAnchorElement>('.view-link[data-year][data-type="shop"]');
@@ -1286,7 +1691,7 @@ function initYearShopGallery(): void {
     ];
 
     const yearOffset = shopType === 'india' ? (year + 3) % baseImages.length : (year + 9) % baseImages.length;
-    return baseImages.map((imgId, index) => {
+    return baseImages.map((_imgId, index) => {
       const selectedIndex = (index + yearOffset) % baseImages.length;
       return `https://images.unsplash.com/photo-${baseImages[selectedIndex]}?w=800&q=95&auto=format&fit=crop`;
     });
@@ -1311,8 +1716,8 @@ function initYearShopGallery(): void {
       photosGrid.appendChild(photoItem);
     });
 
-    if (prevYearBtn) prevYearBtn.disabled = year <= 1993;
-    if (nextYearBtn) nextYearBtn.disabled = year >= 2025;
+    if (prevYearBtn && prevYearBtn instanceof HTMLButtonElement) prevYearBtn.disabled = year <= 1993;
+    if (nextYearBtn && nextYearBtn instanceof HTMLButtonElement) nextYearBtn.disabled = year >= 2025;
 
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -1350,6 +1755,140 @@ function initYearShopGallery(): void {
       closeYearModal();
     }
   });
+}
+
+// Initialize School Photos Gallery in About Section
+function initSchoolPhotosGallery(): void {
+  const gallery = document.querySelector('.school-photos-grid');
+  if (!gallery) return;
+  
+  // Check if already initialized
+  if (gallery.hasAttribute('data-lightbox-initialized')) return;
+  gallery.setAttribute('data-lightbox-initialized', 'true');
+  
+  const photoItems = gallery.querySelectorAll<HTMLImageElement>('.school-photo-item img');
+  if (photoItems.length === 0) return;
+  
+  // Get all photo URLs
+  const allPhotos = Array.from(photoItems).map((img) => img.src);
+  
+  // Use event delegation - single listener on the grid
+  gallery.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const img = target.closest('img');
+    if (img && img.parentElement?.classList.contains('school-photo-item') && !isLightboxOpen) {
+      e.preventDefault();
+      e.stopPropagation();
+      const index = Array.from(photoItems).indexOf(img);
+      if (index >= 0) {
+        openPhotoLightbox(allPhotos, index);
+      }
+    }
+  });
+  
+  // Set cursor style
+  photoItems.forEach((img) => {
+    img.style.cursor = 'pointer';
+  });
+}
+
+// Initialize 3D Globe Image Effect
+function initGlobe3DEffect(): void {
+  const globeImage = document.querySelector<HTMLImageElement>('.about-globe-image');
+  const imageContainer = document.querySelector<HTMLElement>('.about-image-content');
+  
+  if (!globeImage || !imageContainer) return;
+
+  let mouseX = 0;
+  let mouseY = 0;
+  let targetRotateX = 0;
+  let targetRotateY = 0;
+  let currentRotateX = 0;
+  let currentRotateY = 0;
+
+  // Mouse move handler
+  imageContainer.addEventListener('mousemove', (e: MouseEvent) => {
+    const rect = imageContainer.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    mouseX = e.clientX - centerX;
+    mouseY = e.clientY - centerY;
+    
+    // Calculate rotation based on mouse position (max 15 degrees)
+    targetRotateY = (mouseX / rect.width) * 15;
+    targetRotateX = -(mouseY / rect.height) * 15;
+  });
+
+  // Mouse leave handler - reset to center
+  imageContainer.addEventListener('mouseleave', () => {
+    targetRotateX = 0;
+    targetRotateY = 0;
+  });
+
+  // Scroll handler - move image within container's white space
+  function handleScroll(): void {
+    if (!imageContainer || !globeImage) return;
+    const containerRect = imageContainer.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    const containerTop = containerRect.top;
+    const containerBottom = containerRect.bottom;
+    const containerHeight = containerRect.height;
+    
+    // Calculate how much of the container is visible
+    const viewportTop = window.scrollY;
+    const viewportBottom = window.scrollY + windowHeight;
+    
+    // Calculate scroll progress through the container
+    // When container enters viewport from bottom, progress goes from 0 to 1
+    // When container exits viewport from top, progress goes from 1 to 2
+    let scrollProgress = 0;
+    
+    if (containerBottom > viewportTop && containerTop < viewportBottom) {
+      // Container is in viewport
+      const visibleTop = Math.max(containerTop, viewportTop);
+      const visibleBottom = Math.min(containerBottom, viewportBottom);
+      const visibleHeight = visibleBottom - visibleTop;
+      scrollProgress = (viewportTop - containerTop + visibleHeight / 2) / (windowHeight + containerHeight);
+    } else if (containerTop >= viewportBottom) {
+      // Container is below viewport
+      scrollProgress = 0;
+    } else {
+      // Container is above viewport
+      scrollProgress = 1;
+    }
+    
+    // Map scroll progress to vertical movement within white space
+    // Move from -30px (up) to +30px (down) as you scroll
+    const maxMovement = 30; // pixels of movement within white space
+    const translateY = (scrollProgress - 0.5) * 2 * maxMovement;
+    
+    // Optional: Keep some rotation for 3D effect
+    const scrollRotateX = (scrollProgress - 0.5) * 5;
+    
+    // Combine scroll and mouse effects
+    const finalRotateX = currentRotateX + scrollRotateX * 0.2;
+    const finalRotateY = currentRotateY;
+    
+    // Apply transform with vertical movement within container
+    globeImage.style.transform = `perspective(1000px) rotateX(${finalRotateX}deg) rotateY(${finalRotateY}deg) translateY(${translateY}px) translateZ(0)`;
+  }
+
+  // Smooth animation loop
+  function animate(): void {
+    // Smooth interpolation for mouse-based rotation
+    currentRotateX += (targetRotateX - currentRotateX) * 0.1;
+    currentRotateY += (targetRotateY - currentRotateY) * 0.1;
+    
+    handleScroll();
+    requestAnimationFrame(animate);
+  }
+
+  // Start animation
+  animate();
+
+  // Update on scroll
+  window.addEventListener('scroll', handleScroll, { passive: true });
 }
 
 // Contact Form Functionality
@@ -1401,9 +1940,169 @@ function initContactForm(): void {
   });
 }
 
+// Initialize Admin Integration
+function initAdminIntegration(): void {
+  // Load admin data from localStorage
+  function loadAdminData(): void {
+    // Gallery photos
+    const galleryPhotos = localStorage.getItem('nsm_gallery_photos');
+    if (galleryPhotos) {
+      const galleries = JSON.parse(galleryPhotos);
+      const photosByYear: Record<number, string[]> = {};
+      galleries.forEach((gallery: any) => {
+        if (!photosByYear[gallery.year]) {
+          photosByYear[gallery.year] = [];
+        }
+        photosByYear[gallery.year].push(...gallery.photos.map((p: any) => p.url));
+      });
+      (window as any).adminGalleryPhotos = photosByYear;
+    }
+
+    // Chapter photos
+    const chapterPhotos = localStorage.getItem('nsm_chapter_photos');
+    if (chapterPhotos) {
+      const chapters = JSON.parse(chapterPhotos);
+      const photosByChapter: Record<string, Record<number, string[]>> = {};
+      chapters.forEach((chapter: any) => {
+        if (!photosByChapter[chapter.chapterType]) {
+          photosByChapter[chapter.chapterType] = {};
+        }
+        if (!photosByChapter[chapter.chapterType][chapter.year]) {
+          photosByChapter[chapter.chapterType][chapter.year] = [];
+        }
+        photosByChapter[chapter.chapterType][chapter.year].push(...chapter.photos.map((p: any) => p.url));
+      });
+      (window as any).adminChapterPhotos = photosByChapter;
+    }
+
+    // Reunion photos
+    const reunionPhotos = localStorage.getItem('nsm_reunion_photos');
+    if (reunionPhotos) {
+      const reunions = JSON.parse(reunionPhotos);
+      const photosByYear: Record<number, string[]> = {};
+      reunions.forEach((reunion: any) => {
+        if (!photosByYear[reunion.year]) {
+          photosByYear[reunion.year] = [];
+        }
+        photosByYear[reunion.year].push(...reunion.photos.map((p: any) => p.url));
+      });
+      (window as any).adminReunionPhotos = photosByYear;
+    }
+  }
+
+  loadAdminData();
+
+  // Update hero section
+  const heroTitle = document.getElementById('hero-title');
+  const heroQuote = document.querySelector('.hero-quote');
+  const adminHeroTitle = localStorage.getItem('nsm_hero_title');
+  const adminHeroQuote = localStorage.getItem('nsm_hero_quote');
+  if (adminHeroTitle && heroTitle) {
+    heroTitle.textContent = adminHeroTitle;
+  }
+  if (adminHeroQuote && heroQuote) {
+    heroQuote.textContent = adminHeroQuote;
+  }
+
+  // Display latest updates
+  function displayLatestUpdates(): void {
+    const updates = localStorage.getItem('nsm_updates');
+    if (!updates) return;
+    
+    const updatesList = JSON.parse(updates);
+    if (updatesList.length === 0) return;
+
+    const sortedUpdates = updatesList.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const homePage = document.getElementById('page-home');
+    if (!homePage) return;
+
+    let updatesSection = document.getElementById('admin-updates-section');
+    if (!updatesSection) {
+      const leftColumn = homePage.querySelector('.home-left-column');
+      if (leftColumn) {
+        updatesSection = document.createElement('div');
+        updatesSection.id = 'admin-updates-section';
+        updatesSection.className = 'home-info-box admin-updates-box';
+        const eventsBox = leftColumn.querySelector('.nsm-events-box');
+        if (eventsBox && eventsBox.nextSibling) {
+          leftColumn.insertBefore(updatesSection, eventsBox.nextSibling);
+        } else {
+          leftColumn.appendChild(updatesSection);
+        }
+      }
+    }
+
+    if (updatesSection) {
+      const displayUpdates = sortedUpdates.slice(0, 5);
+      updatesSection.innerHTML = `
+        <h3 class="home-info-heading">
+          <i class="fas fa-bullhorn"></i>
+          Latest Updates
+        </h3>
+        <div class="admin-updates-list">
+          ${displayUpdates.map((update: any) => `
+            <div class="admin-update-item">
+              <div class="update-date">${new Date(update.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+              <h4 class="update-title">${update.title}</h4>
+              <p class="update-content">${update.content.substring(0, 100)}${update.content.length > 100 ? '...' : ''}</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+  }
+
+  // Display event photos
+  function displayEventPhotos(): void {
+    const eventPhotos = localStorage.getItem('nsm_event_photos');
+    if (!eventPhotos) return;
+    
+    const eventsList = JSON.parse(eventPhotos);
+    if (eventsList.length === 0) return;
+
+    const sortedEvents = eventsList.sort((a: any, b: any) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime());
+    const eventsContainer = document.querySelector('.events-photos-container');
+    if (!eventsContainer) return;
+
+    const latestEvent = sortedEvents[0];
+    if (latestEvent.photos && latestEvent.photos.length > 0) {
+      const slides = eventsContainer.querySelectorAll('.event-photo-slide img');
+      latestEvent.photos.slice(0, Math.min(slides.length, latestEvent.photos.length)).forEach((photo: any, index: number) => {
+        if (slides[index]) {
+          (slides[index] as HTMLImageElement).src = photo.url;
+          (slides[index] as HTMLImageElement).alt = latestEvent.eventName;
+        }
+      });
+    }
+  }
+
+  displayLatestUpdates();
+  displayEventPhotos();
+
+  // Re-run when home page becomes visible
+  const observer = new MutationObserver(() => {
+    const homePage = document.getElementById('page-home');
+    if (homePage && homePage.classList.contains('visible')) {
+      loadAdminData();
+      displayLatestUpdates();
+      displayEventPhotos();
+    }
+  });
+
+  const pageContent = document.querySelector('.page-content');
+  if (pageContent) {
+    observer.observe(pageContent, {
+      attributes: true,
+      attributeFilter: ['class'],
+      subtree: true,
+    });
+  }
+}
+
 // Wait for DOM to be ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
+    initAdminIntegration();
     initApp();
     initGalleryTabs();
     initReunionTabs();
@@ -1416,8 +2115,11 @@ if (document.readyState === 'loading') {
     initYearShopGallery();
     initYearReunionGallery();
     initContactForm();
+    initGlobe3DEffect();
+    initSchoolPhotosGallery();
   });
 } else {
+  initAdminIntegration();
   initApp();
   initGalleryTabs();
   initReunionTabs();
@@ -1430,6 +2132,551 @@ if (document.readyState === 'loading') {
   initYearShopGallery();
   initYearReunionGallery();
   initContactForm();
+  initDonatePage();
+  initFAQPage();
+  initHomeGallerySlider();
+  initGlobe3DEffect();
+  initEventsTabs();
+  initSchoolPhotosGallery();
+}
+
+// Initialize Events Tabs
+function initEventsTabs(): void {
+  // Support both old and new tab classes
+  const eventTabBtns = document.querySelectorAll<HTMLButtonElement>('.event-tab-modern, .event-tab-btn');
+  const eventSections = document.querySelectorAll<HTMLElement>('.events-section');
+
+  eventTabBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const eventType = btn.getAttribute('data-event-type');
+      
+      // Update active tab
+      eventTabBtns.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Show corresponding section
+      eventSections.forEach((section) => {
+        section.classList.remove('active');
+        if (section.id === `${eventType}-events-section`) {
+          section.classList.add('active');
+        }
+      });
+    });
+  });
+}
+
+// Initialize Home Gallery Slider
+function initHomeGallerySlider(): void {
+  const galleryContainer = document.querySelector('.gallery-slider-container');
+  if (!galleryContainer) return;
+
+  const galleryWrapper = galleryContainer.querySelector<HTMLElement>('.gallery-slider-wrapper');
+  const gallerySlides = galleryContainer.querySelectorAll<HTMLElement>('.gallery-slide');
+  const galleryDots = galleryContainer.querySelectorAll<HTMLElement>('.gallery-dot');
+  const prevBtn = galleryContainer.querySelector<HTMLElement>('.gallery-prev');
+  const nextBtn = galleryContainer.querySelector<HTMLElement>('.gallery-next');
+
+  if (!galleryWrapper || gallerySlides.length === 0) return;
+
+  let currentSlide = 0;
+  let sliderInterval: number | null = null;
+
+  function showSlide(index: number): void {
+    // Update active slide
+    gallerySlides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+    });
+
+    // Update active dot
+    galleryDots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+
+    // Move wrapper
+    if (galleryWrapper) {
+      galleryWrapper.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    currentSlide = index;
+  }
+
+  function nextSlide(): void {
+    const nextIndex = (currentSlide + 1) % gallerySlides.length;
+    showSlide(nextIndex);
+  }
+
+  function prevSlide(): void {
+    const prevIndex = (currentSlide - 1 + gallerySlides.length) % gallerySlides.length;
+    showSlide(prevIndex);
+  }
+
+  function startAutoSlide(): void {
+    if (sliderInterval !== null) {
+      clearInterval(sliderInterval);
+    }
+    sliderInterval = window.setInterval(nextSlide, 4000);
+  }
+
+  function stopAutoSlide(): void {
+    if (sliderInterval !== null) {
+      clearInterval(sliderInterval);
+      sliderInterval = null;
+    }
+  }
+
+  // Initialize first slide
+  showSlide(0);
+  startAutoSlide();
+
+  // Navigation buttons
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      nextSlide();
+      stopAutoSlide();
+      startAutoSlide();
+    });
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      prevSlide();
+      stopAutoSlide();
+      startAutoSlide();
+    });
+  }
+
+  // Dot navigation
+  galleryDots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      showSlide(index);
+      stopAutoSlide();
+      startAutoSlide();
+    });
+  });
+
+  // Pause on hover
+  galleryContainer.addEventListener('mouseenter', stopAutoSlide);
+  galleryContainer.addEventListener('mouseleave', startAutoSlide);
+}
+
+// Initialize Donate Page
+function initDonatePage(): void {
+  // Donate tab switching
+  const donateTabBtns = document.querySelectorAll<HTMLButtonElement>('.donate-tab-btn');
+  const donateFormSections = document.querySelectorAll<HTMLElement>('.donate-form-section');
+
+  donateTabBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const targetTab = btn.getAttribute('data-donate-tab');
+      
+      // Update active tab
+      donateTabBtns.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Show corresponding form
+      donateFormSections.forEach((section) => {
+        section.classList.remove('active');
+        if (section.id === `${targetTab}-donate-form` || section.id === 'nsm-donate-form' || section.id === 'general-donate-form') {
+          if (targetTab === 'nsm-form' && section.id === 'nsm-donate-form') {
+            section.classList.add('active');
+          } else if (targetTab === 'general-form' && section.id === 'general-donate-form') {
+            section.classList.add('active');
+          }
+        }
+      });
+    });
+  });
+
+  // Quick amount buttons
+  const amountBtns = document.querySelectorAll<HTMLButtonElement>('.amount-btn');
+  const amountInputs = document.querySelectorAll<HTMLInputElement>('#nsm-amount, #general-amount');
+
+  amountBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const amount = btn.getAttribute('data-amount');
+      if (amount) {
+        // Update active button
+        amountBtns.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Update amount inputs
+        amountInputs.forEach((input) => {
+          input.value = amount;
+        });
+      }
+    });
+  });
+
+  // Form submissions
+  const nsmForm = document.getElementById('nsmForm') as HTMLFormElement | null;
+  const generalForm = document.getElementById('generalForm') as HTMLFormElement | null;
+
+  function getSelectedAmount(formId: string): string {
+    const form = document.getElementById(formId) as HTMLFormElement | null;
+    if (!form) return '5000';
+    
+    const amountInput = form.querySelector<HTMLInputElement>('input[name="amount"]');
+    const activeAmountBtn = form.querySelector<HTMLButtonElement>('.amount-btn.active');
+    
+    if (activeAmountBtn) {
+      return activeAmountBtn.getAttribute('data-amount') || '5000';
+    }
+    return amountInput?.value || '5000';
+  }
+
+  function showDonationPaymentSection(amount: string): void {
+    const paymentSection = document.getElementById('donation-payment-section');
+    if (paymentSection) {
+      paymentSection.style.display = 'block';
+      paymentSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      
+      // Update QR code with amount
+      const qrCodeImg = document.getElementById('donate-qr-code') as HTMLImageElement | null;
+      if (qrCodeImg) {
+        qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=UPI:nsmalumni@paytm?am=${amount}&tn=NSM%20Alumni%20Donation`;
+      }
+    }
+  }
+
+  if (nsmForm) {
+    nsmForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const amount = getSelectedAmount('nsmForm');
+      showDonationPaymentSection(amount);
+    });
+  }
+
+  if (generalForm) {
+    generalForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const amount = getSelectedAmount('generalForm');
+      showDonationPaymentSection(amount);
+    });
+  }
+
+  // Payment method tabs
+  const paymentTabBtns = document.querySelectorAll<HTMLButtonElement>('.payment-tab-btn');
+  const bankPaymentDetails = document.getElementById('bank-payment-details');
+  const razorpayPaymentDetails = document.getElementById('razorpay-payment-details');
+
+  paymentTabBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const method = btn.getAttribute('data-payment-method');
+      
+      paymentTabBtns.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (method === 'bank') {
+        bankPaymentDetails?.classList.add('active');
+        razorpayPaymentDetails?.classList.remove('active');
+      } else {
+        razorpayPaymentDetails?.classList.add('active');
+        bankPaymentDetails?.classList.remove('active');
+      }
+    });
+  });
+
+  // Payment confirmation
+  const confirmBankPaymentBtn = document.getElementById('confirm-donate-bank-payment');
+  const razorpayPayBtn = document.getElementById('razorpay-donate-pay-btn');
+  const donationPaymentSuccessSection = document.getElementById('donation-payment-success-section');
+
+  function showDonationPaymentSuccess(transactionId: string, amount: string, method: string): void {
+    if (!donationPaymentSuccessSection) return;
+
+    // Hide payment details
+    if (bankPaymentDetails) bankPaymentDetails.classList.remove('active');
+    if (razorpayPaymentDetails) razorpayPaymentDetails.classList.remove('active');
+
+    // Update success section details
+    const txnIdEl = document.getElementById('donation-payment-success-txn-id');
+    const amountEl = document.getElementById('donation-payment-success-amount');
+    
+    if (txnIdEl) txnIdEl.textContent = transactionId;
+    if (amountEl) amountEl.textContent = '₹' + parseFloat(amount).toLocaleString('en-IN');
+
+    // Store transaction details for receipt
+    donationPaymentSuccessSection.dataset.transactionId = transactionId;
+    donationPaymentSuccessSection.dataset.amount = amount;
+    donationPaymentSuccessSection.dataset.method = method;
+
+    // Track donation
+    const nsmForm = document.getElementById('nsmForm') as HTMLFormElement | null;
+    const generalForm = document.getElementById('generalForm') as HTMLFormElement | null;
+    let donorName = 'Anonymous';
+    let donorEmail = '';
+    let category = 'general';
+
+    if (nsmForm) {
+      const formData = new FormData(nsmForm);
+      donorName = (formData.get('name') || 'Anonymous').toString();
+      donorEmail = (formData.get('email') || '').toString();
+      category = 'nsm';
+    } else if (generalForm) {
+      const formData = new FormData(generalForm);
+      donorName = (formData.get('name') || 'Anonymous').toString();
+      donorEmail = (formData.get('email') || '').toString();
+      category = 'general';
+    }
+
+    const donations = JSON.parse(localStorage.getItem('nsm_donations') || '[]');
+    donations.push({
+      id: Date.now().toString(),
+      name: donorName,
+      email: donorEmail,
+      amount: amount,
+      method: method,
+      transactionId: transactionId,
+      category: category,
+      timestamp: Date.now()
+    });
+    localStorage.setItem('nsm_donations', JSON.stringify(donations));
+
+    // Show success section
+    donationPaymentSuccessSection.style.display = 'block';
+    donationPaymentSuccessSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // Download Receipt Functionality for Donations
+  const donationDownloadReceiptBtn = document.getElementById('donation-download-receipt-btn');
+
+  function downloadDonationReceipt(): void {
+    if (!donationPaymentSuccessSection) return;
+
+    const transactionId = donationPaymentSuccessSection.dataset.transactionId || 'TXN' + Date.now();
+    const amount = donationPaymentSuccessSection.dataset.amount || '5000';
+    const method = donationPaymentSuccessSection.dataset.method || 'Payment';
+
+    // Get donor details from forms if available
+    const nsmForm = document.getElementById('nsmForm') as HTMLFormElement | null;
+    const generalForm = document.getElementById('generalForm') as HTMLFormElement | null;
+    let donorName = 'Donor';
+    let donorEmail = '';
+
+    if (nsmForm) {
+      const formData = new FormData(nsmForm);
+      const name = formData.get('name') || '';
+      donorName = name.toString().trim() || 'Donor';
+      donorEmail = (formData.get('email') || '').toString();
+    } else if (generalForm) {
+      const formData = new FormData(generalForm);
+      const name = formData.get('name') || '';
+      donorName = name.toString().trim() || 'Donor';
+      donorEmail = (formData.get('email') || '').toString();
+    }
+
+    // Create receipt HTML
+    const receiptHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Donation Receipt - NSM Alumni</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 40px; max-width: 600px; margin: 0 auto; }
+          .header { text-align: center; border-bottom: 3px solid #00274d; padding-bottom: 20px; margin-bottom: 30px; }
+          .logo { font-size: 32px; font-weight: bold; color: #00274d; margin-bottom: 10px; }
+          .title { font-size: 24px; color: #333; margin: 10px 0; }
+          .receipt-details { background: #f8f9fa; padding: 25px; border-radius: 10px; margin: 20px 0; }
+          .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #ddd; }
+          .detail-row:last-child { border-bottom: none; }
+          .label { font-weight: 600; color: #666; }
+          .value { font-weight: 700; color: #333; }
+          .success-badge { background: #28a745; color: white; padding: 8px 16px; border-radius: 20px; display: inline-block; margin: 20px 0; }
+          .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px solid #e0e0e0; color: #666; font-size: 14px; }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="logo">NSM</div>
+          <div class="title">Old Students Association</div>
+          <div class="success-badge">✓ Donation Successful</div>
+        </div>
+        
+        <h2 style="color: #00274d; margin-bottom: 20px;">Donation Receipt</h2>
+        
+        <div class="receipt-details">
+          <div class="detail-row">
+            <span class="label">Transaction ID:</span>
+            <span class="value">${transactionId}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Date:</span>
+            <span class="value">${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Time:</span>
+            <span class="value">${new Date().toLocaleTimeString('en-IN')}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Donor Name:</span>
+            <span class="value">${donorName}</span>
+          </div>
+          ${donorEmail ? `<div class="detail-row">
+            <span class="label">Email:</span>
+            <span class="value">${donorEmail}</span>
+          </div>` : ''}
+          <div class="detail-row">
+            <span class="label">Payment Method:</span>
+            <span class="value">${method}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Amount Donated:</span>
+            <span class="value">₹${parseFloat(amount).toLocaleString('en-IN')}</span>
+          </div>
+        </div>
+        
+        <div class="footer">
+          <p>This is a computer-generated receipt. No signature is required.</p>
+          <p>For any queries, please contact: nsmalumni@example.com</p>
+          <p style="margin-top: 20px;">Thank you for your generous donation!</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Create blob and download
+    const blob = new Blob([receiptHTML], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `NSM_Donation_Receipt_${transactionId}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  if (donationDownloadReceiptBtn) {
+    donationDownloadReceiptBtn.addEventListener('click', downloadDonationReceipt);
+  }
+
+  if (confirmBankPaymentBtn) {
+    confirmBankPaymentBtn.addEventListener('click', () => {
+      if (confirm('Have you completed the bank transfer/UPI payment?')) {
+        const amount = getSelectedAmount('nsmForm') || getSelectedAmount('generalForm');
+        const transactionId = 'TXN' + Date.now();
+        showDonationPaymentSuccess(transactionId, amount, 'Bank Transfer / UPI');
+      }
+    });
+  }
+
+  if (razorpayPayBtn) {
+    razorpayPayBtn.addEventListener('click', () => {
+      const amount = getSelectedAmount('nsmForm') || getSelectedAmount('generalForm');
+      const amountInPaise = Math.round(parseFloat(amount) * 100);
+      
+      // Razorpay Key - Replace with your actual Razorpay key
+      const RAZORPAY_KEY_ID = 'YOUR_RAZORPAY_KEY_ID'; // TODO: Add your Razorpay Key ID here
+      
+      // Check if Razorpay is loaded
+      if (typeof (window as any).Razorpay === 'undefined') {
+        alert('Razorpay SDK is not loaded. Please check your internet connection.');
+        return;
+      }
+      
+      // If key is not set, show alert and use simulation
+      if (RAZORPAY_KEY_ID === 'YOUR_RAZORPAY_KEY_ID') {
+        if (confirm(`Razorpay key not configured. Simulating payment of ₹${parseFloat(amount).toLocaleString('en-IN')}?`)) {
+          setTimeout(() => {
+            const transactionId = 'RZP' + Date.now();
+            showDonationPaymentSuccess(transactionId, amount, 'Razorpay');
+          }, 1500);
+        }
+        return;
+      }
+      
+      // Initialize Razorpay checkout
+      const Razorpay = (window as any).Razorpay;
+      const options = {
+        key: RAZORPAY_KEY_ID,
+        amount: amountInPaise,
+        currency: 'INR',
+        name: 'NSM Old Students Association',
+        description: 'Donation Payment',
+        handler: function(response: any) {
+          const transactionId = response.razorpay_payment_id || 'RZP' + Date.now();
+          showDonationPaymentSuccess(transactionId, amount, 'Razorpay');
+        },
+        theme: {
+          color: '#ff6b9d'
+        }
+      };
+      
+      const razorpay = new Razorpay(options);
+      razorpay.open();
+    });
+  }
+}
+
+// Initialize FAQ Page
+function initFAQPage(): void {
+  // FAQ Accordion
+  const faqItems = document.querySelectorAll<HTMLElement>('.faq-item');
+  
+  faqItems.forEach((item) => {
+    const question = item.querySelector<HTMLElement>('.faq-question');
+    if (question) {
+      question.addEventListener('click', () => {
+        const isActive = item.classList.contains('active');
+        
+        // Close all items
+        faqItems.forEach((i) => i.classList.remove('active'));
+        
+        // Toggle current item
+        if (!isActive) {
+          item.classList.add('active');
+        }
+      });
+    }
+  });
+
+  // FAQ Search
+  const faqSearchInput = document.getElementById('faq-search') as HTMLInputElement | null;
+  const faqCategoryBtns = document.querySelectorAll<HTMLButtonElement>('.faq-category-btn');
+  const faqNoResults = document.querySelector<HTMLElement>('.faq-no-results');
+
+  function filterFAQs(searchTerm: string = '', category: string = 'all'): void {
+    let visibleCount = 0;
+
+    faqItems.forEach((item) => {
+      const question = item.querySelector('h3')?.textContent?.toLowerCase() || '';
+      const answer = item.querySelector('p')?.textContent?.toLowerCase() || '';
+      const itemCategory = item.getAttribute('data-category') || '';
+
+      const matchesSearch = !searchTerm || question.includes(searchTerm) || answer.includes(searchTerm);
+      const matchesCategory = category === 'all' || itemCategory === category;
+
+      if (matchesSearch && matchesCategory) {
+        item.style.display = 'block';
+        visibleCount++;
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
+    if (faqNoResults) {
+      faqNoResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+  }
+
+  if (faqSearchInput) {
+    faqSearchInput.addEventListener('input', (e) => {
+      const searchTerm = (e.target as HTMLInputElement).value.toLowerCase();
+      const activeCategory = document.querySelector<HTMLButtonElement>('.faq-category-btn.active')?.getAttribute('data-category') || 'all';
+      filterFAQs(searchTerm, activeCategory);
+    });
+  }
+
+  faqCategoryBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      faqCategoryBtns.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      const category = btn.getAttribute('data-category') || 'all';
+      const searchTerm = faqSearchInput?.value.toLowerCase() || '';
+      filterFAQs(searchTerm, category);
+    });
+  });
 }
 
 

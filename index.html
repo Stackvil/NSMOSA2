@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NSM Old Students Association</title>
+    <title>NSMOSA</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -20,6 +20,8 @@
     />
     <!-- Razorpay SDK - Add your Razorpay key later -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- face-api.js for face detection -->
+    <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.14/dist/face-api.min.js"></script>
     <style>
       /* Prevent FOUC - Hide content until styles are loaded */
       body {
@@ -95,7 +97,7 @@
         <div class="logo-area">
           <img src="/images/HOME PAGE PHOTOS NSM/NSM LOGO 1.jpeg" alt="NSM Logo" class="nsm-logo-img" />
           <div class="logo-text">
-            <span class="logo-title">NSM Old Students Association</span>
+            <span class="logo-title">N.St.Mathew's public school</span>
           </div>
         </div>
         <div class="header-right">
@@ -108,24 +110,6 @@
               rel="noopener noreferrer"
             >
               <i class="fab fa-facebook-f"></i>
-            </a>
-            <a
-              href="https://www.twitter.com"
-              aria-label="Twitter"
-              class="social-icon"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i class="fab fa-x-twitter"></i>
-            </a>
-            <a
-              href="https://www.linkedin.com"
-              aria-label="LinkedIn"
-              class="social-icon"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i class="fab fa-linkedin-in"></i>
             </a>
             <a
               href="https://www.instagram.com"
@@ -161,10 +145,10 @@
               <a href="#" data-page="home">Home</a>
             </li>
             <li class="nav-item has-dropdown">
-              <a href="#" data-page="about">About NSM</a>
+              <a href="#" data-page="about">About NSMOSA</a>
               <div class="dropdown-menu">
                 <a href="#" class="dropdown-item" data-subpage="about-overview"
-                  >About NSM Old Students Association</a
+                  >About NSMOSA</a
                 >
                 <a href="#" class="dropdown-item" data-subpage="president"
                   >President's Message</a
@@ -179,34 +163,23 @@
                   >Alumni Benefits</a
                 >
                 <a href="#" class="dropdown-item" data-subpage="annual-reports"
-                  >NSM Annual Reports</a
+                  >NSMOSA Annual Reports</a
                 >
               </div>
             </li>
             <li class="nav-item has-dropdown">
-              <a href="#" data-page="connect">NSM Alumni Connect</a>
-              <div class="dropdown-menu mega connect-dropdown">
-                <div class="dropdown-column">
-                  <div class="dropdown-heading">My Profile</div>
-                  <a href="#" class="dropdown-item" data-connect-subpage="profile">My Profile</a>
-                </div>
-                <div class="dropdown-column">
-                  <div class="dropdown-heading">Alumni - Alumni</div>
-                  <a href="#" class="dropdown-item" data-connect-subpage="alumni-event">Alumni Event</a>
-                  <a href="#" class="dropdown-item" data-connect-subpage="alumni-directory">Network - Alumni Directory</a>
-                  <a href="#" class="dropdown-item" data-connect-subpage="business-directory">Network - Business Directory</a>
-                </div>
-                <div class="dropdown-column">
-                  <div class="dropdown-heading">Alumni - NSM</div>
-                  <a href="#" class="dropdown-item" data-connect-subpage="campus-events">Campus Events</a>
-                  <a href="#" class="dropdown-item" data-connect-subpage="volunteering">Volunteering Work</a>
-                  <a href="#" class="dropdown-item" data-connect-subpage="how-to-give">How to Give</a>
-                  <a href="#" class="dropdown-item" data-connect-subpage="connect-us">Connect With Us</a>
-                </div>
+              <a href="#" data-page="connect">NSMOSA Alumni Connect</a>
+              <div class="dropdown-menu">
+                <a href="#" class="dropdown-item" data-connect-subpage="profile">My Profile</a>
+                <a href="#" class="dropdown-item" data-connect-subpage="alumni-event">Alumni Event</a>
+                <a href="#" class="dropdown-item" data-connect-subpage="alumni-directory">Alumni Directory</a>
+                <a href="#" class="dropdown-item" data-connect-subpage="business-directory">Business Directory</a>
+                <a href="#" class="dropdown-item" data-connect-subpage="how-to-give">How to Give</a>
+                <a href="#" class="dropdown-item" data-connect-subpage="connect-us">Connect With Us</a>
               </div>
             </li>
             <li class="nav-item">
-              <a href="#" data-page="events">NSM Alumni Events</a>
+              <a href="#" data-page="events">NSMOSA Alumni Events</a>
             </li>
             <li class="nav-item has-dropdown">
               <a href="#" data-page="reunion">Re-Union</a>
@@ -237,7 +210,7 @@
               <a href="#" data-page="faq">FAQ's</a>
             </li>
             <li class="nav-item">
-              <a href="#" data-page="donate" class="nav-donate-btn"><i class="fas fa-heart"></i> Donate</a>
+              <a href="#" data-page="member" class="nav-donate-btn"><i class="fas fa-user-plus"></i> Be a Member</a>
             </li>
             <li class="nav-item">
               <a href="#" data-page="contact">Contact Us</a>
@@ -251,8 +224,8 @@
     <section class="hero" style="background-image: url('/images/HOME%20PAGE%20PHOTOS%20NSM/HERO%20SECTION.jpg');">
       <div class="hero-overlay"></div>
       <div class="hero-content">
-        <h1 id="hero-title">NSM OLD STUDENTS ASSOCIATION</h1>
-        <p class="hero-quote">TOWARDS A BETTER WORLD</p>
+        <h1 id="hero-title">NSMOSA</h1>
+        <p class="hero-quote">TOWARDS A BETTER SOCIETY</p>
       </div>
     </section>
 
@@ -270,7 +243,7 @@
                 <div class="events-box-header">
                   <h3 class="events-box-heading">
                     <img src="/images/HOME PAGE PHOTOS NSM/NSM LOGO 1.jpeg" alt="NSM Logo" class="events-box-logo" />
-                    NSM Events
+                    NSMOSA Events
                   </h3>
                 </div>
                 <div class="events-photos-container">
@@ -328,7 +301,7 @@
               <div class="home-info-box">
                 <h3 class="home-info-heading">
                   <i class="fas fa-user-plus"></i>
-                  How to Join NSM?
+                  How to Join NSMOSA?
                 </h3>
                 <p class="home-info-text">
                   Click "Join Now" and complete the registration. Get verified to access exclusive alumni benefits and networking.
@@ -336,16 +309,6 @@
                 <a href="#" class="read-more-link">Read More</a>
               </div>
 
-              <div class="home-info-box">
-                <h3 class="home-info-heading">
-                  <i class="fas fa-project-diagram"></i>
-                  Ongoing Projects
-                </h3>
-                <p class="home-info-text">
-                  Scholarship programs, infrastructure development, research funding, and mentorship initiatives.
-                </p>
-                <a href="#" class="read-more-link">Read More</a>
-              </div>
             </div>
 
             <!-- Center Column - Image Slider -->
@@ -405,7 +368,7 @@
                 </div>
                 <div class="portrait-text-content">
                   <p class="portrait-text">
-                    We are delighted to share that our esteemed alumnus, Mr. Rajesh Kumar (B.Com, 1985-1988), Rajesh Kumar Foundation has generously contributed USD 10,000 (INR 8,87,600.00) to NSM School Foundation. This contribution will support student scholarships, research initiatives, and infrastructure development projects that will benefit future generations of NSM students.
+                    We are delighted to share that our esteemed alumnus, Mr. Rajesh Kumar (B.Com, 1985-1988), Rajesh Kumar Foundation has generously contributed USD 10,000 (INR 8,87,600.00) to NSMOSA School Foundation. This contribution will support student scholarships, research initiatives, and infrastructure development projects that will benefit future generations of NSMOSA students.
                   </p>
                 </div>
               </div>
@@ -489,7 +452,7 @@
                   <div class="nsm-branding">
                     <img src="/images/HOME PAGE PHOTOS NSM/NSM LOGO 1.jpeg" alt="NSM Logo" class="nsm-logo-circle-img" />
                     <div class="nsm-brand-text">
-                      <div class="nsm-brand-title">NSM ALUMNI ASSOCIATION</div>
+                      <div class="nsm-brand-title">NSMOSA ALUMNI ASSOCIATION</div>
                       <div class="nsm-brand-subtitle">Join Our Community</div>
                     </div>
                   </div>
@@ -542,16 +505,6 @@
                 </div>
               </div>
 
-              <div class="home-info-box">
-                <h3 class="home-info-heading">
-                  <i class="fas fa-trophy"></i>
-                  Alumni Awards
-                </h3>
-                <p class="home-info-text">
-                  Recognizing outstanding achievements: Business Excellence, Sports, Academic Excellence, Community Service, and Lifetime Achievement. Annual nominations open.
-                </p>
-                <a href="#" class="read-more-link">Read More</a>
-              </div>
             </div>
           </div>
         </div>
@@ -572,7 +525,7 @@
             <!-- Main Content Layout -->
             <div class="about-content-layout">
               <div class="about-text-content">
-                <h2 class="page-title">About NSM Old Students Association</h2>
+                <h2 class="page-title">About NSMOSA</h2>
                 
                 <!-- Introduction Card -->
                 <div class="about-intro-card">
@@ -595,7 +548,7 @@
                   <div class="journey-content">
                     <h3 class="journey-title">A Journey of Excellence</h3>
                     <p class="journey-text">
-                      The journey of a thousand miles begins with a single step. Similarly NSM has risen from a humble dwelling to imposing buildings well equipped with latest state-of-art technology. The school is managed by the <strong>Society of Montfort Brothers of St. Gabriel</strong>.
+                      The journey of a thousand miles begins with a single step. Similarly NSMOSA has risen from a humble dwelling to imposing buildings well equipped with latest state-of-art technology. The school is managed by the <strong>Society of Montfort Brothers of St. Gabriel</strong>.
                     </p>
                   </div>
                 </div>
@@ -639,7 +592,7 @@
                       <i class="fas fa-history"></i>
                       Our Journey Through Time
                     </h3>
-                    <p class="timeline-subtitle">Key milestones that shaped NSM's legacy</p>
+                    <p class="timeline-subtitle">Key milestones that shaped NSMOSA's legacy</p>
                   </div>
                   
                   <div class="timeline-container">
@@ -680,7 +633,7 @@
                           <span class="timeline-badge">Academic Milestone</span>
                         </div>
                         <p class="timeline-card-text">
-                          The first batch of Class X appeared for the <strong>AISSE in 1979</strong>, setting the stage for academic excellence and establishing NSM's commitment to quality education.
+                          The first batch of Class X appeared for the <strong>AISSE in 1979</strong>, setting the stage for academic excellence and establishing NSMOSA's commitment to quality education.
                         </p>
                         <div class="timeline-date">
                           <i class="fas fa-calendar-alt"></i>
@@ -702,7 +655,7 @@
                           <span class="timeline-badge highlight-badge">Achievement</span>
                         </div>
                         <p class="timeline-card-text">
-                          We secured <strong>21 National ranks</strong> in the AISSE (1984-85), establishing NSM as a premier educational institution and showcasing our commitment to academic excellence.
+                          We secured <strong>21 National ranks</strong> in the AISSE (1984-85), establishing NSMOSA as a premier educational institution and showcasing our commitment to academic excellence.
                         </p>
                         <div class="timeline-achievement">
                           <div class="achievement-stat">
@@ -752,7 +705,7 @@
                 <!-- Contact Section -->
                 <div class="about-contact-card">
                   <h3 class="contact-title">
-                    <i class="fas fa-phone-alt"></i> Contact NSM Old Students Association
+                    <i class="fas fa-phone-alt"></i> Contact NSMOSA
                   </h3>
                   <div class="contact-details">
                     <div class="contact-item">
@@ -779,7 +732,7 @@
                 <h2 class="page-title">President's Message</h2>
                 <div class="president-message-text">
                   <p class="president-greeting">
-                    Dear NSM Alumni Family,
+                    Dear NSMOSA Alumni Family,
                   </p>
                   <p>
                     I consider it as a great honour to address you from this renowned seat of learning, N. St. Mathew’s Public School, Vijayawada.
@@ -802,7 +755,7 @@
                   <p>
                     Right from its inception in the year 1974, this mighty institution has been on quest for excellence in curricular, co-curricular and extra-curricular pursuits and is strongly moving ahead with an aim of shaping the young NSMites ‘Towards a Better World’.
                   </p>
-                  As we gear up to march into the Golden Era of NSM, I urge you to join us in this remarkable academic mission that will shape the future of the students and make them ready to face the challenges that the world will pose for them in their future.
+                  As we gear up to march into the Golden Era of NSMOSA, I urge you to join us in this remarkable academic mission that will shape the future of the students and make them ready to face the challenges that the world will pose for them in their future.
                   <p class="president-signature">
                     Warm regards,<br />
                     <strong>Dr. Rajesh Kumar</strong><br />
@@ -848,7 +801,7 @@
                     <span class="position-badge badge-primary">Rector</span>
                   </div>
                   <div class="executive-col col-name">Rev. Fr. Dr. Thomas Mathew</div>
-                  <div class="executive-col col-affiliation">NSM School</div>
+                  <div class="executive-col col-affiliation">NSMOSA School</div>
                 </div>
 
                 <div class="executive-row">
@@ -856,7 +809,7 @@
                     <span class="position-badge badge-secondary">Secretary</span>
                   </div>
                   <div class="executive-col col-name">Dr. Priya Menon</div>
-                  <div class="executive-col col-affiliation">NSM School</div>
+                  <div class="executive-col col-affiliation">NSMOSA School</div>
                 </div>
 
                 <div class="executive-row">
@@ -864,7 +817,7 @@
                     <span class="position-badge badge-primary">Principal</span>
                   </div>
                   <div class="executive-col col-name">Dr. Suresh Iyer</div>
-                  <div class="executive-col col-affiliation">NSM School</div>
+                  <div class="executive-col col-affiliation">NSMOSA School</div>
                 </div>
 
                 <div class="executive-row">
@@ -872,7 +825,7 @@
                     <span class="position-badge badge-secondary">Deputy Principal</span>
                   </div>
                   <div class="executive-col col-name">Dr. Anjali Sharma</div>
-                  <div class="executive-col col-affiliation">NSM School</div>
+                  <div class="executive-col col-affiliation">NSMOSA School</div>
                 </div>
 
                 <div class="executive-row">
@@ -880,7 +833,7 @@
                     <span class="position-badge badge-primary">Director</span>
                   </div>
                   <div class="executive-col col-name">Prof. Ramesh Nair</div>
-                  <div class="executive-col col-affiliation">NSM School</div>
+                  <div class="executive-col col-affiliation">NSMOSA School</div>
                 </div>
 
                 <div class="executive-row highlight-row">
@@ -962,85 +915,15 @@
           <div id="chapters-section" class="about-subsection">
             <h2 class="page-title">Our Chapter Presence</h2>
             <p class="page-text">
-              Explore our extensive network of alumni chapters across India and around the world. Connect with fellow NSM alumni in your region.
+              Explore our extensive network of alumni chapters. Connect with fellow NSMOSA alumni in your region.
             </p>
             
-            <div class="chapters-category-container">
-              <!-- India Chapters -->
-              <div class="chapter-category-card" id="india-chapters-card">
-                <div class="chapter-card-image-wrapper">
-                  <img 
-                    src="https://images.unsplash.com/photo-1587474260584-136574528ed5?w=1920&q=100&auto=format&fit=crop" 
-                    alt="India Gate, New Delhi"
-                    class="chapter-card-image"
-                  />
-                  <div class="chapter-card-overlay">
-                    <h3 class="chapter-card-title">India</h3>
-                    <p class="chapter-card-subtitle">Connect with chapters across India</p>
-                  </div>
-                </div>
-                <div class="chapter-card-content">
-                  <button class="chapter-view-btn" data-chapter-type="india">
-                    <span>View Indian Chapters</span>
-                    <i class="fas fa-arrow-right"></i>
-                  </button>
-                </div>
+            <div class="coming-soon-container" style="margin: 60px 0; padding: 60px 20px;">
+              <div class="coming-soon-icon">
+                <i class="fas fa-clock"></i>
               </div>
-
-              <!-- International Chapters -->
-              <div class="chapter-category-card" id="international-chapters-card">
-                <div class="chapter-card-image-wrapper">
-                  <img 
-                    src="https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=1920&q=100&auto=format&fit=crop" 
-                    alt="Statue of Liberty"
-                    class="chapter-card-image"
-                  />
-                  <div class="chapter-card-overlay">
-                    <h3 class="chapter-card-title">International</h3>
-                    <p class="chapter-card-subtitle">Connect with global chapters</p>
-                  </div>
-                </div>
-                <div class="chapter-card-content">
-                  <button class="chapter-view-btn" data-chapter-type="international">
-                    <span>View International Chapters</span>
-                    <i class="fas fa-arrow-right"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- India Chapters List (Hidden until login) -->
-            <div id="india-chapters-list" class="chapters-list-section" style="display: none;">
-              <div class="chapters-list-header">
-                <button class="chapters-back-btn" onclick="showChapterCategories()">
-                  <i class="fas fa-arrow-left"></i> Back to Categories
-                </button>
-                <h3 class="chapters-list-title">Indian Chapters</h3>
-              </div>
-              <div class="coming-soon-container">
-                <div class="coming-soon-icon">
-                  <i class="fas fa-clock"></i>
-                </div>
-                <h2 class="coming-soon-title">Coming Soon</h2>
-                <p class="coming-soon-text">We're working on bringing you the Indian Chapters section. Stay tuned for updates!</p>
-              </div>
-            </div>
-
-            <!-- International Chapters List (Hidden until login) -->
-            <div id="international-chapters-list" class="chapters-list-section" style="display: none;">
-              <div class="chapters-list-header">
-                <button class="chapters-back-btn" onclick="showChapterCategories()">
-                  <i class="fas fa-arrow-left"></i> Back to Categories
-                </button>
-                <h3 class="chapters-list-title">International Chapters</h3>
-              </div>
-              <div class="coming-soon-container">
-                <div class="coming-soon-icon">
-                  <i class="fas fa-clock"></i>
-                </div>
-                <h2 class="coming-soon-title">Coming Soon</h2>
-                <p class="coming-soon-text">We're working on bringing you the International Chapters section. Stay tuned for updates!</p>
-              </div>
+              <h2 class="coming-soon-title">Coming Soon</h2>
+              <p class="coming-soon-text">We're working on bringing you the Alumni Chapters section. Stay tuned for updates!</p>
             </div>
 
             <!-- Login Required Modal -->
@@ -1072,7 +955,7 @@
                 
                 <div class="benefits-detailed-content">
                   <p class="page-text">
-                    The NSM Old Students Association represents a vibrant community of graduates who have walked the hallowed halls of N.St.Mathew's Public School. Our association serves as a bridge connecting past, present, and future generations of NSMites, fostering lifelong relationships and creating opportunities for mutual growth and development.
+                    The NSMOSA Old Students Association represents a vibrant community of graduates who have walked the hallowed halls of N.St.Mathew's Public School. Our association serves as a bridge connecting past, present, and future generations of NSMOSAites, fostering lifelong relationships and creating opportunities for mutual growth and development.
                   </p>
                   
                   <p class="page-text">
@@ -1080,7 +963,7 @@
                   </p>
                   
                   <p class="page-text">
-                    Beyond professional benefits, our association organizes annual reunions, cultural events, and social gatherings that celebrate the rich heritage and shared memories of NSM. These events provide opportunities to reconnect with old friends, make new connections, and relive the cherished moments of your school days.
+                    Beyond professional benefits, our association organizes annual reunions, cultural events, and social gatherings that celebrate the rich heritage and shared memories of NSMOSA. These events provide opportunities to reconnect with old friends, make new connections, and relive the cherished moments of your school days.
                   </p>
                   
                   <p class="page-text">
@@ -1088,7 +971,7 @@
                   </p>
                   
                   <p class="page-text">
-                    Join us in building a stronger NSM community where every graduate can thrive, contribute, and continue the legacy of excellence that defines our institution. Together, we can create a network that supports each other's success and strengthens the bonds that make NSM more than just a school—it's a family.
+                    Join us in building a stronger NSMOSA community where every graduate can thrive, contribute, and continue the legacy of excellence that defines our institution. Together, we can create a network that supports each other's success and strengthens the bonds that make NSMOSA more than just a school—it's a family.
                   </p>
                 </div>
               </div>
@@ -1190,7 +1073,7 @@
 
           <!-- NSM Annual Reports Section -->
           <div id="annual-reports-section" class="about-subsection">
-            <h2 class="page-title">NSM Annual Reports</h2>
+            <h2 class="page-title">NSMOSA Annual Reports</h2>
             
             <div class="coming-soon-container">
               <div class="coming-soon-content">
@@ -1220,7 +1103,7 @@
               <!-- Report Card 2: NSM Centenary Awards -->
               <div class="report-card">
                 <div class="report-card-content">
-                  <h3 class="report-title">NSM - Centenary Awards 2025 - Nominations Invited</h3>
+                  <h3 class="report-title">NSMOSA - Centenary Awards 2025 - Nominations Invited</h3>
                   <a href="#" class="report-view-link">View More</a>
                 </div>
               </div>
@@ -1342,7 +1225,7 @@
 
         <!-- Connect Page Content -->
         <div id="page-connect" class="page-section">
-          <h2 class="page-title">NSM Alumni Connect</h2>
+          <h2 class="page-title">NSMOSA Alumni Connect</h2>
           
           <!-- Connect Tabs -->
           <div class="gallery-tabs connect-tabs">
@@ -1358,12 +1241,6 @@
             <button class="gallery-tab" data-connect-type="business-directory">
               <i class="fas fa-building"></i> Business Directory
             </button>
-            <button class="gallery-tab" data-connect-type="campus-events">
-              <i class="fas fa-graduation-cap"></i> Campus Events
-            </button>
-            <button class="gallery-tab" data-connect-type="volunteering">
-              <i class="fas fa-hands-helping"></i> Volunteering
-            </button>
             <button class="gallery-tab" data-connect-type="how-to-give">
               <i class="fas fa-donate"></i> How to Give
             </button>
@@ -1375,54 +1252,111 @@
           <!-- My Profile Section -->
           <div id="profile-connect-section" class="connect-section active">
             <h3 class="page-subtitle">My Profile</h3>
-            <div class="profile-container">
-              <div class="profile-header">
-                <div class="profile-photo-wrapper">
-                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=90&auto=format&fit=crop" alt="Profile Photo" class="profile-photo" />
-                </div>
-                <div class="profile-info">
-                  <h2 class="profile-name">Dr. Rajesh Kumar</h2>
-                  <p class="profile-title">Class of 2005 | Computer Science</p>
-                  <p class="profile-location"><i class="fas fa-map-marker-alt"></i> Bangalore, India</p>
-                  <p class="profile-current-role">Senior Software Engineer at Tech Solutions Inc.</p>
-                </div>
-              </div>
-              <div class="profile-details">
-                <div class="profile-detail-card">
-                  <h4><i class="fas fa-envelope"></i> Email</h4>
-                  <p>rajesh.kumar@email.com</p>
-                </div>
-                <div class="profile-detail-card">
-                  <h4><i class="fas fa-phone"></i> Phone</h4>
-                  <p>+91 98765 43210</p>
-                </div>
-                <div class="profile-detail-card">
-                  <h4><i class="fas fa-linkedin"></i> LinkedIn</h4>
-                  <p>linkedin.com/in/rajeshkumar</p>
-                </div>
-                <div class="profile-detail-card">
-                  <h4><i class="fas fa-briefcase"></i> Current Position</h4>
-                  <p>Senior Software Engineer | Tech Solutions Inc. | 2018 - Present</p>
-                </div>
-                <div class="profile-detail-card">
-                  <h4><i class="fas fa-graduation-cap"></i> Education</h4>
-                  <p>B.Tech Computer Science, NSM School (2001-2005)</p>
-                  <p>M.Tech Software Engineering, IIT Delhi (2005-2007)</p>
-                </div>
-                <div class="profile-detail-card">
-                  <h4><i class="fas fa-trophy"></i> Achievements</h4>
-                  <p>• NSM Outstanding Alumni Award 2020</p>
-                  <p>• Published 15 research papers in international journals</p>
-                  <p>• Mentor to 20+ NSM students</p>
+            <p class="page-text" style="margin-bottom: 30px;">Update your profile information. You can add or edit your details at any time.</p>
+            
+            <form id="user-profile-form" class="profile-edit-form">
+              <div class="profile-form-section">
+                <h4 class="form-section-title"><i class="fas fa-user-circle"></i> Profile Picture</h4>
+                <div class="profile-picture-section">
+                  <div class="profile-picture-wrapper" id="profile-picture-wrapper">
+                    <img id="profile-picture-preview" src="" alt="Profile Picture" class="profile-picture-preview" style="display: none;" />
+                    <div class="profile-picture-placeholder" id="profile-picture-placeholder">
+                      <i class="fas fa-camera"></i>
+                      <span>Click to add profile picture</span>
+                    </div>
+                    <input type="hidden" id="profile-picture-data" name="profilePicture" />
+                  </div>
+                  <p class="profile-picture-hint">Click above to open camera and scan your face</p>
                 </div>
               </div>
-            </div>
+
+              <div class="profile-form-section">
+                <h4 class="form-section-title"><i class="fas fa-user"></i> Basic Information</h4>
+                <div class="profile-form-grid">
+                  <div class="profile-form-group">
+                    <label for="profile-fullname">
+                      Full Name <span class="required">*</span>
+                    </label>
+                    <input type="text" id="profile-fullname" name="fullname" class="profile-input" placeholder="Enter your full name" />
+                  </div>
+                  <div class="profile-form-group">
+                    <label for="profile-email">
+                      Email Address <span class="required">*</span>
+                    </label>
+                    <input type="email" id="profile-email" name="email" class="profile-input" placeholder="your.email@example.com" />
+                  </div>
+                  <div class="profile-form-group">
+                    <label for="profile-phone">
+                      Phone Number
+                    </label>
+                    <input type="tel" id="profile-phone" name="phone" class="profile-input" placeholder="+91 98765 43210" />
+                  </div>
+                  <div class="profile-form-group">
+                    <label for="profile-location">
+                      Location
+                    </label>
+                    <input type="text" id="profile-location" name="location" class="profile-input" placeholder="City, Country" />
+                  </div>
+                  <div class="profile-form-group">
+                    <label for="profile-graduation">
+                      Graduation Year
+                    </label>
+                    <input type="text" id="profile-graduation" name="graduation" class="profile-input" placeholder="e.g., 2005" maxlength="4" pattern="[0-9]{4}" />
+                  </div>
+                  <div class="profile-form-group">
+                    <label for="profile-course">
+                      Course/Department
+                    </label>
+                    <input type="text" id="profile-course" name="course" class="profile-input" placeholder="e.g., Computer Science" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="profile-form-section">
+                <h4 class="form-section-title"><i class="fas fa-briefcase"></i> Professional Information</h4>
+                <div class="profile-form-group">
+                  <label for="profile-position">
+                    Current Position
+                  </label>
+                  <input type="text" id="profile-position" name="position" class="profile-input" placeholder="e.g., Senior Software Engineer at Tech Solutions Inc." />
+                </div>
+              </div>
+
+              <div class="profile-form-section">
+                <h4 class="form-section-title"><i class="fas fa-graduation-cap"></i> Education</h4>
+                <div class="profile-form-group">
+                  <label for="profile-education">
+                    Education Details
+                  </label>
+                  <textarea id="profile-education" name="education" class="profile-textarea" rows="4" placeholder="Enter your education details (one per line)&#10;e.g., B.Tech Computer Science, NSMOSA School (2001-2005)&#10;M.Tech Software Engineering, IIT Delhi (2005-2007)"></textarea>
+                </div>
+              </div>
+
+              <div class="profile-form-section">
+                <h4 class="form-section-title"><i class="fas fa-trophy"></i> Achievements</h4>
+                <div class="profile-form-group">
+                  <label for="profile-achievements">
+                    Achievements
+                  </label>
+                  <textarea id="profile-achievements" name="achievements" class="profile-textarea" rows="4" placeholder="Enter your achievements (one per line)&#10;e.g., • NSMOSA Outstanding Alumni Award 2020&#10;• Published 15 research papers in international journals"></textarea>
+                </div>
+              </div>
+
+              <div class="profile-form-actions">
+                <button type="submit" class="profile-save-btn">
+                  <i class="fas fa-save"></i> Save Profile
+                </button>
+                <button type="button" class="profile-cancel-btn" id="profile-cancel-btn">
+                  <i class="fas fa-times"></i> Cancel
+                </button>
+              </div>
+            </form>
           </div>
 
           <!-- Alumni Event Section -->
           <div id="alumni-event-connect-section" class="connect-section">
             <h3 class="page-subtitle">Alumni Events</h3>
-            <p class="page-text">Join our upcoming alumni events and reconnect with your batchmates and the NSM community.</p>
+            <p class="page-text">Join our upcoming alumni events and reconnect with your batchmates and the NSMOSA community.</p>
             <div class="events-grid">
               <div class="event-card">
                 <div class="event-image-wrapper">
@@ -1433,10 +1367,10 @@
                   </div>
                 </div>
                 <div class="event-content">
-                  <h4 class="event-title">NSM Alumni Annual Meet 2025</h4>
-                  <p class="event-location"><i class="fas fa-map-marker-alt"></i> NSM School Auditorium</p>
+                  <h4 class="event-title">NSMOSA Alumni Annual Meet 2025</h4>
+                  <p class="event-location"><i class="fas fa-map-marker-alt"></i> NSMOSA School Auditorium</p>
                   <p class="event-time"><i class="fas fa-clock"></i> 10:00 AM - 6:00 PM</p>
-                  <p class="event-description">Join us for a day of networking, reminiscing, and celebrating our shared NSM journey. Food, music, and memories await!</p>
+                  <p class="event-description">Join us for a day of networking, reminiscing, and celebrating our shared NSMOSA journey. Food, music, and memories await!</p>
                   <a href="#" class="event-btn">Register Now</a>
                 </div>
               </div>
@@ -1449,10 +1383,10 @@
                   </div>
                 </div>
                 <div class="event-content">
-                  <h4 class="event-title">NSM Tech Summit 2025</h4>
-                  <p class="event-location"><i class="fas fa-map-marker-alt"></i> NSM School Conference Hall</p>
+                  <h4 class="event-title">NSMOSA Tech Summit 2025</h4>
+                  <p class="event-location"><i class="fas fa-map-marker-alt"></i> NSMOSA School Conference Hall</p>
                   <p class="event-time"><i class="fas fa-clock"></i> 9:00 AM - 5:00 PM</p>
-                  <p class="event-description">A day dedicated to technology trends, innovations, and networking opportunities for NSM tech alumni.</p>
+                  <p class="event-description">A day dedicated to technology trends, innovations, and networking opportunities for NSMOSA tech alumni.</p>
                   <a href="#" class="event-btn">Register Now</a>
                 </div>
               </div>
@@ -1481,10 +1415,10 @@
                   </div>
                 </div>
                 <div class="event-content">
-                  <h4 class="event-title">NSM Career Fair 2025</h4>
-                  <p class="event-location"><i class="fas fa-map-marker-alt"></i> NSM School Sports Complex</p>
+                  <h4 class="event-title">NSMOSA Career Fair 2025</h4>
+                  <p class="event-location"><i class="fas fa-map-marker-alt"></i> NSMOSA School Sports Complex</p>
                   <p class="event-time"><i class="fas fa-clock"></i> 10:00 AM - 4:00 PM</p>
-                  <p class="event-description">Connect with top employers and explore career opportunities. Open to all NSM alumni and current students.</p>
+                  <p class="event-description">Connect with top employers and explore career opportunities. Open to all NSMOSA alumni and current students.</p>
                   <a href="#" class="event-btn">Register Now</a>
                 </div>
               </div>
@@ -1495,7 +1429,7 @@
           <!-- Alumni Directory Section -->
           <div id="alumni-directory-connect-section" class="connect-section">
             <h3 class="page-subtitle">Alumni Directory</h3>
-            <p class="page-text">Connect with NSM alumni from around the world. Search by name, batch, location, or industry.</p>
+            <p class="page-text">Connect with NSMOSA alumni from around the world. Search by name, batch, location, or industry.</p>
             <div class="directory-search">
               <input type="text" placeholder="Search by name, batch, location, or industry..." class="directory-search-input" />
               <button class="directory-search-btn"><i class="fas fa-search"></i> Search</button>
@@ -1555,159 +1489,12 @@
           <!-- Business Directory Section -->
           <div id="business-directory-connect-section" class="connect-section">
             <h3 class="page-subtitle">Business Directory</h3>
-            <p class="page-text">Discover businesses and services owned by NSM alumni. Support your fellow alumni entrepreneurs!</p>
-            <div class="business-grid">
-              <div class="business-card">
-                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=90&auto=format&fit=crop" alt="Business" class="business-image" />
-                <div class="business-content">
-                  <h4 class="business-name">Tech Solutions Inc.</h4>
-                  <p class="business-owner">Owner: Dr. Rajesh Kumar (Class of 2005)</p>
-                  <p class="business-category"><i class="fas fa-tag"></i> Software Development</p>
-                  <p class="business-location"><i class="fas fa-map-marker-alt"></i> Bangalore, India</p>
-                  <p class="business-description">Leading provider of enterprise software solutions and cloud services.</p>
-                  <a href="#" class="business-link">Visit Website</a>
-                </div>
+            <div class="coming-soon-container" style="margin: 60px 0; padding: 60px 20px;">
+              <div class="coming-soon-icon">
+                <i class="fas fa-clock"></i>
               </div>
-              <div class="business-card">
-                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=90&auto=format&fit=crop" alt="Business" class="business-image" />
-                <div class="business-content">
-                  <h4 class="business-name">EduTech Innovations</h4>
-                  <p class="business-owner">Owner: Priya Sharma (Class of 2008)</p>
-                  <p class="business-category"><i class="fas fa-tag"></i> Education Technology</p>
-                  <p class="business-location"><i class="fas fa-map-marker-alt"></i> Delhi, India</p>
-                  <p class="business-description">Revolutionary e-learning platforms for schools and universities.</p>
-                  <a href="#" class="business-link">Visit Website</a>
-                </div>
-              </div>
-              <div class="business-card">
-                <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=600&q=90&auto=format&fit=crop" alt="Business" class="business-image" />
-                <div class="business-content">
-                  <h4 class="business-name">Data Analytics Corp</h4>
-                  <p class="business-owner">Owner: Amit Kumar (Class of 2010)</p>
-                  <p class="business-category"><i class="fas fa-tag"></i> Data Analytics</p>
-                  <p class="business-location"><i class="fas fa-map-marker-alt"></i> Hyderabad, India</p>
-                  <p class="business-description">Advanced data analytics and business intelligence solutions.</p>
-                  <a href="#" class="business-link">Visit Website</a>
-                </div>
-              </div>
-              <div class="business-card">
-                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=90&auto=format&fit=crop" alt="Business" class="business-image" />
-                <div class="business-content">
-                  <h4 class="business-name">Green Energy Solutions</h4>
-                  <p class="business-owner">Owner: Ravi Singh (Class of 2007)</p>
-                  <p class="business-category"><i class="fas fa-tag"></i> Renewable Energy</p>
-                  <p class="business-location"><i class="fas fa-map-marker-alt"></i> Mumbai, India</p>
-                  <p class="business-description">Sustainable energy solutions for residential and commercial use.</p>
-                  <a href="#" class="business-link">Visit Website</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Campus Events Section -->
-          <div id="campus-events-connect-section" class="connect-section">
-            <h3 class="page-subtitle">Campus Events</h3>
-            <p class="page-text">Stay updated with events happening at NSM School. Alumni are welcome to attend and participate!</p>
-            <div class="campus-events-grid">
-              <div class="campus-event-card">
-                <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&q=90&auto=format&fit=crop" alt="Campus Event" class="campus-event-image" />
-                <div class="campus-event-content">
-                  <div class="campus-event-date">
-                    <span class="event-day">20</span>
-                    <span class="event-month">MAR</span>
-                  </div>
-                  <h4 class="campus-event-title">Annual Science Exhibition</h4>
-                  <p class="campus-event-location"><i class="fas fa-map-marker-alt"></i> NSM School Science Block</p>
-                  <p class="campus-event-description">Showcase of innovative projects by NSM students. Alumni welcome to judge and mentor.</p>
-                  <a href="#" class="campus-event-btn">Learn More</a>
-                </div>
-              </div>
-              <div class="campus-event-card">
-                <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=90&auto=format&fit=crop" alt="Campus Event" class="campus-event-image" />
-                <div class="campus-event-content">
-                  <div class="campus-event-date">
-                    <span class="event-day">05</span>
-                    <span class="event-month">APR</span>
-                  </div>
-                  <h4 class="campus-event-title">Industry-Academia Conclave</h4>
-                  <p class="campus-event-location"><i class="fas fa-map-marker-alt"></i> NSM School Auditorium</p>
-                  <p class="campus-event-description">Interactive session between industry leaders and students. Alumni speakers invited.</p>
-                  <a href="#" class="campus-event-btn">Learn More</a>
-                </div>
-              </div>
-              <div class="campus-event-card">
-                <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&q=90&auto=format&fit=crop" alt="Campus Event" class="campus-event-image" />
-                <div class="campus-event-content">
-                  <div class="campus-event-date">
-                    <span class="event-day">18</span>
-                    <span class="event-month">APR</span>
-                  </div>
-                  <h4 class="campus-event-title">Cultural Festival - Spring Fest 2025</h4>
-                  <p class="campus-event-location"><i class="fas fa-map-marker-alt"></i> NSM School Grounds</p>
-                  <p class="campus-event-description">Three-day cultural extravaganza with music, dance, and drama performances.</p>
-                  <a href="#" class="campus-event-btn">Learn More</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Volunteering Work Section -->
-          <div id="volunteering-connect-section" class="connect-section">
-            <h3 class="page-subtitle">Volunteering Opportunities</h3>
-            <p class="page-text">Give back to the NSM community by volunteering your time and expertise. Make a difference in students' lives!</p>
-            <div class="volunteering-grid">
-              <div class="volunteering-card">
-                <div class="volunteering-icon">
-                  <i class="fas fa-chalkboard-teacher"></i>
-                </div>
-                <h4>Mentor Students</h4>
-                <p class="volunteering-description">Guide current NSM students in their career choices and professional development. Share your experiences and insights.</p>
-                <ul class="volunteering-details">
-                  <li>Time commitment: 2-4 hours/month</li>
-                  <li>Format: Online or in-person sessions</li>
-                  <li>Focus areas: Career guidance, technical skills, soft skills</li>
-                </ul>
-                <a href="#" class="volunteering-btn">Sign Up as Mentor</a>
-              </div>
-              <div class="volunteering-card">
-                <div class="volunteering-icon">
-                  <i class="fas fa-microphone"></i>
-                </div>
-                <h4>Guest Lecturer</h4>
-                <p class="volunteering-description">Share your industry knowledge by delivering guest lectures on topics relevant to your expertise.</p>
-                <ul class="volunteering-details">
-                  <li>Time commitment: 1-2 hours per session</li>
-                  <li>Format: In-person or virtual</li>
-                  <li>Topics: Industry trends, case studies, technical skills</li>
-                </ul>
-                <a href="#" class="volunteering-btn">Offer to Speak</a>
-              </div>
-              <div class="volunteering-card">
-                <div class="volunteering-icon">
-                  <i class="fas fa-hands-helping"></i>
-                </div>
-                <h4>Event Organizer</h4>
-                <p class="volunteering-description">Help organize alumni events, reunions, and networking sessions in your city or region.</p>
-                <ul class="volunteering-details">
-                  <li>Time commitment: Varies by event</li>
-                  <li>Role: Planning, coordination, outreach</li>
-                  <li>Location: Your city or region</li>
-                </ul>
-                <a href="#" class="volunteering-btn">Join Organizing Committee</a>
-              </div>
-              <div class="volunteering-card">
-                <div class="volunteering-icon">
-                  <i class="fas fa-laptop-code"></i>
-                </div>
-                <h4>Skill Development Workshop</h4>
-                <p class="volunteering-description">Conduct workshops to help students develop technical and professional skills.</p>
-                <ul class="volunteering-details">
-                  <li>Time commitment: 4-8 hours per workshop</li>
-                  <li>Format: Hands-on training sessions</li>
-                  <li>Topics: Programming, design, communication, leadership</li>
-                </ul>
-                <a href="#" class="volunteering-btn">Propose Workshop</a>
-              </div>
+              <h2 class="coming-soon-title">Coming Soon</h2>
+              <p class="coming-soon-text">We're working on bringing you the Business Directory section. Stay tuned for updates!</p>
             </div>
           </div>
 
@@ -4220,430 +4007,264 @@
           </div>
         </div>
 
-        <!-- Donate Page Content -->
-        <div id="page-donate" class="page-section">
-          <!-- Make a Difference Today Section -->
-          <div class="donate-section-box">
-            <div class="donate-hero-section">
-            <div class="donate-hero-particles"></div>
-            <div class="donate-hero-overlay"></div>
-            <div class="donate-hero-content">
-              <div class="hero-icon-wrapper">
-                <div class="hero-icon-glow"></div>
-                <i class="fas fa-heart hero-main-icon"></i>
-                <div class="hero-icon-rings">
-                  <div class="ring ring-1"></div>
-                  <div class="ring ring-2"></div>
-                  <div class="ring ring-3"></div>
+        <!-- Be a Member Page Content -->
+        <div id="page-member" class="page-section">
+          <!-- Modern Professional Hero Section -->
+          <div class="member-hero-section">
+            <div class="member-hero-background"></div>
+            <div class="member-hero-content">
+              <div class="member-hero-badge">
+                <i class="fas fa-star"></i>
+                <span>Exclusive Membership</span>
+              </div>
+              <h1 class="member-hero-title">
+                Join the <span class="highlight-text">NSMOSA</span> Community
+              </h1>
+              <p class="member-hero-description">
+                Become part of an elite network of alumni, connect with fellow graduates, and contribute to the legacy of excellence. Your membership opens doors to exclusive events, networking opportunities, and lifelong connections.
+              </p>
+              <div class="member-benefits-preview">
+                <div class="benefit-item">
+                  <i class="fas fa-users"></i>
+                  <span>Network Access</span>
+                </div>
+                <div class="benefit-item">
+                  <i class="fas fa-calendar-alt"></i>
+                  <span>Exclusive Events</span>
+                </div>
+                <div class="benefit-item">
+                  <i class="fas fa-graduation-cap"></i>
+                  <span>Lifetime Membership</span>
                 </div>
               </div>
-              <h1 class="donate-hero-title">
-                <span class="title-line-1">Make a</span>
-                <span class="title-line-2">Difference</span>
-                <span class="title-line-3">Today</span>
-              </h1>
-              <p class="donate-hero-subtitle">Your contribution helps shape the future of NSM students and strengthens our community. Every donation matters, every rupee counts towards building a better tomorrow.</p>
-              
-              <div class="donate-impact-stats">
-                <div class="impact-stat-card">
-                  <div class="stat-card-glow"></div>
-                  <div class="stat-icon-wrapper">
-                    <div class="stat-icon-bg"></div>
-                    <i class="fas fa-rupee-sign stat-icon"></i>
-                  </div>
-                  <div class="stat-number" data-target="50">₹50L+</div>
-                  <div class="stat-label">Raised This Year</div>
-                  <div class="stat-progress">
-                    <div class="stat-progress-bar" style="width: 75%">
-                      <div class="stat-progress-shine"></div>
-                    </div>
-                  </div>
-                  <div class="stat-card-decoration"></div>
+            </div>
+          </div>
+
+          <!-- Professional Registration Section -->
+          <div class="member-registration-container">
+            <div class="member-form-wrapper">
+              <div class="member-form-header">
+                <div class="form-header-icon">
+                  <i class="fas fa-id-card"></i>
                 </div>
-                <div class="impact-stat-card">
-                  <div class="stat-card-glow"></div>
-                  <div class="stat-icon-wrapper">
-                    <div class="stat-icon-bg"></div>
-                    <i class="fas fa-user-graduate stat-icon"></i>
-                  </div>
-                  <div class="stat-number" data-target="500">500+</div>
-                  <div class="stat-label">Students Supported</div>
-                  <div class="stat-progress">
-                    <div class="stat-progress-bar" style="width: 80%">
-                      <div class="stat-progress-shine"></div>
-                    </div>
-                  </div>
-                  <div class="stat-card-decoration"></div>
-                </div>
-                <div class="impact-stat-card">
-                  <div class="stat-card-glow"></div>
-                  <div class="stat-icon-wrapper">
-                    <div class="stat-icon-bg"></div>
-                    <i class="fas fa-users stat-icon"></i>
-                  </div>
-                  <div class="stat-number" data-target="1000">1000+</div>
-                  <div class="stat-label">Generous Donors</div>
-                  <div class="stat-progress">
-                    <div class="stat-progress-bar" style="width: 90%">
-                      <div class="stat-progress-shine"></div>
-                    </div>
-                  </div>
-                  <div class="stat-card-decoration"></div>
+                <div class="form-header-text">
+                  <h2 class="member-form-title">Membership Registration</h2>
+                  <p class="member-form-subtitle">Complete your details to join NSMOSA</p>
                 </div>
               </div>
 
-              <div class="donate-goal-banner">
-                <div class="goal-banner-glow"></div>
-                <div class="goal-content">
-                  <div class="goal-icon-wrapper">
-                    <i class="fas fa-bullseye goal-icon"></i>
-                  </div>
-                  <span class="goal-text">Our Goal: ₹75L by End of Year</span>
-                  <div class="goal-progress-container">
-                    <div class="goal-progress-bar">
-                      <div class="goal-progress-fill" style="width: 67%">
-                        <div class="goal-progress-shine"></div>
+              <form id="member-registration-form" class="member-registration-form">
+                <div class="member-form-section">
+                  <h3 class="section-label">
+                    <i class="fas fa-user-circle"></i>
+                    Personal Information
+                  </h3>
+                  
+                  <div class="member-form-grid">
+                    <div class="member-form-group">
+                      <label for="member-name" class="member-label">
+                        Full Name <span class="required-star">*</span>
+                      </label>
+                      <div class="member-input-wrapper">
+                        <i class="fas fa-user input-icon"></i>
+                        <input 
+                          type="text" 
+                          id="member-name" 
+                          name="name" 
+                          class="member-input" 
+                          placeholder="Enter your full name"
+                          required 
+                        />
                       </div>
                     </div>
-                    <span class="goal-percentage">67%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          </div>
 
-          <!-- Impact in Action Section -->
-          <div class="donate-section-box">
-            <div class="donate-impact-stories">
-            <div class="stories-header">
-              <h2 class="stories-title">Your Impact in Action</h2>
-              <p class="stories-subtitle">See how your donations are transforming lives and building futures</p>
-            </div>
-            <div class="stories-grid">
-              <div class="story-card">
-                <div class="story-icon-wrapper">
-                  <i class="fas fa-graduation-cap story-icon"></i>
-                </div>
-                <h3>Scholarships & Education</h3>
-                <p>Supporting bright students who need financial assistance to pursue their dreams. Your donations help break financial barriers and create opportunities.</p>
-                <div class="story-impact">
-                  <span class="impact-number">250+</span>
-                  <span class="impact-text">Students Benefited</span>
-                </div>
-              </div>
-              <div class="story-card">
-                <div class="story-icon-wrapper">
-                  <i class="fas fa-building story-icon"></i>
-                </div>
-                <h3>Infrastructure Development</h3>
-                <p>Building modern facilities, labs, and enhancing the learning environment. Creating spaces where innovation and excellence thrive.</p>
-                <div class="story-impact">
-                  <span class="impact-number">15+</span>
-                  <span class="impact-text">Projects Completed</span>
-                </div>
-              </div>
-              <div class="story-card">
-                <div class="story-icon-wrapper">
-                  <i class="fas fa-book story-icon"></i>
-                </div>
-                <h3>Resources & Equipment</h3>
-                <p>Providing books, equipment, and educational materials for students. Ensuring every student has access to quality learning resources.</p>
-                <div class="story-impact">
-                  <span class="impact-number">5000+</span>
-                  <span class="impact-text">Resources Provided</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          </div>
+                    <div class="member-form-group">
+                      <label for="member-email" class="member-label">
+                        Email Address <span class="required-star">*</span>
+                      </label>
+                      <div class="member-input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input 
+                          type="email" 
+                          id="member-email" 
+                          name="email" 
+                          class="member-input" 
+                          placeholder="your.email@example.com"
+                          required 
+                        />
+                      </div>
+                    </div>
 
-          <!-- Start Your Donation Journey Section -->
-          <div class="donate-section-box">
-            <div class="donate-forms-container">
-            <div class="forms-header">
-              <h2 class="forms-main-title">Start Your Donation Journey</h2>
-              <p class="forms-subtitle">Choose your category and make a meaningful contribution</p>
-            </div>
-            <div class="donate-tabs">
-              <button class="donate-tab-btn active" data-donate-tab="nsm-form">
-                <div class="tab-btn-content">
-                  <i class="fas fa-user-graduate"></i>
-                  <span>NSM Old Students / Alumni</span>
-                </div>
-                <div class="tab-btn-indicator"></div>
-              </button>
-              <button class="donate-tab-btn" data-donate-tab="general-form">
-                <div class="tab-btn-content">
-                  <i class="fas fa-users"></i>
-                  <span>General Public</span>
-                </div>
-                <div class="tab-btn-indicator"></div>
-              </button>
-            </div>
+                    <div class="member-form-group">
+                      <label for="member-phone" class="member-label">
+                        Phone Number <span class="required-star">*</span>
+                      </label>
+                      <div class="member-input-wrapper">
+                        <i class="fas fa-phone input-icon"></i>
+                        <input 
+                          type="tel" 
+                          id="member-phone" 
+                          name="phone" 
+                          class="member-input" 
+                          placeholder="+91 98765 43210"
+                          required 
+                        />
+                      </div>
+                    </div>
 
-            <!-- NSM Alumni Form -->
-            <div id="nsm-donate-form" class="donate-form-section active">
-              <form id="nsmForm" class="donate-form">
-                <div class="form-header-decoration"></div>
-                <h3 class="form-section-title">
-                  <span class="title-icon"><i class="fas fa-user-graduate"></i></span>
-                  <span class="title-text">NSM Alumni Donation Form</span>
-                </h3>
-                <p class="form-description">Thank you for choosing to give back to your alma mater. Your support makes a lasting impact.</p>
-                
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="nsm-name">
-                      <i class="fas fa-user"></i> Full Name <span class="required">*</span>
-                    </label>
-                    <input type="text" id="nsm-name" name="name" class="form-input" required />
-                  </div>
-                  <div class="form-group">
-                    <label for="nsm-email">
-                      <i class="fas fa-envelope"></i> Email <span class="required">*</span>
-                    </label>
-                    <input type="email" id="nsm-email" name="email" class="form-input" required />
+                    <div class="member-form-group">
+                      <label for="member-graduation" class="member-label">
+                        Graduation Year
+                      </label>
+                      <div class="member-input-wrapper">
+                        <i class="fas fa-graduation-cap input-icon"></i>
+                        <input 
+                          type="text" 
+                          id="member-graduation" 
+                          name="graduation" 
+                          class="member-input" 
+                          placeholder="e.g., 2020"
+                          maxlength="4"
+                          pattern="[0-9]{4}"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="nsm-phone">
-                      <i class="fas fa-phone"></i> Phone Number <span class="required">*</span>
-                    </label>
-                    <input type="tel" id="nsm-phone" name="phone" class="form-input" required />
+                <!-- Registration Fee Section -->
+                <div class="member-fee-section">
+                  <div class="fee-card">
+                    <div class="fee-card-header">
+                      <i class="fas fa-tag"></i>
+                      <h3 class="fee-title">Membership Fee</h3>
+                    </div>
+                    <div class="fee-card-body">
+                      <div class="fee-amount-display">
+                        <span class="fee-currency">₹</span>
+                        <span class="fee-value">5,000</span>
+                      </div>
+                      <p class="fee-description">One-time registration fee for lifetime membership</p>
+                      <div class="fee-benefits">
+                        <div class="fee-benefit-item">
+                          <i class="fas fa-check-circle"></i>
+                          <span>Lifetime Access</span>
+                        </div>
+                        <div class="fee-benefit-item">
+                          <i class="fas fa-check-circle"></i>
+                          <span>All Events Included</span>
+                        </div>
+                        <div class="fee-benefit-item">
+                          <i class="fas fa-check-circle"></i>
+                          <span>Network Benefits</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="form-group">
-                    <label for="nsm-batch">
-                      <i class="fas fa-graduation-cap"></i> Graduation Year
-                    </label>
-                    <input type="text" id="nsm-batch" name="batch" class="form-input" placeholder="e.g., 1995" />
-                  </div>
+                  <input type="hidden" id="member-amount" name="amount" value="5000" />
                 </div>
 
-                <div class="form-group">
-                  <label for="nsm-address">
-                    <i class="fas fa-map-marker-alt"></i> Address
-                  </label>
-                  <textarea id="nsm-address" name="address" class="form-input" rows="3"></textarea>
-                </div>
-
-                <div class="form-group">
-                  <label for="nsm-purpose">
-                    <i class="fas fa-bullseye"></i> Purpose of Donation
-                  </label>
-                  <select id="nsm-purpose" name="purpose" class="form-input">
-                    <option value="">Select Purpose</option>
-                    <option value="scholarship">Scholarship</option>
-                    <option value="infrastructure">Infrastructure Development</option>
-                    <option value="general">General Fund</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div class="donation-amount-section">
-                  <label class="amount-label">
-                    <i class="fas fa-rupee-sign"></i> Donation Amount <span class="required">*</span>
-                  </label>
-                  <div class="quick-amount-buttons">
-                    <button type="button" class="amount-btn" data-amount="5000">₹5,000</button>
-                    <button type="button" class="amount-btn" data-amount="10000">₹10,000</button>
-                    <button type="button" class="amount-btn" data-amount="25000">₹25,000</button>
-                    <button type="button" class="amount-btn" data-amount="50000">₹50,000</button>
-                    <button type="button" class="amount-btn" data-amount="100000">₹1,00,000</button>
-                  </div>
-                  <div class="custom-amount-input">
-                    <span class="currency-symbol">₹</span>
-                    <input type="number" id="nsm-amount" name="amount" class="form-input" placeholder="Enter custom amount" min="5000" step="100" required />
-                  </div>
-                  <small class="amount-hint">Minimum donation: ₹5,000</small>
-                </div>
-
-                <button type="submit" class="donate-submit-btn">
-                  <i class="fas fa-heart"></i> Proceed to Payment
-                </button>
-              </form>
-            </div>
-
-            <!-- General Public Form -->
-            <div id="general-donate-form" class="donate-form-section">
-              <form id="generalForm" class="donate-form">
-                <div class="form-header-decoration"></div>
-                <h3 class="form-section-title">
-                  <span class="title-icon"><i class="fas fa-users"></i></span>
-                  <span class="title-text">General Donation Form</span>
-                </h3>
-                <p class="form-description">Your generosity helps us create opportunities and transform lives. Every contribution matters.</p>
-                
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="general-name">
-                      <i class="fas fa-user"></i> Full Name <span class="required">*</span>
-                    </label>
-                    <input type="text" id="general-name" name="name" class="form-input" required />
-                  </div>
-                  <div class="form-group">
-                    <label for="general-email">
-                      <i class="fas fa-envelope"></i> Email <span class="required">*</span>
-                    </label>
-                    <input type="email" id="general-email" name="email" class="form-input" required />
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="general-phone">
-                      <i class="fas fa-phone"></i> Phone Number <span class="required">*</span>
-                    </label>
-                    <input type="tel" id="general-phone" name="phone" class="form-input" required />
-                  </div>
-                  <div class="form-group">
-                    <label for="general-organization">
-                      <i class="fas fa-building"></i> Organization (Optional)
-                    </label>
-                    <input type="text" id="general-organization" name="organization" class="form-input" />
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="general-address">
-                    <i class="fas fa-map-marker-alt"></i> Address
-                  </label>
-                  <textarea id="general-address" name="address" class="form-input" rows="3"></textarea>
-                </div>
-
-                <div class="form-group">
-                  <label for="general-purpose">
-                    <i class="fas fa-bullseye"></i> Purpose of Donation
-                  </label>
-                  <select id="general-purpose" name="purpose" class="form-input">
-                    <option value="">Select Purpose</option>
-                    <option value="scholarship">Scholarship</option>
-                    <option value="infrastructure">Infrastructure Development</option>
-                    <option value="general">General Fund</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div class="donation-amount-section">
-                  <label class="amount-label">
-                    <i class="fas fa-rupee-sign"></i> Donation Amount <span class="required">*</span>
-                  </label>
-                  <div class="quick-amount-buttons">
-                    <button type="button" class="amount-btn" data-amount="5000">₹5,000</button>
-                    <button type="button" class="amount-btn" data-amount="10000">₹10,000</button>
-                    <button type="button" class="amount-btn" data-amount="25000">₹25,000</button>
-                    <button type="button" class="amount-btn" data-amount="50000">₹50,000</button>
-                    <button type="button" class="amount-btn" data-amount="100000">₹1,00,000</button>
-                  </div>
-                  <div class="custom-amount-input">
-                    <span class="currency-symbol">₹</span>
-                    <input type="number" id="general-amount" name="amount" class="form-input" placeholder="Enter custom amount" min="5000" step="100" required />
-                  </div>
-                  <small class="amount-hint">Minimum donation: ₹5,000</small>
-                </div>
-
-                <button type="submit" class="donate-submit-btn">
-                  <i class="fas fa-heart"></i> Proceed to Payment
+                <button type="submit" class="member-submit-btn">
+                  <span>Proceed to Payment</span>
+                  <i class="fas fa-arrow-right"></i>
                 </button>
               </form>
             </div>
           </div>
 
-          <!-- Payment Section (Hidden initially) -->
-          <div id="donation-payment-section" class="donation-payment-section" style="display: none;">
-            <h3 class="section-title">
-              <i class="fas fa-credit-card"></i> Payment Options
-            </h3>
-            <div class="payment-methods-tabs">
-              <button type="button" class="payment-tab-btn active" data-payment-method="bank">
-                <i class="fas fa-university"></i> Bank Transfer / UPI
-              </button>
-              <button type="button" class="payment-tab-btn" data-payment-method="razorpay">
-                <i class="fas fa-credit-card"></i> Razorpay
-              </button>
-            </div>
-
-            <div id="bank-payment-details" class="payment-details-box active">
-              <div class="bank-details-box">
-                <h4 class="bank-details-title">Bank Account Details</h4>
-                <div class="account-info">
-                  <div class="account-info-item">
-                    <span class="account-label">Account Name:</span>
-                    <span class="account-value">NSM Old Students Association</span>
-                  </div>
-                  <div class="account-info-item">
-                    <span class="account-label">Account Number:</span>
-                    <span class="account-value">1234567890123456</span>
-                  </div>
-                  <div class="account-info-item">
-                    <span class="account-label">IFSC Code:</span>
-                    <span class="account-value">BANK0001234</span>
-                  </div>
-                  <div class="account-info-item">
-                    <span class="account-label">Bank Name:</span>
-                    <span class="account-value">State Bank of India</span>
-                  </div>
-                  <div class="account-info-item">
-                    <span class="account-label">Branch:</span>
-                    <span class="account-value">Chennai Main Branch</span>
-                  </div>
-                  <div class="account-info-item">
-                    <span class="account-label">UPI ID:</span>
-                    <span class="account-value">nsmalumni@paytm</span>
-                  </div>
-                </div>
-                <div class="qr-code-box">
-                  <h5 class="qr-title">Scan QR Code to Pay</h5>
-                  <div class="qr-code-wrapper">
-                    <img id="donate-qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=UPI:nsmalumni@paytm?am=5000&tn=NSM%20Alumni%20Donation" 
-                         alt="UPI QR Code" 
-                         class="qr-code-image" />
-                  </div>
-                  <p class="qr-hint">Scan with any UPI app (PhonePe, Paytm, Google Pay, etc.)</p>
-                </div>
-                <button type="button" class="payment-confirm-btn" id="confirm-donate-bank-payment">
-                  <i class="fas fa-check-circle"></i> I have made the payment
+            <!-- Payment Section (Hidden initially) -->
+            <div id="member-payment-section" class="donation-payment-section" style="display: none;">
+              <h3 class="section-title">
+                <i class="fas fa-credit-card"></i> Payment Options
+              </h3>
+              <div class="payment-methods-tabs">
+                <button type="button" class="payment-tab-btn active" data-payment-method="bank">
+                  <i class="fas fa-university"></i> Bank Transfer / UPI
+                </button>
+                <button type="button" class="payment-tab-btn" data-payment-method="razorpay">
+                  <i class="fas fa-credit-card"></i> Razorpay
                 </button>
               </div>
-            </div>
 
-            <div id="razorpay-payment-details" class="payment-details-box">
-              <div class="razorpay-payment-box">
-                <p class="razorpay-info-text">
-                  <i class="fas fa-shield-alt"></i> Secure payment gateway powered by Razorpay
-                </p>
-                <button type="button" class="razorpay-pay-btn" id="razorpay-donate-pay-btn">
-                  <i class="fas fa-credit-card"></i> Pay with Razorpay
-                </button>
+              <div id="bank-payment-details" class="payment-details-box active">
+                <div class="bank-details-box">
+                  <h4 class="bank-details-title">Bank Account Details</h4>
+                  <div class="account-info">
+                    <div class="account-info-item">
+                      <span class="account-label">Account Name:</span>
+                      <span class="account-value">NSMOSA</span>
+                    </div>
+                    <div class="account-info-item">
+                      <span class="account-label">Account Number:</span>
+                      <span class="account-value">1234567890123456</span>
+                    </div>
+                    <div class="account-info-item">
+                      <span class="account-label">IFSC Code:</span>
+                      <span class="account-value">BANK0001234</span>
+                    </div>
+                    <div class="account-info-item">
+                      <span class="account-label">Bank Name:</span>
+                      <span class="account-value">State Bank of India</span>
+                    </div>
+                    <div class="account-info-item">
+                      <span class="account-label">Branch:</span>
+                      <span class="account-value">Chennai Main Branch</span>
+                    </div>
+                    <div class="account-info-item">
+                      <span class="account-label">UPI ID:</span>
+                      <span class="account-value">nsmalumni@paytm</span>
+                    </div>
+                  </div>
+                  <div class="qr-code-box">
+                    <h5 class="qr-title">Scan QR Code to Pay</h5>
+                    <div class="qr-code-wrapper">
+                      <img id="member-qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=UPI:nsmalumni@paytm?am=5000&tn=NSMOSA%20Membership%20Fee" 
+                           alt="UPI QR Code" 
+                           class="qr-code-image" />
+                    </div>
+                    <p class="qr-hint">Scan with any UPI app (PhonePe, Paytm, Google Pay, etc.)</p>
+                  </div>
+                  <button type="button" class="payment-confirm-btn" id="confirm-member-bank-payment">
+                    <i class="fas fa-check-circle"></i> I have made the payment
+                  </button>
+                </div>
+              </div>
+
+              <div id="razorpay-payment-details" class="payment-details-box">
+                <div class="razorpay-payment-box">
+                  <p class="razorpay-info-text">
+                    <i class="fas fa-shield-alt"></i> Secure payment gateway powered by Razorpay
+                  </p>
+                  <button type="button" class="razorpay-pay-btn" id="razorpay-member-pay-btn">
+                    <i class="fas fa-credit-card"></i> Pay with Razorpay
+                  </button>
+                </div>
+              </div>
+
+              <!-- Payment Success Message (Hidden initially) -->
+              <div id="member-payment-success-section" class="payment-success-section" style="display: none;">
+                <div class="payment-success-box">
+                  <div class="payment-success-icon">
+                    <i class="fas fa-check-circle"></i>
+                  </div>
+                  <h3 class="payment-success-title">Payment Successfully Completed!</h3>
+                  <p class="payment-success-text">Your membership registration has been processed successfully. Welcome to NSMOSA!</p>
+                  <div class="payment-success-info">
+                    <div class="success-info-item">
+                      <span class="success-info-label">Transaction ID:</span>
+                      <span class="success-info-value" id="member-payment-success-txn-id">-</span>
+                    </div>
+                    <div class="success-info-item">
+                      <span class="success-info-label">Amount Paid:</span>
+                      <span class="success-info-value" id="member-payment-success-amount">-</span>
+                    </div>
+                  </div>
+                  <button type="button" class="download-receipt-btn" id="member-download-receipt-btn">
+                    <i class="fas fa-download"></i> Download Receipt
+                  </button>
+                </div>
               </div>
             </div>
-
-            <!-- Donation Payment Success Message (Hidden initially) -->
-            <div id="donation-payment-success-section" class="payment-success-section" style="display: none;">
-              <div class="payment-success-box">
-                <div class="payment-success-icon">
-                  <i class="fas fa-check-circle"></i>
-                </div>
-                <h3 class="payment-success-title">Payment Successfully Completed!</h3>
-                <p class="payment-success-text">Your donation has been processed successfully. Thank you for your generous contribution!</p>
-                <div class="payment-success-info">
-                  <div class="success-info-item">
-                    <span class="success-info-label">Transaction ID:</span>
-                    <span class="success-info-value" id="donation-payment-success-txn-id">-</span>
-                  </div>
-                  <div class="success-info-item">
-                    <span class="success-info-label">Amount Paid:</span>
-                    <span class="success-info-value" id="donation-payment-success-amount">-</span>
-                  </div>
-                </div>
-                <button type="button" class="download-receipt-btn" id="donation-download-receipt-btn">
-                  <i class="fas fa-download"></i> Download Receipt
-                </button>
-              </div>
-            </div>
-          </div>
           </div>
         </div>
 
@@ -4966,24 +4587,6 @@
               class="social-icon-modern facebook"
             >
               <i class="fab fa-facebook-f"></i>
-            </a>
-            <a
-              href="https://www.twitter.com"
-              aria-label="Twitter"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="social-icon-modern twitter"
-            >
-              <i class="fab fa-x-twitter"></i>
-            </a>
-            <a
-              href="https://www.linkedin.com"
-              aria-label="LinkedIn"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="social-icon-modern linkedin"
-            >
-              <i class="fab fa-linkedin-in"></i>
             </a>
             <a
               href="https://www.instagram.com"
@@ -8257,6 +7860,466 @@
           padding-left: 40px;
         }
       }
+
+      /* ============================================
+         MODERN PROFESSIONAL MEMBER PAGE STYLES
+         ============================================ */
+      
+      /* Member Hero Section */
+      .member-hero-section {
+        position: relative;
+        min-height: 500px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 80px 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        background-size: 200% 200%;
+        animation: gradientShift 8s ease infinite;
+        overflow: hidden;
+        margin-bottom: 60px;
+      }
+
+      @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+
+      .member-hero-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+          radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+        opacity: 0.6;
+      }
+
+      .member-hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 900px;
+        text-align: center;
+        color: #ffffff;
+      }
+
+      .member-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        padding: 10px 24px;
+        border-radius: 50px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        margin-bottom: 30px;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+
+      .member-hero-badge i {
+        color: #ffd700;
+        font-size: 16px;
+      }
+
+      .member-hero-title {
+        font-size: 56px;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 24px;
+        letter-spacing: -1px;
+      }
+
+      .member-hero-title .highlight-text {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+      }
+
+      .member-hero-description {
+        font-size: 18px;
+        line-height: 1.8;
+        color: rgba(255, 255, 255, 0.95);
+        margin-bottom: 40px;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .member-benefits-preview {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        flex-wrap: wrap;
+        margin-top: 40px;
+      }
+
+      .benefit-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 20px 30px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .benefit-item:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.25);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .benefit-item i {
+        font-size: 32px;
+        color: #ffd700;
+        margin-bottom: 8px;
+      }
+
+      .benefit-item span {
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+
+      /* Member Registration Container */
+      .member-registration-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px 80px;
+      }
+
+      .member-form-wrapper {
+        background: #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .member-form-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 40px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        color: #ffffff;
+      }
+
+      .form-header-icon {
+        width: 70px;
+        height: 70px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .form-header-text {
+        flex: 1;
+      }
+
+      .member-form-title {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+      }
+
+      .member-form-subtitle {
+        font-size: 16px;
+        opacity: 0.9;
+        font-weight: 400;
+      }
+
+      /* Member Registration Form */
+      .member-registration-form {
+        padding: 50px;
+      }
+
+      .member-form-section {
+        margin-bottom: 40px;
+      }
+
+      .section-label {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e2e8f0;
+      }
+
+      .section-label i {
+        color: #667eea;
+        font-size: 20px;
+      }
+
+      .member-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+
+      .member-form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .member-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #4a5568;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .required-star {
+        color: #e53e3e;
+        font-size: 16px;
+      }
+
+      .member-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .input-icon {
+        position: absolute;
+        left: 16px;
+        color: #a0aec0;
+        font-size: 18px;
+        z-index: 1;
+      }
+
+      .member-input {
+        width: 100%;
+        padding: 14px 16px 14px 48px;
+        font-size: 15px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        background: #ffffff;
+        color: #2d3748;
+        transition: all 0.3s ease;
+        font-family: inherit;
+      }
+
+      .member-input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      }
+
+      .member-input::placeholder {
+        color: #a0aec0;
+      }
+
+      /* Fee Section */
+      .member-fee-section {
+        margin: 40px 0;
+      }
+
+      .fee-card {
+        background: linear-gradient(135deg, #f6f8fb 0%, #ffffff 100%);
+        border: 2px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 32px;
+        text-align: center;
+      }
+
+      .fee-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
+      .fee-card-header i {
+        font-size: 28px;
+        color: #667eea;
+      }
+
+      .fee-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #2d3748;
+        margin: 0;
+      }
+
+      .fee-amount-display {
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .fee-currency {
+        font-size: 32px;
+        font-weight: 700;
+        color: #667eea;
+      }
+
+      .fee-value {
+        font-size: 56px;
+        font-weight: 800;
+        color: #2d3748;
+        line-height: 1;
+      }
+
+      .fee-description {
+        font-size: 15px;
+        color: #718096;
+        margin-bottom: 24px;
+      }
+
+      .fee-benefits {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        flex-wrap: wrap;
+        padding-top: 24px;
+        border-top: 1px solid #e2e8f0;
+      }
+
+      .fee-benefit-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #4a5568;
+        font-weight: 500;
+      }
+
+      .fee-benefit-item i {
+        color: #48bb78;
+        font-size: 16px;
+      }
+
+      /* Submit Button */
+      .member-submit-btn {
+        width: 100%;
+        padding: 18px 32px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #ffffff;
+        border: none;
+        border-radius: 12px;
+        font-size: 17px;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        transition: all 0.3s ease;
+        margin-top: 32px;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .member-submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+      }
+
+      .member-submit-btn:active {
+        transform: translateY(0);
+      }
+
+      .member-submit-btn i {
+        font-size: 18px;
+        transition: transform 0.3s ease;
+      }
+
+      .member-submit-btn:hover i {
+        transform: translateX(4px);
+      }
+
+      /* Payment Section Styles (using existing but with member prefix) */
+      #member-payment-section {
+        margin-top: 40px;
+        padding: 40px;
+        background: #f7fafc;
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .member-hero-title {
+          font-size: 36px;
+        }
+
+        .member-hero-description {
+          font-size: 16px;
+        }
+
+        .member-benefits-preview {
+          gap: 20px;
+        }
+
+        .benefit-item {
+          padding: 16px 20px;
+        }
+
+        .member-form-header {
+          flex-direction: column;
+          text-align: center;
+          padding: 30px 20px;
+        }
+
+        .member-registration-form {
+          padding: 30px 20px;
+        }
+
+        .member-form-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .fee-value {
+          font-size: 42px;
+        }
+
+        .fee-benefits {
+          flex-direction: column;
+          gap: 12px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .member-hero-section {
+          padding: 60px 15px;
+          min-height: 400px;
+        }
+
+        .member-hero-title {
+          font-size: 28px;
+        }
+
+        .member-form-title {
+          font-size: 24px;
+        }
+      }
     </style>
 
     <!-- Login Modal -->
@@ -8268,7 +8331,7 @@
         </button>
         <div class="auth-modal-header">
           <h2 class="auth-modal-title">Welcome Back</h2>
-          <p class="auth-modal-subtitle">Sign in to your NSM Alumni account</p>
+          <p class="auth-modal-subtitle">Sign in to your NSMOSA Alumni account</p>
         </div>
 
         <!-- Login Type Toggle -->
@@ -8391,10 +8454,10 @@
         <div class="auth-modal-header">
           <div class="nsm-logo-header">
             <div class="nsm-logo-circle-large">
-              <span>NSM</span>
+              <span>NSMOSA</span>
             </div>
             <div class="nsm-header-text">
-              <h1 class="nsm-title-highlight">NSM Alumni School</h1>
+              <h1 class="nsm-title-highlight">NSMOSA Alumni School</h1>
               <p class="nsm-subtitle">Join Our Alumni Network</p>
             </div>
           </div>
@@ -8406,15 +8469,15 @@
             <!-- Left Column -->
             <div class="register-form-column">
               <div class="form-group-auth">
-                <label for="register-firstname">
-                  <i class="fas fa-user"></i> First name <span class="required">*</span>
+                <label for="register-fullname">
+                  <i class="fas fa-user"></i> Full name <span class="required">*</span>
                 </label>
                 <input 
                   type="text" 
-                  id="register-firstname" 
-                  name="firstname" 
+                  id="register-fullname" 
+                  name="fullname" 
                   class="form-input-auth" 
-                  placeholder="Enter first name"
+                  placeholder="Enter full name"
                   required
                 />
               </div>
@@ -8454,35 +8517,10 @@
                   />
                 </div>
               </div>
-              <div class="form-group-auth">
-                <label for="register-address">
-                  <i class="fas fa-map-marker-alt"></i> Address <span class="required">*</span>
-                </label>
-                <textarea 
-                  id="register-address" 
-                  name="address" 
-                  class="form-input-auth" 
-                  placeholder="Enter your full address"
-                  rows="3"
-                  required
-                ></textarea>
-              </div>
             </div>
 
             <!-- Right Column -->
             <div class="register-form-column">
-              <div class="form-group-auth">
-                <label for="register-surname">
-                  <i class="fas fa-user"></i> Surname
-                </label>
-                <input 
-                  type="text" 
-                  id="register-surname" 
-                  name="surname" 
-                  class="form-input-auth" 
-                  placeholder="Enter surname"
-                />
-              </div>
               <div class="form-group-auth">
                 <label for="register-email">
                   <i class="fas fa-envelope"></i> Email Address <span class="required">*</span>
@@ -8497,66 +8535,17 @@
                 />
               </div>
               <div class="form-group-auth">
-                <label for="register-institution">
-                  <i class="fas fa-building"></i> Institutions <span class="required">*</span>
-                </label>
-                <select id="register-institution" name="institution" class="form-input-auth" required>
-                  <option value="">Select Institution</option>
-                  <option value="nsm-school">NSM School</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-              <div class="form-group-auth">
                 <label for="register-graduation">
-                  <i class="fas fa-graduation-cap"></i> Graduation
-                </label>
-                <select id="register-graduation" name="graduation" class="form-input-auth">
-                  <option value="">Select Graduation Year</option>
-                  <option value="1993">1993</option>
-                  <option value="1994">1994</option>
-                  <option value="1995">1995</option>
-                  <option value="1996">1996</option>
-                  <option value="1997">1997</option>
-                  <option value="1998">1998</option>
-                  <option value="1999">1999</option>
-                  <option value="2000">2000</option>
-                  <option value="2001">2001</option>
-                  <option value="2002">2002</option>
-                  <option value="2003">2003</option>
-                  <option value="2004">2004</option>
-                  <option value="2005">2005</option>
-                  <option value="2006">2006</option>
-                  <option value="2007">2007</option>
-                  <option value="2008">2008</option>
-                  <option value="2009">2009</option>
-                  <option value="2010">2010</option>
-                  <option value="2011">2011</option>
-                  <option value="2012">2012</option>
-                  <option value="2013">2013</option>
-                  <option value="2014">2014</option>
-                  <option value="2015">2015</option>
-                  <option value="2016">2016</option>
-                  <option value="2017">2017</option>
-                  <option value="2018">2018</option>
-                  <option value="2019">2019</option>
-                  <option value="2020">2020</option>
-                  <option value="2021">2021</option>
-                  <option value="2022">2022</option>
-                  <option value="2023">2023</option>
-                  <option value="2024">2024</option>
-                  <option value="2025">2025</option>
-                </select>
-              </div>
-              <div class="form-group-auth">
-                <label for="register-rollno">
-                  <i class="fas fa-hashtag"></i> Roll No
+                  <i class="fas fa-graduation-cap"></i> Graduation Year
                 </label>
                 <input 
                   type="text" 
-                  id="register-rollno" 
-                  name="rollno" 
+                  id="register-graduation" 
+                  name="graduation" 
                   class="form-input-auth" 
-                  placeholder="Enter roll number"
+                  placeholder="Enter graduation year (e.g., 2020)"
+                  pattern="[0-9]{4}"
+                  maxlength="4"
                 />
               </div>
             </div>
@@ -8602,136 +8591,6 @@
             </div>
           </div>
 
-          <!-- Donation Section -->
-          <div class="donation-section">
-            <h3 class="section-title-auth">
-              <i class="fas fa-donate"></i> Alumni Donation
-            </h3>
-            <div class="donation-info-box">
-              <p class="donation-info-text">
-                <i class="fas fa-info-circle"></i> Minimum donation amount: <strong>₹5,000</strong>
-              </p>
-            </div>
-            <div class="form-group-auth">
-              <label for="donation-amount">
-                <i class="fas fa-rupee-sign"></i> Donation Amount <span class="required">*</span>
-              </label>
-              <div class="donation-amount-input-wrapper">
-                <span class="donation-currency">₹</span>
-                <input 
-                  type="number" 
-                  id="donation-amount" 
-                  name="donationAmount" 
-                  class="form-input-auth donation-amount-input" 
-                  placeholder="5000"
-                  value="5000"
-                  min="5000"
-                  step="100"
-                  required
-                />
-              </div>
-              <small class="donation-hint">Minimum amount: ₹5,000</small>
-            </div>
-          </div>
-
-          <!-- Payment Options Section -->
-          <div class="payment-options-section" id="payment-options-section" style="display: none;">
-            <h3 class="section-title-auth">
-              <i class="fas fa-credit-card"></i> Payment Options
-            </h3>
-            <div class="payment-methods-tabs">
-              <button type="button" class="payment-tab-btn active" data-payment-method="bank">
-                <i class="fas fa-university"></i> Bank Transfer / UPI
-              </button>
-              <button type="button" class="payment-tab-btn" data-payment-method="razorpay">
-                <i class="fas fa-credit-card"></i> Online Payment (Razorpay)
-              </button>
-            </div>
-
-            <!-- Bank Transfer / UPI Details -->
-            <div id="bank-payment-details" class="payment-details-box active">
-              <div class="account-details-box">
-                <h4 class="account-details-title">
-                  <i class="fas fa-university"></i> Bank Account Details
-                </h4>
-                <div class="account-info-grid">
-                  <div class="account-info-item">
-                    <span class="account-label">Account Name:</span>
-                    <span class="account-value">NSM Old Students Association</span>
-                  </div>
-                  <div class="account-info-item">
-                    <span class="account-label">Account Number:</span>
-                    <span class="account-value">1234567890123</span>
-                  </div>
-                  <div class="account-info-item">
-                    <span class="account-label">IFSC Code:</span>
-                    <span class="account-value">SBIN0001234</span>
-                  </div>
-                  <div class="account-info-item">
-                    <span class="account-label">Bank Name:</span>
-                    <span class="account-value">State Bank of India</span>
-                  </div>
-                  <div class="account-info-item">
-                    <span class="account-label">Branch:</span>
-                    <span class="account-value">Chennai Main Branch</span>
-                  </div>
-                  <div class="account-info-item">
-                    <span class="account-label">UPI ID:</span>
-                    <span class="account-value">nsmalumni@paytm</span>
-                  </div>
-                </div>
-                <div class="qr-code-box">
-                  <h5 class="qr-title">Scan QR Code to Pay</h5>
-                  <div class="qr-code-wrapper">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=UPI:nsmalumni@paytm?am=5000&tn=NSM%20Alumni%20Donation" 
-                         alt="UPI QR Code" 
-                         class="qr-code-image" />
-                  </div>
-                  <p class="qr-hint">Scan with any UPI app (PhonePe, Paytm, Google Pay, etc.)</p>
-                </div>
-                <button type="button" class="payment-confirm-btn" id="confirm-bank-payment">
-                  <i class="fas fa-check-circle"></i> I have made the payment
-                </button>
-              </div>
-            </div>
-
-            <!-- Razorpay Payment -->
-            <div id="razorpay-payment-details" class="payment-details-box">
-              <div class="razorpay-payment-box">
-                <p class="razorpay-info-text">
-                  <i class="fas fa-shield-alt"></i> Secure payment gateway powered by Razorpay
-                </p>
-                <button type="button" class="razorpay-pay-btn" id="razorpay-pay-btn">
-                  <i class="fas fa-credit-card"></i> Pay with Razorpay
-                </button>
-              </div>
-            </div>
-
-            <!-- Payment Success Message (Hidden initially) -->
-            <div id="payment-success-section" class="payment-success-section" style="display: none;">
-              <div class="payment-success-box">
-                <div class="payment-success-icon">
-                  <i class="fas fa-check-circle"></i>
-                </div>
-                <h3 class="payment-success-title">Payment Successfully Completed!</h3>
-                <p class="payment-success-text">Your payment has been processed successfully. Your account will be created shortly.</p>
-                <div class="payment-success-info">
-                  <div class="success-info-item">
-                    <span class="success-info-label">Transaction ID:</span>
-                    <span class="success-info-value" id="payment-success-txn-id">-</span>
-                  </div>
-                  <div class="success-info-item">
-                    <span class="success-info-label">Amount Paid:</span>
-                    <span class="success-info-value" id="payment-success-amount">-</span>
-                  </div>
-                </div>
-                <button type="button" class="download-receipt-btn" id="download-receipt-btn">
-                  <i class="fas fa-download"></i> Download Receipt
-                </button>
-              </div>
-            </div>
-          </div>
-
           <div class="form-group-auth checkbox-group">
             <label class="checkbox-label">
               <input type="checkbox" name="terms" required />
@@ -8739,8 +8598,8 @@
             </label>
           </div>
           <button type="submit" class="auth-submit-btn register-submit-btn" id="register-submit-btn">
-            <span>Proceed to Payment</span>
-            <i class="fas fa-arrow-right"></i>
+            <span>Create Account</span>
+            <i class="fas fa-user-plus"></i>
           </button>
         </form>
         <div class="auth-footer">
@@ -11212,6 +11071,405 @@
         line-height: 1.6;
       }
 
+      /* Profile Edit Form Styles */
+      .profile-edit-form {
+        background: #ffffff;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .profile-form-section {
+        margin-bottom: 40px;
+        padding-bottom: 30px;
+        border-bottom: 2px solid #f0f0f0;
+      }
+
+      .profile-form-section:last-of-type {
+        border-bottom: none;
+        margin-bottom: 30px;
+      }
+
+      .form-section-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--loyola-blue);
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .form-section-title i {
+        font-size: 22px;
+      }
+
+      .profile-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .profile-form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .profile-form-group.full-width {
+        grid-column: 1 / -1;
+      }
+
+      .profile-form-group label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .profile-form-group .required {
+        color: #e53e3e;
+        font-size: 16px;
+      }
+
+      .profile-input,
+      .profile-textarea {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 15px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #333;
+        font-family: inherit;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+      }
+
+      .profile-input:focus,
+      .profile-textarea:focus {
+        outline: none;
+        border-color: var(--loyola-blue);
+        box-shadow: 0 0 0 3px rgba(0, 39, 77, 0.1);
+      }
+
+      .profile-input::placeholder,
+      .profile-textarea::placeholder {
+        color: #a0aec0;
+      }
+
+      .profile-textarea {
+        resize: vertical;
+        min-height: 100px;
+        line-height: 1.6;
+      }
+
+      /* Profile Picture Styles */
+      .profile-picture-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .profile-picture-wrapper {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        border: 4px solid var(--loyola-blue);
+        overflow: hidden;
+        cursor: pointer;
+        background: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .profile-picture-wrapper:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .profile-picture-preview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .profile-picture-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        color: #999;
+      }
+
+      .profile-picture-placeholder i {
+        font-size: 48px;
+      }
+
+      .profile-picture-placeholder span {
+        font-size: 14px;
+        text-align: center;
+        padding: 0 15px;
+      }
+
+      .profile-picture-hint {
+        margin-top: 15px;
+        font-size: 14px;
+        color: #666;
+        text-align: center;
+      }
+
+      /* Camera Modal Styles */
+      .camera-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 10000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .camera-modal.active {
+        display: flex;
+      }
+
+      .camera-modal-content {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 30px;
+        max-width: 600px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+      }
+
+      .camera-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .camera-modal-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--loyola-blue);
+        margin: 0;
+      }
+
+      .camera-close-btn {
+        background: none;
+        border: none;
+        font-size: 28px;
+        color: #999;
+        cursor: pointer;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+      }
+
+      .camera-close-btn:hover {
+        background: #f0f0f0;
+        color: #333;
+      }
+
+      .camera-video-container {
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto 20px;
+        border-radius: 15px;
+        overflow: hidden;
+        background: #000;
+      }
+
+      #camera-video {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      #camera-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .face-detection-status {
+        text-align: center;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-weight: 600;
+        display: none;
+      }
+
+      .face-detection-status.detecting {
+        display: block;
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      .face-detection-status.detected {
+        display: block;
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .face-detection-status.no-face {
+        display: block;
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .camera-controls {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .camera-btn {
+        padding: 12px 30px;
+        font-size: 16px;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .camera-capture-btn {
+        background: var(--loyola-blue);
+        color: #ffffff;
+      }
+
+      .camera-capture-btn:hover {
+        background: #003366;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 39, 77, 0.3);
+      }
+
+      .camera-accept-btn {
+        background: #28a745;
+        color: #ffffff;
+      }
+
+      .camera-accept-btn:hover {
+        background: #218838;
+      }
+
+      .camera-accept-btn:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+      }
+
+      .camera-retake-btn {
+        background: #6c757d;
+        color: #ffffff;
+      }
+
+      .camera-retake-btn:hover {
+        background: #5a6268;
+      }
+
+      .camera-cancel-btn {
+        background: #dc3545;
+        color: #ffffff;
+      }
+
+      .camera-cancel-btn:hover {
+        background: #c82333;
+      }
+
+      .profile-form-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: flex-end;
+        padding-top: 20px;
+        border-top: 2px solid #f0f0f0;
+      }
+
+      .profile-save-btn,
+      .profile-cancel-btn {
+        padding: 12px 30px;
+        font-size: 16px;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .profile-save-btn {
+        background: var(--loyola-blue);
+        color: #ffffff;
+      }
+
+      .profile-save-btn:hover {
+        background: #003366;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 39, 77, 0.3);
+      }
+
+      .profile-cancel-btn {
+        background: #e2e8f0;
+        color: #4a5568;
+      }
+
+      .profile-cancel-btn:hover {
+        background: #cbd5e0;
+      }
+
+      @media (max-width: 768px) {
+        .profile-form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .profile-edit-form {
+          padding: 25px 20px;
+        }
+
+        .profile-form-actions {
+          flex-direction: column;
+        }
+
+        .profile-save-btn,
+        .profile-cancel-btn {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+
       /* Events Grid */
       .events-grid {
         display: grid;
@@ -12852,9 +13110,8 @@
           
           if (registerForm) {
             const formData = new FormData(registerForm);
-            const firstName = formData.get('firstname') || '';
-            const surname = formData.get('surname') || '';
-            userName = (firstName + ' ' + surname).trim() || 'User';
+            const fullName = formData.get('fullname') || '';
+            userName = fullName.trim() || 'User';
             userEmail = formData.get('email') || '';
           }
           
@@ -12966,7 +13223,6 @@
         // Registration Form Submission
         const registerForm = document.getElementById('register-form');
         const registerSubmitBtn = document.getElementById('register-submit-btn');
-        const paymentOptionsSection = document.getElementById('payment-options-section');
 
         if (registerForm) {
           registerForm.addEventListener('submit', function(e) {
@@ -12978,72 +13234,42 @@
               return;
             }
 
-            // Check if payment options are already shown
-            if (paymentOptionsSection.style.display === 'none' || !paymentOptionsSection.style.display) {
-              // First submission - show payment options
-              paymentOptionsSection.style.display = 'block';
-              registerSubmitBtn.innerHTML = '<span>Complete Payment</span> <i class="fas fa-credit-card"></i>';
-              
-              // Scroll to payment section
-              paymentOptionsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-              
-              // Prevent form submission
-              return false;
-            } else {
-              // Second submission - check if payment is completed
-              if (!paymentCompleted) {
-                alert('Please complete the payment to create your account.');
-                return false;
-              }
-
-              // Collect form data
-              const formData = new FormData(registerForm);
+            // Collect form data
+            const formData = new FormData(registerForm);
               const userData = {
-                firstName: formData.get('firstname'),
-                surname: formData.get('surname'),
-                email: formData.get('email'),
-                password: formData.get('password'),
-                mobile: formData.get('mobile'),
-                telcode: formData.get('telcode'),
-                gender: formData.get('gender'),
-                course: formData.get('course'),
-                from: formData.get('from'),
-                to: formData.get('to'),
-                donationAmount: formData.get('donationAmount'),
-                paymentMethod: selectedPaymentMethod
-              };
+              fullName: formData.get('fullname'),
+              email: formData.get('email'),
+              password: formData.get('password'),
+              mobile: formData.get('mobile'),
+              telcode: formData.get('telcode'),
+              gender: formData.get('gender'),
+              graduation: formData.get('graduation')
+            };
 
-              // Store user data in localStorage (for demo purposes)
-              // In production, send to backend API
-              const users = JSON.parse(localStorage.getItem('nsm_users') || '[]');
-              users.push({
-                ...userData,
-                id: Date.now(),
-                createdAt: new Date().toISOString()
-              });
-              localStorage.setItem('nsm_users', JSON.stringify(users));
+            // Store user data in localStorage (for demo purposes)
+            // In production, send to backend API
+            const users = JSON.parse(localStorage.getItem('nsm_users') || '[]');
+            users.push({
+              ...userData,
+              id: Date.now(),
+              createdAt: new Date().toISOString()
+            });
+            localStorage.setItem('nsm_users', JSON.stringify(users));
 
-              // Store login credentials
-              const credentials = JSON.parse(localStorage.getItem('nsm_credentials') || '[]');
-              credentials.push({
-                email: userData.email,
-                password: userData.password,
-                mobile: userData.telcode + userData.mobile
-              });
-              localStorage.setItem('nsm_credentials', JSON.stringify(credentials));
+            // Store login credentials
+            const credentials = JSON.parse(localStorage.getItem('nsm_credentials') || '[]');
+            credentials.push({
+              email: userData.email,
+              password: userData.password,
+              mobile: (userData.telcode || '') + (userData.mobile || '')
+            });
+            localStorage.setItem('nsm_credentials', JSON.stringify(credentials));
 
-              // Payment already completed, success modal should be shown
-              // Form submission is handled by payment success flow
-            }
+            // Show success message
+            alert('Account created successfully! Please sign in to continue.');
+            closeRegisterModal();
           });
         }
-
-        // Update payment method when tab changes
-        paymentTabBtns.forEach(btn => {
-          btn.addEventListener('click', function() {
-            selectedPaymentMethod = this.getAttribute('data-payment-method') === 'bank' ? 'Bank Transfer / UPI' : 'Razorpay';
-          });
-        });
         }); // End of DOMContentLoaded
     </script>
 
@@ -13252,6 +13478,71 @@
             sessionStorage.removeItem('last_requested_chapter_details');
           }
         };
+
+        // Profile Form Handler
+        const profileForm = document.getElementById('user-profile-form');
+        const profileCancelBtn = document.getElementById('profile-cancel-btn');
+
+        // Load saved profile data if available
+        function loadProfileData() {
+          const savedProfile = localStorage.getItem('nsm_user_profile');
+          if (savedProfile) {
+            try {
+              const profileData = JSON.parse(savedProfile);
+              if (profileData.fullname) document.getElementById('profile-fullname').value = profileData.fullname || '';
+              if (profileData.email) document.getElementById('profile-email').value = profileData.email || '';
+              if (profileData.phone) document.getElementById('profile-phone').value = profileData.phone || '';
+              if (profileData.location) document.getElementById('profile-location').value = profileData.location || '';
+              if (profileData.graduation) document.getElementById('profile-graduation').value = profileData.graduation || '';
+              if (profileData.course) document.getElementById('profile-course').value = profileData.course || '';
+              if (profileData.position) document.getElementById('profile-position').value = profileData.position || '';
+              if (profileData.education) document.getElementById('profile-education').value = profileData.education || '';
+              if (profileData.achievements) document.getElementById('profile-achievements').value = profileData.achievements || '';
+            } catch (e) {
+              console.error('Error loading profile data:', e);
+            }
+          }
+        }
+
+        // Load profile data on page load
+        loadProfileData();
+
+        // Handle form submission
+        if (profileForm) {
+          profileForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(profileForm);
+            const profileData = {
+              fullname: formData.get('fullname') || '',
+              email: formData.get('email') || '',
+              phone: formData.get('phone') || '',
+              location: formData.get('location') || '',
+              graduation: formData.get('graduation') || '',
+              course: formData.get('course') || '',
+              position: formData.get('position') || '',
+              education: formData.get('education') || '',
+              achievements: formData.get('achievements') || '',
+              updatedAt: new Date().toISOString()
+            };
+
+            // Save to localStorage
+            localStorage.setItem('nsm_user_profile', JSON.stringify(profileData));
+            
+            // Show success message
+            alert('Profile saved successfully!');
+          });
+        }
+
+        // Handle cancel button
+        if (profileCancelBtn) {
+          profileCancelBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
+              profileForm.reset();
+              loadProfileData(); // Reload saved data
+            }
+          });
+        }
       });
 
 
@@ -13362,6 +13653,358 @@
         }
       });
     </script>
+
+    <!-- Camera Modal for Profile Picture -->
+    <div id="camera-modal" class="camera-modal">
+      <div class="camera-modal-content">
+        <div class="camera-modal-header">
+          <h3 class="camera-modal-title">Take Profile Picture</h3>
+          <button class="camera-close-btn" id="camera-close-btn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="face-detection-status" id="face-status">
+          <span id="face-status-text">Position your face in front of the camera</span>
+        </div>
+        <div class="camera-video-container">
+          <video id="camera-video" autoplay playsinline></video>
+          <canvas id="camera-canvas"></canvas>
+        </div>
+        <div class="camera-controls">
+          <button class="camera-btn camera-capture-btn" id="camera-capture-btn">
+            <i class="fas fa-camera"></i> Capture
+          </button>
+          <button class="camera-btn camera-accept-btn" id="camera-accept-btn" style="display: none;" disabled>
+            <i class="fas fa-check"></i> Accept
+          </button>
+          <button class="camera-btn camera-retake-btn" id="camera-retake-btn" style="display: none;">
+            <i class="fas fa-redo"></i> Retake
+          </button>
+          <button class="camera-btn camera-cancel-btn" id="camera-cancel-btn">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Profile Picture Camera Handler
+      (function() {
+        let stream = null;
+        let capturedImage = null;
+        let modelsLoaded = false;
+        let faceDetectionInterval = null;
+
+        const profilePictureWrapper = document.getElementById('profile-picture-wrapper');
+        const profilePicturePreview = document.getElementById('profile-picture-preview');
+        const profilePicturePlaceholder = document.getElementById('profile-picture-placeholder');
+        const profilePictureData = document.getElementById('profile-picture-data');
+        const cameraModal = document.getElementById('camera-modal');
+        const cameraVideo = document.getElementById('camera-video');
+        const cameraCanvas = document.getElementById('camera-canvas');
+        const cameraCaptureBtn = document.getElementById('camera-capture-btn');
+        const cameraAcceptBtn = document.getElementById('camera-accept-btn');
+        const cameraRetakeBtn = document.getElementById('camera-retake-btn');
+        const cameraCancelBtn = document.getElementById('camera-cancel-btn');
+        const cameraCloseBtn = document.getElementById('camera-close-btn');
+        const faceStatus = document.getElementById('face-status');
+        const faceStatusText = document.getElementById('face-status-text');
+
+        // Load face detection models
+        async function loadFaceModels() {
+          try {
+            if (typeof faceapi !== 'undefined') {
+              await Promise.all([
+                faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/'),
+                faceapi.nets.faceLandmark68Net.loadFromUri('https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/'),
+                faceapi.nets.faceRecognitionNet.loadFromUri('https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/')
+              ]);
+              modelsLoaded = true;
+            } else {
+              // Fallback: Use a simpler approach without face-api
+              modelsLoaded = false;
+            }
+          } catch (e) {
+            console.log('Face detection models not available, using basic camera');
+            modelsLoaded = false;
+          }
+        }
+
+        // Detect face in video
+        async function detectFace() {
+          if (!modelsLoaded || !cameraVideo || cameraVideo.readyState !== 4) return false;
+          
+          try {
+            // Use TinyFaceDetector with optimal settings
+            const detection = await faceapi
+              .detectSingleFace(cameraVideo, new faceapi.TinyFaceDetectorOptions({ 
+                inputSize: 416, 
+                scoreThreshold: 0.5 
+              }))
+              .withFaceLandmarks();
+            
+            return detection !== undefined;
+          } catch (e) {
+            console.error('Face detection error:', e);
+            return false;
+          }
+        }
+
+        // Start face detection loop
+        function startFaceDetection() {
+          if (faceDetectionInterval) clearInterval(faceDetectionInterval);
+          
+          faceDetectionInterval = setInterval(async () => {
+            if (!cameraVideo || cameraVideo.readyState !== 4) return;
+            
+            const hasFace = await detectFace();
+            
+            if (hasFace) {
+              faceStatus.className = 'face-detection-status detected';
+              faceStatusText.textContent = 'Face detected! You can capture the photo.';
+              cameraCaptureBtn.disabled = false;
+            } else {
+              faceStatus.className = 'face-detection-status no-face';
+              faceStatusText.textContent = 'No face detected. Please position your face in front of the camera.';
+              cameraCaptureBtn.disabled = false;
+            }
+          }, 500);
+        }
+
+        // Open camera modal
+        profilePictureWrapper.addEventListener('click', async function() {
+          cameraModal.classList.add('active');
+          faceStatus.className = 'face-detection-status detecting';
+          faceStatusText.textContent = 'Initializing camera...';
+          
+          try {
+            stream = await navigator.mediaDevices.getUserMedia({
+              video: { 
+                facingMode: 'user',
+                width: { ideal: 640 },
+                height: { ideal: 480 }
+              }
+            });
+            
+            cameraVideo.srcObject = stream;
+            cameraVideo.play();
+            
+            // Set canvas size
+            cameraVideo.addEventListener('loadedmetadata', () => {
+              cameraCanvas.width = cameraVideo.videoWidth;
+              cameraCanvas.height = cameraVideo.videoHeight;
+            });
+            
+            // Load face detection models
+            await loadFaceModels();
+            startFaceDetection();
+            
+            faceStatus.className = 'face-detection-status detecting';
+            faceStatusText.textContent = 'Camera ready. Position your face in front of the camera.';
+          } catch (error) {
+            alert('Error accessing camera: ' + error.message);
+            closeCameraModal();
+          }
+        });
+
+        // Capture photo
+        cameraCaptureBtn.addEventListener('click', async function() {
+          const ctx = cameraCanvas.getContext('2d');
+          ctx.drawImage(cameraVideo, 0, 0);
+          
+          // Check face detection (optional validation)
+          if (modelsLoaded) {
+            const hasFace = await detectFace();
+            if (!hasFace) {
+              if (!confirm('No face detected in the image. Do you want to continue anyway?')) {
+                return;
+              }
+            }
+          }
+          
+          capturedImage = cameraCanvas.toDataURL('image/jpeg', 0.8);
+          
+          // Stop video stream
+          if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            stream = null;
+          }
+          
+          if (faceDetectionInterval) {
+            clearInterval(faceDetectionInterval);
+            faceDetectionInterval = null;
+          }
+          
+          // Show accept/retake buttons
+          cameraCaptureBtn.style.display = 'none';
+          cameraAcceptBtn.style.display = 'flex';
+          cameraRetakeBtn.style.display = 'flex';
+          cameraAcceptBtn.disabled = false;
+          
+          faceStatus.className = 'face-detection-status detected';
+          faceStatusText.textContent = 'Photo captured! Review and accept or retake.';
+        });
+
+        // Accept photo
+        cameraAcceptBtn.addEventListener('click', function() {
+          if (capturedImage) {
+            profilePictureData.value = capturedImage;
+            profilePicturePreview.src = capturedImage;
+            profilePicturePreview.style.display = 'block';
+            profilePicturePlaceholder.style.display = 'none';
+            
+            // Save to localStorage
+            const savedProfile = JSON.parse(localStorage.getItem('nsm_user_profile') || '{}');
+            savedProfile.profilePicture = capturedImage;
+            localStorage.setItem('nsm_user_profile', JSON.stringify(savedProfile));
+          }
+          closeCameraModal();
+        });
+
+        // Retake photo
+        cameraRetakeBtn.addEventListener('click', async function() {
+          capturedImage = null;
+          cameraCaptureBtn.style.display = 'flex';
+          cameraAcceptBtn.style.display = 'none';
+          cameraRetakeBtn.style.display = 'none';
+          
+          try {
+            stream = await navigator.mediaDevices.getUserMedia({
+              video: { 
+                facingMode: 'user',
+                width: { ideal: 640 },
+                height: { ideal: 480 }
+              }
+            });
+            
+            cameraVideo.srcObject = stream;
+            cameraVideo.play();
+            startFaceDetection();
+            
+            faceStatus.className = 'face-detection-status detecting';
+            faceStatusText.textContent = 'Camera ready. Position your face in front of the camera.';
+          } catch (error) {
+            alert('Error accessing camera: ' + error.message);
+          }
+        });
+
+        // Close camera modal
+        function closeCameraModal() {
+          cameraModal.classList.remove('active');
+          
+          if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            stream = null;
+          }
+          
+          if (faceDetectionInterval) {
+            clearInterval(faceDetectionInterval);
+            faceDetectionInterval = null;
+          }
+          
+          cameraVideo.srcObject = null;
+          capturedImage = null;
+          
+          // Reset UI
+          cameraCaptureBtn.style.display = 'flex';
+          cameraAcceptBtn.style.display = 'none';
+          cameraRetakeBtn.style.display = 'none';
+          faceStatus.className = 'face-detection-status';
+        }
+
+        cameraCancelBtn.addEventListener('click', closeCameraModal);
+        cameraCloseBtn.addEventListener('click', closeCameraModal);
+        
+        // Close on modal overlay click
+        cameraModal.addEventListener('click', function(e) {
+          if (e.target === cameraModal) {
+            closeCameraModal();
+          }
+        });
+
+        // Load saved profile picture
+        function loadProfilePicture() {
+          const savedProfile = localStorage.getItem('nsm_user_profile');
+          if (savedProfile) {
+            try {
+              const profileData = JSON.parse(savedProfile);
+              if (profileData.profilePicture) {
+                profilePicturePreview.src = profileData.profilePicture;
+                profilePicturePreview.style.display = 'block';
+                profilePicturePlaceholder.style.display = 'none';
+                profilePictureData.value = profileData.profilePicture;
+              }
+            } catch (e) {
+              console.error('Error loading profile picture:', e);
+            }
+          }
+        }
+
+        // Load profile picture on page load
+        loadProfilePicture();
+      })();
+
+      // Handle Register Now buttons in Alumni Event section
+      (function() {
+        // Function to navigate to member page
+        function navigateToMemberPage() {
+          const memberNavLink = document.querySelector('a[data-page="member"]');
+          if (memberNavLink) {
+            memberNavLink.click();
+          } else {
+            // Fallback: scroll to member page if link doesn't exist
+            const memberPage = document.getElementById('page-member');
+            if (memberPage) {
+              // Switch to member page programmatically
+              const pageSections = document.querySelectorAll('.page-section');
+              pageSections.forEach(section => section.classList.remove('visible'));
+              memberPage.classList.add('visible');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }
+        }
+
+        // Add event listeners to Register Now buttons in Alumni Event section
+        function setupEventRegisterButtons() {
+          const alumniEventSection = document.getElementById('alumni-event-connect-section');
+          if (alumniEventSection) {
+            const eventButtons = alumniEventSection.querySelectorAll('.event-btn');
+            eventButtons.forEach(button => {
+              button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                navigateToMemberPage();
+              });
+            });
+          }
+        }
+
+        // Setup on page load
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', setupEventRegisterButtons);
+        } else {
+          setupEventRegisterButtons();
+        }
+
+        // Also setup after connect section is shown (in case it's dynamically loaded)
+        const observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+              const target = mutation.target;
+              if (target && target.id === 'alumni-event-connect-section' && target.classList.contains('active')) {
+                setTimeout(setupEventRegisterButtons, 100);
+              }
+            }
+          });
+        });
+
+        const alumniEventSection = document.getElementById('alumni-event-connect-section');
+        if (alumniEventSection) {
+          observer.observe(alumniEventSection, { attributes: true });
+        }
+      })();
+    </script>
+
   </body>
 </html>
 

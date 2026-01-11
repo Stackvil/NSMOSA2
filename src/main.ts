@@ -12,7 +12,7 @@ function isValidPageKey(key: string | undefined): key is PageKey {
     'reunion',
     'faq',
     'contact',
-    'donate',
+    'member',
     'home',
   ];
   return key !== undefined && validKeys.includes(key as PageKey);
@@ -36,20 +36,20 @@ function initApp(): void {
     reunion: document.getElementById('page-reunion'),
     faq: document.getElementById('page-faq'),
     contact: document.getElementById('page-contact'),
-    donate: document.getElementById('page-donate'),
+    member: document.getElementById('page-member'),
   };
 
   const heroTitles: Record<PageKey, string> = {
-    about: 'ABOUT NSM',
-    connect: 'NSM ALUMNI CONNECT',
+    about: 'ABOUT NSMOSA',
+    connect: 'NSMOSA ALUMNI CONNECT',
     gallery: 'PHOTO GALLERY',
-    'alumni-day': 'NSM ALUMNI DAY',
-    events: 'NSM ALUMNI EVENTS',
+    'alumni-day': 'NSMOSA ALUMNI DAY',
+    events: 'NSMOSA ALUMNI EVENTS',
     reunion: 'RE-UNION',
     faq: "FAQ'S",
     contact: 'CONTACT US',
-    donate: 'DONATE',
-    home: 'NSM OLD STUDENTS ASSOCIATION',
+    member: 'BE A MEMBER',
+    home: 'NSMOSA',
   };
 
   function setActivePage(pageKey: PageKey, category?: string): void {
@@ -67,7 +67,7 @@ function initApp(): void {
     // Update sidebar links
     sidebarLinks.forEach((link) => {
       link.classList.remove('active');
-      if (link.textContent?.trim() === 'About NSM' && pageKey === 'about') {
+      if (link.textContent?.trim() === 'About NSMOSA' && pageKey === 'about') {
         link.classList.add('active');
       }
     });
@@ -90,6 +90,11 @@ function initApp(): void {
       setTimeout(() => {
         initImageSliders();
       }, 100);
+    }
+
+    // Initialize member page when shown
+    if (pageKey === 'member') {
+      // Member page is already initialized, but we can add any specific initialization here if needed
     }
 
     // If navigating to FAQ with a category, filter to that category
@@ -137,7 +142,7 @@ function initApp(): void {
       const linkText = link.textContent?.trim();
       let targetPage: PageKey | null = null;
 
-      if (linkText === 'About NSM') targetPage = 'about';
+      if (linkText === 'About NSMOSA') targetPage = 'about';
       // Add more mappings as needed
 
       if (targetPage) {
@@ -2132,7 +2137,7 @@ if (document.readyState === 'loading') {
   initYearShopGallery();
   initYearReunionGallery();
   initContactForm();
-  initDonatePage();
+  initMemberPage();
   initFAQPage();
   initHomeGallerySlider();
   initGlobe3DEffect();
@@ -2259,98 +2264,29 @@ function initHomeGallerySlider(): void {
   galleryContainer.addEventListener('mouseleave', startAutoSlide);
 }
 
-// Initialize Donate Page
-function initDonatePage(): void {
-  // Donate tab switching
-  const donateTabBtns = document.querySelectorAll<HTMLButtonElement>('.donate-tab-btn');
-  const donateFormSections = document.querySelectorAll<HTMLElement>('.donate-form-section');
+// Initialize Member Page
+function initMemberPage(): void {
+  // Member registration form
+  const memberForm = document.getElementById('member-registration-form') as HTMLFormElement | null;
 
-  donateTabBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const targetTab = btn.getAttribute('data-donate-tab');
-      
-      // Update active tab
-      donateTabBtns.forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      // Show corresponding form
-      donateFormSections.forEach((section) => {
-        section.classList.remove('active');
-        if (section.id === `${targetTab}-donate-form` || section.id === 'nsm-donate-form' || section.id === 'general-donate-form') {
-          if (targetTab === 'nsm-form' && section.id === 'nsm-donate-form') {
-            section.classList.add('active');
-          } else if (targetTab === 'general-form' && section.id === 'general-donate-form') {
-            section.classList.add('active');
-          }
-        }
-      });
-    });
-  });
-
-  // Quick amount buttons
-  const amountBtns = document.querySelectorAll<HTMLButtonElement>('.amount-btn');
-  const amountInputs = document.querySelectorAll<HTMLInputElement>('#nsm-amount, #general-amount');
-
-  amountBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const amount = btn.getAttribute('data-amount');
-      if (amount) {
-        // Update active button
-        amountBtns.forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        // Update amount inputs
-        amountInputs.forEach((input) => {
-          input.value = amount;
-        });
-      }
-    });
-  });
-
-  // Form submissions
-  const nsmForm = document.getElementById('nsmForm') as HTMLFormElement | null;
-  const generalForm = document.getElementById('generalForm') as HTMLFormElement | null;
-
-  function getSelectedAmount(formId: string): string {
-    const form = document.getElementById(formId) as HTMLFormElement | null;
-    if (!form) return '5000';
-    
-    const amountInput = form.querySelector<HTMLInputElement>('input[name="amount"]');
-    const activeAmountBtn = form.querySelector<HTMLButtonElement>('.amount-btn.active');
-    
-    if (activeAmountBtn) {
-      return activeAmountBtn.getAttribute('data-amount') || '5000';
-    }
-    return amountInput?.value || '5000';
-  }
-
-  function showDonationPaymentSection(amount: string): void {
-    const paymentSection = document.getElementById('donation-payment-section');
+  function showMemberPaymentSection(): void {
+    const paymentSection = document.getElementById('member-payment-section');
     if (paymentSection) {
       paymentSection.style.display = 'block';
       paymentSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       
-      // Update QR code with amount
-      const qrCodeImg = document.getElementById('donate-qr-code') as HTMLImageElement | null;
+      // Update QR code with fixed amount
+      const qrCodeImg = document.getElementById('member-qr-code') as HTMLImageElement | null;
       if (qrCodeImg) {
-        qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=UPI:nsmalumni@paytm?am=${amount}&tn=NSM%20Alumni%20Donation`;
+        qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=UPI:nsmalumni@paytm?am=5000&tn=NSMOSA%20Membership%20Fee`;
       }
     }
   }
 
-  if (nsmForm) {
-    nsmForm.addEventListener('submit', (e) => {
+  if (memberForm) {
+    memberForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const amount = getSelectedAmount('nsmForm');
-      showDonationPaymentSection(amount);
-    });
-  }
-
-  if (generalForm) {
-    generalForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const amount = getSelectedAmount('generalForm');
-      showDonationPaymentSection(amount);
+      showMemberPaymentSection();
     });
   }
 
@@ -2377,92 +2313,78 @@ function initDonatePage(): void {
   });
 
   // Payment confirmation
-  const confirmBankPaymentBtn = document.getElementById('confirm-donate-bank-payment');
-  const razorpayPayBtn = document.getElementById('razorpay-donate-pay-btn');
-  const donationPaymentSuccessSection = document.getElementById('donation-payment-success-section');
+  const confirmBankPaymentBtn = document.getElementById('confirm-member-bank-payment');
+  const razorpayPayBtn = document.getElementById('razorpay-member-pay-btn');
+  const memberPaymentSuccessSection = document.getElementById('member-payment-success-section');
 
-  function showDonationPaymentSuccess(transactionId: string, amount: string, method: string): void {
-    if (!donationPaymentSuccessSection) return;
+  function showMemberPaymentSuccess(transactionId: string, method: string): void {
+    if (!memberPaymentSuccessSection) return;
 
     // Hide payment details
     if (bankPaymentDetails) bankPaymentDetails.classList.remove('active');
     if (razorpayPaymentDetails) razorpayPaymentDetails.classList.remove('active');
 
     // Update success section details
-    const txnIdEl = document.getElementById('donation-payment-success-txn-id');
-    const amountEl = document.getElementById('donation-payment-success-amount');
+    const txnIdEl = document.getElementById('member-payment-success-txn-id');
+    const amountEl = document.getElementById('member-payment-success-amount');
+    const amount = '5000';
     
     if (txnIdEl) txnIdEl.textContent = transactionId;
-    if (amountEl) amountEl.textContent = '₹' + parseFloat(amount).toLocaleString('en-IN');
+    if (amountEl) amountEl.textContent = '₹5,000';
 
     // Store transaction details for receipt
-    donationPaymentSuccessSection.dataset.transactionId = transactionId;
-    donationPaymentSuccessSection.dataset.amount = amount;
-    donationPaymentSuccessSection.dataset.method = method;
+    memberPaymentSuccessSection.dataset.transactionId = transactionId;
+    memberPaymentSuccessSection.dataset.amount = amount;
+    memberPaymentSuccessSection.dataset.method = method;
 
-    // Track donation
-    const nsmForm = document.getElementById('nsmForm') as HTMLFormElement | null;
-    const generalForm = document.getElementById('generalForm') as HTMLFormElement | null;
-    let donorName = 'Anonymous';
-    let donorEmail = '';
-    let category = 'general';
+    // Track membership registration
+    const memberForm = document.getElementById('member-registration-form') as HTMLFormElement | null;
+    let memberName = 'Member';
+    let memberEmail = '';
 
-    if (nsmForm) {
-      const formData = new FormData(nsmForm);
-      donorName = (formData.get('name') || 'Anonymous').toString();
-      donorEmail = (formData.get('email') || '').toString();
-      category = 'nsm';
-    } else if (generalForm) {
-      const formData = new FormData(generalForm);
-      donorName = (formData.get('name') || 'Anonymous').toString();
-      donorEmail = (formData.get('email') || '').toString();
-      category = 'general';
+    if (memberForm) {
+      const formData = new FormData(memberForm);
+      memberName = (formData.get('name') || 'Member').toString();
+      memberEmail = (formData.get('email') || '').toString();
     }
 
-    const donations = JSON.parse(localStorage.getItem('nsm_donations') || '[]');
-    donations.push({
+    const memberships = JSON.parse(localStorage.getItem('nsm_memberships') || '[]');
+    memberships.push({
       id: Date.now().toString(),
-      name: donorName,
-      email: donorEmail,
+      name: memberName,
+      email: memberEmail,
       amount: amount,
       method: method,
       transactionId: transactionId,
-      category: category,
       timestamp: Date.now()
     });
-    localStorage.setItem('nsm_donations', JSON.stringify(donations));
+    localStorage.setItem('nsm_memberships', JSON.stringify(memberships));
 
     // Show success section
-    donationPaymentSuccessSection.style.display = 'block';
-    donationPaymentSuccessSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    memberPaymentSuccessSection.style.display = 'block';
+    memberPaymentSuccessSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  // Download Receipt Functionality for Donations
-  const donationDownloadReceiptBtn = document.getElementById('donation-download-receipt-btn');
+  // Download Receipt Functionality for Membership
+  const memberDownloadReceiptBtn = document.getElementById('member-download-receipt-btn');
 
-  function downloadDonationReceipt(): void {
-    if (!donationPaymentSuccessSection) return;
+  function downloadMemberReceipt(): void {
+    if (!memberPaymentSuccessSection) return;
 
-    const transactionId = donationPaymentSuccessSection.dataset.transactionId || 'TXN' + Date.now();
-    const amount = donationPaymentSuccessSection.dataset.amount || '5000';
-    const method = donationPaymentSuccessSection.dataset.method || 'Payment';
+    const transactionId = memberPaymentSuccessSection.dataset.transactionId || 'TXN' + Date.now();
+    const amount = '5000';
+    const method = memberPaymentSuccessSection.dataset.method || 'Payment';
 
-    // Get donor details from forms if available
-    const nsmForm = document.getElementById('nsmForm') as HTMLFormElement | null;
-    const generalForm = document.getElementById('generalForm') as HTMLFormElement | null;
-    let donorName = 'Donor';
-    let donorEmail = '';
+    // Get member details from form
+    const memberForm = document.getElementById('member-registration-form') as HTMLFormElement | null;
+    let memberName = 'Member';
+    let memberEmail = '';
 
-    if (nsmForm) {
-      const formData = new FormData(nsmForm);
+    if (memberForm) {
+      const formData = new FormData(memberForm);
       const name = formData.get('name') || '';
-      donorName = name.toString().trim() || 'Donor';
-      donorEmail = (formData.get('email') || '').toString();
-    } else if (generalForm) {
-      const formData = new FormData(generalForm);
-      const name = formData.get('name') || '';
-      donorName = name.toString().trim() || 'Donor';
-      donorEmail = (formData.get('email') || '').toString();
+      memberName = name.toString().trim() || 'Member';
+      memberEmail = (formData.get('email') || '').toString();
     }
 
     // Create receipt HTML
@@ -2470,7 +2392,7 @@ function initDonatePage(): void {
       <!DOCTYPE html>
       <html>
       <head>
-        <title>Donation Receipt - NSM Alumni</title>
+        <title>Membership Receipt - NSMOSA</title>
         <style>
           body { font-family: Arial, sans-serif; padding: 40px; max-width: 600px; margin: 0 auto; }
           .header { text-align: center; border-bottom: 3px solid #00274d; padding-bottom: 20px; margin-bottom: 30px; }
@@ -2487,12 +2409,12 @@ function initDonatePage(): void {
       </head>
       <body>
         <div class="header">
-          <div class="logo">NSM</div>
-          <div class="title">Old Students Association</div>
-          <div class="success-badge">✓ Donation Successful</div>
+          <div class="logo">NSMOSA</div>
+          <div class="title">Membership Registration</div>
+          <div class="success-badge">✓ Registration Successful</div>
         </div>
         
-        <h2 style="color: #00274d; margin-bottom: 20px;">Donation Receipt</h2>
+        <h2 style="color: #00274d; margin-bottom: 20px;">Membership Receipt</h2>
         
         <div class="receipt-details">
           <div class="detail-row">
@@ -2508,27 +2430,27 @@ function initDonatePage(): void {
             <span class="value">${new Date().toLocaleTimeString('en-IN')}</span>
           </div>
           <div class="detail-row">
-            <span class="label">Donor Name:</span>
-            <span class="value">${donorName}</span>
+            <span class="label">Member Name:</span>
+            <span class="value">${memberName}</span>
           </div>
-          ${donorEmail ? `<div class="detail-row">
+          ${memberEmail ? `<div class="detail-row">
             <span class="label">Email:</span>
-            <span class="value">${donorEmail}</span>
+            <span class="value">${memberEmail}</span>
           </div>` : ''}
           <div class="detail-row">
             <span class="label">Payment Method:</span>
             <span class="value">${method}</span>
           </div>
           <div class="detail-row">
-            <span class="label">Amount Donated:</span>
-            <span class="value">₹${parseFloat(amount).toLocaleString('en-IN')}</span>
+            <span class="label">Registration Fee:</span>
+            <span class="value">₹5,000</span>
           </div>
         </div>
         
         <div class="footer">
           <p>This is a computer-generated receipt. No signature is required.</p>
           <p>For any queries, please contact: nsmalumni@example.com</p>
-          <p style="margin-top: 20px;">Thank you for your generous donation!</p>
+          <p style="margin-top: 20px;">Welcome to NSMOSA! Thank you for joining us.</p>
         </div>
       </body>
       </html>
@@ -2539,30 +2461,29 @@ function initDonatePage(): void {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `NSM_Donation_Receipt_${transactionId}.html`;
+    a.download = `NSMOSA_Membership_Receipt_${transactionId}.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }
 
-  if (donationDownloadReceiptBtn) {
-    donationDownloadReceiptBtn.addEventListener('click', downloadDonationReceipt);
+  if (memberDownloadReceiptBtn) {
+    memberDownloadReceiptBtn.addEventListener('click', downloadMemberReceipt);
   }
 
   if (confirmBankPaymentBtn) {
     confirmBankPaymentBtn.addEventListener('click', () => {
       if (confirm('Have you completed the bank transfer/UPI payment?')) {
-        const amount = getSelectedAmount('nsmForm') || getSelectedAmount('generalForm');
         const transactionId = 'TXN' + Date.now();
-        showDonationPaymentSuccess(transactionId, amount, 'Bank Transfer / UPI');
+        showMemberPaymentSuccess(transactionId, 'Bank Transfer / UPI');
       }
     });
   }
 
   if (razorpayPayBtn) {
     razorpayPayBtn.addEventListener('click', () => {
-      const amount = getSelectedAmount('nsmForm') || getSelectedAmount('generalForm');
+      const amount = '5000';
       const amountInPaise = Math.round(parseFloat(amount) * 100);
       
       // Razorpay Key - Replace with your actual Razorpay key
@@ -2576,10 +2497,10 @@ function initDonatePage(): void {
       
       // If key is not set, show alert and use simulation
       if (RAZORPAY_KEY_ID === 'YOUR_RAZORPAY_KEY_ID') {
-        if (confirm(`Razorpay key not configured. Simulating payment of ₹${parseFloat(amount).toLocaleString('en-IN')}?`)) {
+        if (confirm(`Razorpay key not configured. Simulating payment of ₹5,000?`)) {
           setTimeout(() => {
             const transactionId = 'RZP' + Date.now();
-            showDonationPaymentSuccess(transactionId, amount, 'Razorpay');
+            showMemberPaymentSuccess(transactionId, 'Razorpay');
           }, 1500);
         }
         return;
@@ -2591,11 +2512,11 @@ function initDonatePage(): void {
         key: RAZORPAY_KEY_ID,
         amount: amountInPaise,
         currency: 'INR',
-        name: 'NSM Old Students Association',
-        description: 'Donation Payment',
+        name: 'NSMOSA',
+        description: 'Membership Registration Fee',
         handler: function(response: any) {
           const transactionId = response.razorpay_payment_id || 'RZP' + Date.now();
-          showDonationPaymentSuccess(transactionId, amount, 'Razorpay');
+          showMemberPaymentSuccess(transactionId, 'Razorpay');
         },
         theme: {
           color: '#ff6b9d'
@@ -2678,5 +2599,7 @@ function initFAQPage(): void {
     });
   });
 }
+
+
 
 

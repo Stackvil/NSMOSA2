@@ -7,7 +7,7 @@ export type PageKey =
   | 'reunion'
   | 'faq'
   | 'contact'
-  | 'donate'
+  | 'member'
   | 'home';
 
 export interface PageSection {

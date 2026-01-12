@@ -201,9 +201,6 @@
                 <a href="#" class="dropdown-item" data-subpage="video-gallery"
                   >Video Gallery</a
                 >
-                <a href="#" class="dropdown-item" data-subpage="chapter-gallery"
-                  >Chapter Gallery</a
-                >
               </div>
             </li>
             <li class="nav-item">
@@ -298,7 +295,7 @@
                 </div>
               </div>
 
-              <div class="home-info-box">
+              <div class="home-info-box" style="cursor: pointer;" onclick="navigateToFAQRegistration()">
                 <h3 class="home-info-heading">
                   <i class="fas fa-user-plus"></i>
                   How to Join NSMOSA?
@@ -306,7 +303,7 @@
                 <p class="home-info-text">
                   Click "Join Now" and complete the registration. Get verified to access exclusive alumni benefits and networking.
                 </p>
-                <a href="#" class="read-more-link">Read More</a>
+                <a href="#" class="read-more-link" onclick="event.preventDefault(); navigateToFAQRegistration(); return false;">Read More →</a>
               </div>
 
             </div>
@@ -1619,10 +1616,6 @@
                     <input type="email" id="connect-email" name="email" placeholder="Enter your email" required />
                   </div>
                   <div class="form-group">
-                    <label for="connect-subject">Subject</label>
-                    <input type="text" id="connect-subject" name="subject" placeholder="Enter subject" required />
-                  </div>
-                  <div class="form-group">
                     <label for="connect-message">Message</label>
                     <textarea id="connect-message" name="message" rows="6" placeholder="Enter your message" required></textarea>
                   </div>
@@ -1642,9 +1635,6 @@
             </button>
             <button class="gallery-tab" data-gallery-type="video">
               <i class="fas fa-video"></i> Video Gallery
-            </button>
-            <button class="gallery-tab" data-gallery-type="chapter">
-              <i class="fas fa-map"></i> Chapter Gallery
             </button>
           </div>
 
@@ -1923,11 +1913,11 @@
               </button>
               <button class="event-tab-modern" data-event-type="school">
                 <div class="tab-icon-wrapper">
-                  <i class="fas fa-school"></i>
+                  <i class="fas fa-star"></i>
                 </div>
                 <div class="tab-content">
-                  <h3 class="tab-title">School Events</h3>
-                  <p class="tab-description">Annual celebrations and campus activities</p>
+                  <h3 class="tab-title">NSMOSA Events</h3>
+                  <p class="tab-description">Alumni association celebrations and activities</p>
                 </div>
                 <div class="tab-indicator"></div>
               </button>
@@ -1937,10 +1927,11 @@
           <!-- Social Events Section -->
           <div id="social-events-section" class="events-section active">
             <div class="events-grid">
-              <div class="event-card">
+              <div class="event-card" data-event-id="alumni-reunion" style="cursor: pointer;">
                 <img
                   src="/images/HOME PAGE PHOTOS NSM/event.jpg"
                   alt="NSM Social Event"
+                  data-event-id="alumni-reunion"
                 />
                 <h3>Alumni Reunion 2025</h3>
                 <p>
@@ -1958,7 +1949,7 @@
                   </div>
                 </div>
               </div>
-              <div class="event-card">
+              <div class="event-card" data-event-id="networking-mixer" style="cursor: pointer;">
                 <img
                   src="/images/HOME PAGE PHOTOS NSM/event 1.jpg"
                   alt="NSM Social Event"
@@ -1979,7 +1970,7 @@
                   </div>
                 </div>
               </div>
-              <div class="event-card">
+              <div class="event-card" data-event-id="annual-alumni-dinner" style="cursor: pointer;">
                 <img
                   src="/images/HOME PAGE PHOTOS NSM/event2.jpg"
                   alt="NSM Social Event"
@@ -2000,7 +1991,7 @@
                   </div>
                 </div>
               </div>
-              <div class="event-card">
+              <div class="event-card" data-event-id="sports-day-alumni" style="cursor: pointer;">
                 <img
                   src="/images/HOME PAGE PHOTOS NSM/event 3.jpg"
                   alt="NSM Social Event"
@@ -2021,7 +2012,7 @@
                   </div>
                 </div>
               </div>
-              <div class="event-card">
+              <div class="event-card" data-event-id="cultural-evening" style="cursor: pointer;">
                 <img
                   src="/images/HOME PAGE PHOTOS NSM/event 4.jpg"
                   alt="NSM Social Event"
@@ -2042,7 +2033,7 @@
                   </div>
                 </div>
               </div>
-              <div class="event-card">
+              <div class="event-card" data-event-id="alumni-meet-greet" style="cursor: pointer;">
                 <img
                   src="/images/HOME PAGE PHOTOS NSM/event 5.jpg"
                   alt="NSM Social Event"
@@ -2066,10 +2057,10 @@
             </div>
           </div>
 
-          <!-- School Events Section -->
+          <!-- NSMOSA Events Section -->
           <div id="school-events-section" class="events-section">
             <div class="events-grid">
-              <div class="event-card">
+              <div class="event-card" data-event-id="annual-day" style="cursor: pointer;">
                 <img
                   src="/images/HOME PAGE PHOTOS NSM/middel main box.jpg"
                   alt="NSM School Event"
@@ -2090,7 +2081,7 @@
                   </div>
                 </div>
               </div>
-              <div class="event-card">
+              <div class="event-card" data-event-id="science-exhibition" style="cursor: pointer;">
                 <img
                   src="/images/HOME PAGE PHOTOS NSM/middel main box 1.jpg"
                   alt="NSM School Event"
@@ -2111,7 +2102,7 @@
                   </div>
                 </div>
               </div>
-              <div class="event-card">
+              <div class="event-card" data-event-id="sports-meet" style="cursor: pointer;">
                 <img
                   src="/images/HOME PAGE PHOTOS NSM/middel main box 2.jpg"
                   alt="NSM School Event"
@@ -2132,7 +2123,7 @@
                   </div>
                 </div>
               </div>
-              <div class="event-card">
+              <div class="event-card" data-event-id="graduation-ceremony" style="cursor: pointer;">
                 <img
                   src="/images/HOME PAGE PHOTOS NSM/middel main box 3.jpg"
                   alt="NSM School Event"
@@ -2153,7 +2144,7 @@
                   </div>
                 </div>
               </div>
-              <div class="event-card">
+              <div class="event-card" data-event-id="literary-fest" style="cursor: pointer;">
                 <img
                   src="/images/HOME PAGE PHOTOS NSM/photo gallery.jpg"
                   alt="NSM School Event"
@@ -2174,7 +2165,7 @@
                   </div>
                 </div>
               </div>
-              <div class="event-card">
+              <div class="event-card" data-event-id="founders-day" style="cursor: pointer;">
                 <img
                   src="/images/HOME PAGE PHOTOS NSM/photo gallery1.jpg"
                   alt="NSM School Event"
@@ -2193,6 +2184,24 @@
                   <div class="event-time">
                     <i class="fas fa-clock"></i> 9:00 AM - 2:00 PM
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Event Photos Modal (Members Only) -->
+          <div id="event-photos-modal" class="event-photos-modal">
+            <div class="modal-overlay-event-photos"></div>
+            <div class="modal-content-event-photos">
+              <div class="modal-header-event-photos">
+                <h2 class="modal-title-event-photos" id="event-photos-title">Event Photos</h2>
+                <button class="modal-close-event-photos" id="event-photos-close-btn">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              <div class="modal-body-event-photos">
+                <div class="event-photos-grid" id="event-photos-grid">
+                  <!-- Photos will be inserted here by JavaScript -->
                 </div>
               </div>
             </div>
@@ -4385,20 +4394,6 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="contact-subject">
-                      <i class="fas fa-tag"></i> Subject <span class="required">*</span>
-                    </label>
-                    <input 
-                      type="text" 
-                      id="contact-subject" 
-                      name="subject" 
-                      class="form-input" 
-                      placeholder="What is this regarding?"
-                      required
-                    />
-                  </div>
-
-                  <div class="form-group">
                     <label for="contact-message">
                       <i class="fas fa-comment-alt"></i> Message <span class="required">*</span>
                     </label>
@@ -4481,7 +4476,7 @@
         <div class="footer-column footer-about">
           <div class="footer-logo-section">
             <img src="/images/HOME PAGE PHOTOS NSM/NSM LOGO 1.jpeg" alt="NSM Logo" class="footer-logo" />
-            <h3 class="footer-title">About NSM</h3>
+            <h3 class="footer-title">About NSMOSA</h3>
           </div>
           <p class="footer-text">
             NSM School aims at the training of young men and women of quality to be
@@ -4495,37 +4490,37 @@
           </div>
         </div>
 
-        <div class="footer-column footer-events">
+        <div class="footer-column footer-events" id="footer-upcoming-events">
           <div class="footer-section-header">
             <i class="fas fa-calendar-star"></i>
-            <h3 class="footer-title">India Events</h3>
+            <h3 class="footer-title" id="footer-upcoming-title">NSMOSA Upcoming Events</h3>
           </div>
-          <div class="event-card">
+          <div class="event-card" id="footer-upcoming-event-card">
             <div class="event-date-modern">
-              <div class="event-month">JAN</div>
-              <div class="event-day">10</div>
-              <div class="event-year">2025</div>
+              <div class="event-month" id="footer-upcoming-month">JAN</div>
+              <div class="event-day" id="footer-upcoming-day">18</div>
+              <div class="event-year" id="footer-upcoming-year">2026</div>
             </div>
             <div class="event-details-modern">
-              <h4>B.Com batch of 1973-1976 Reunion (NSM)</h4>
+              <h4 id="footer-upcoming-title-text">Hyderabad Upcoming Reunion</h4>
               <span class="event-badge">Upcoming</span>
             </div>
           </div>
         </div>
 
-        <div class="footer-column footer-events">
+        <div class="footer-column footer-events" id="footer-past-events">
           <div class="footer-section-header">
-            <i class="fas fa-globe-americas"></i>
-            <h3 class="footer-title">International Events</h3>
+            <i class="fas fa-calendar-check"></i>
+            <h3 class="footer-title" id="footer-past-title">NSMOSA Past Events</h3>
           </div>
-          <div class="event-card">
+          <div class="event-card" id="footer-past-event-card">
             <div class="event-date-modern">
-              <div class="event-month">SEP</div>
-              <div class="event-day">10</div>
-              <div class="event-year">2023</div>
+              <div class="event-month" id="footer-past-month">SEP</div>
+              <div class="event-day" id="footer-past-day">10</div>
+              <div class="event-year" id="footer-past-year">2023</div>
             </div>
             <div class="event-details-modern">
-              <h4>Singapore NSM Chapter Reunion</h4>
+              <h4 id="footer-past-title-text">Andhra Pradesh NSM Chapter Reunion</h4>
               <span class="event-badge past">Past Event</span>
             </div>
           </div>
@@ -12544,6 +12539,76 @@
           }
         }
 
+        // Function to navigate to member page
+        function navigateToMemberPage() {
+          const memberNavLink = document.querySelector('a[data-page="member"]');
+          if (memberNavLink) {
+            memberNavLink.click();
+          } else {
+            // Fallback: scroll to member page if link doesn't exist
+            const memberPage = document.getElementById('page-member');
+            if (memberPage) {
+              // Switch to member page programmatically
+              const pageSections = document.querySelectorAll('.page-section');
+              pageSections.forEach(section => section.classList.remove('visible'));
+              memberPage.classList.add('visible');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }
+        }
+
+        // Function to navigate to FAQ page with registration category
+        function navigateToFAQRegistration() {
+          const faqNavLink = document.querySelector('a[data-page="faq"]');
+          if (faqNavLink) {
+            faqNavLink.click();
+            // After navigating to FAQ, filter to registration category
+            setTimeout(() => {
+              const registrationCategoryBtn = document.querySelector('.faq-category-btn[data-category="registration"]');
+              if (registrationCategoryBtn) {
+                // Remove active from all category buttons
+                document.querySelectorAll('.faq-category-btn').forEach((btn) => {
+                  btn.classList.remove('active');
+                });
+                // Add active to registration category
+                registrationCategoryBtn.classList.add('active');
+                // Trigger click to filter
+                registrationCategoryBtn.click();
+                // Scroll to FAQ section
+                setTimeout(() => {
+                  const faqSection = document.getElementById('page-faq');
+                  if (faqSection) {
+                    faqSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }, 300);
+              }
+            }, 200);
+          } else {
+            // Fallback: navigate directly to FAQ page
+            const faqPage = document.getElementById('page-faq');
+            if (faqPage) {
+              const pageSections = document.querySelectorAll('.page-section');
+              pageSections.forEach(section => section.classList.remove('visible'));
+              faqPage.classList.add('visible');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              // Filter to registration category
+              setTimeout(() => {
+                const registrationCategoryBtn = document.querySelector('.faq-category-btn[data-category="registration"]');
+                if (registrationCategoryBtn) {
+                  document.querySelectorAll('.faq-category-btn').forEach((btn) => {
+                    btn.classList.remove('active');
+                  });
+                  registrationCategoryBtn.classList.add('active');
+                  registrationCategoryBtn.click();
+                }
+              }, 200);
+            }
+          }
+        }
+
+        // Make function globally accessible
+        window.navigateToFAQRegistration = navigateToFAQRegistration;
+
         // Event listeners
         if (signInBtn) {
           signInBtn.addEventListener('click', (e) => {
@@ -12555,14 +12620,26 @@
           console.error('Sign in button not found');
         }
 
-        // Register button on home page
+        // Register button on home page - navigate to member page
         const registerNowBtn = document.querySelector('.register-now-btn');
         if (registerNowBtn) {
           registerNowBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            openRegisterModal();
+            navigateToMemberPage();
           });
+        }
+
+        // Register badge on photo overlay - also navigate to member page
+        const registerNowBadge = document.querySelector('.register-now-badge');
+        if (registerNowBadge) {
+          registerNowBadge.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            navigateToMemberPage();
+          });
+          // Make badge clickable
+          registerNowBadge.style.cursor = 'pointer';
         }
 
         if (loginCloseBtn) {
@@ -13280,8 +13357,42 @@
         const aboutDropdownLinks = document.querySelectorAll('.dropdown-item[data-subpage]');
         const sidebarLinks = document.querySelectorAll('.sidebar-link');
 
+        // Function to check if user is a member
+        function isUserMember() {
+          const memberships = JSON.parse(localStorage.getItem('nsm_memberships') || '[]');
+          return memberships.length > 0;
+        }
+
+        // Function to navigate to member page
+        function navigateToMemberPage() {
+          const memberNavLink = document.querySelector('a[data-page="member"]');
+          if (memberNavLink) {
+            memberNavLink.click();
+          } else {
+            // Fallback: scroll to member page if link doesn't exist
+            const memberPage = document.getElementById('page-member');
+            if (memberPage) {
+              // Switch to member page programmatically
+              const pageSections = document.querySelectorAll('.page-section');
+              pageSections.forEach(section => section.classList.remove('visible'));
+              memberPage.classList.add('visible');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }
+        }
+
         // Function to show a specific about subsection
         function showAboutSubsection(subsectionId) {
+          // Check membership for restricted sections
+          const memberOnlySections = ['annual-reports-section', 'chapters-section'];
+          if (memberOnlySections.includes(subsectionId)) {
+            if (!isUserMember()) {
+              // User is not a member - navigate to member page
+              navigateToMemberPage();
+              return; // Don't show the section
+            }
+          }
+
           const allSubsections = document.querySelectorAll('.about-subsection');
           allSubsections.forEach(section => {
             section.classList.remove('active');
@@ -13997,11 +14108,464 @@
             }
           });
         });
+      })();
 
-        const alumniEventSection = document.getElementById('alumni-event-connect-section');
-        if (alumniEventSection) {
-          observer.observe(alumniEventSection, { attributes: true });
+      // Event Photos Feature (Members Only)
+      (function() {
+        // Simple lightbox function for event images
+        function openEventImageLightbox(photos, currentIndex) {
+          const lightbox = document.getElementById('photo-lightbox');
+          const lightboxImage = document.getElementById('lightbox-image');
+          const lightboxCounter = document.getElementById('lightbox-counter');
+          const lightboxCloseBtn = document.getElementById('lightbox-close-btn');
+          const lightboxPrevBtn = document.getElementById('lightbox-prev-btn');
+          const lightboxNextBtn = document.getElementById('lightbox-next-btn');
+          const lightboxOverlay = lightbox ? lightbox.querySelector('.lightbox-overlay') : null;
+
+          if (!lightbox || !lightboxImage) {
+            console.error('Lightbox elements not found');
+            return;
+          }
+
+          let currentPhotoIndex = currentIndex || 0;
+          const totalPhotos = photos.length;
+
+          function updateLightboxImage() {
+            if (photos[currentPhotoIndex]) {
+              lightboxImage.style.opacity = '0.5';
+              
+              const img = new Image();
+              img.onload = function() {
+                if (lightboxImage && photos[currentPhotoIndex]) {
+                  lightboxImage.src = photos[currentPhotoIndex];
+                  lightboxImage.style.opacity = '1';
+                }
+              };
+              img.onerror = function() {
+                if (lightboxImage) {
+                  lightboxImage.style.opacity = '1';
+                }
+              };
+              img.src = photos[currentPhotoIndex];
+              
+              if (lightboxCounter) {
+                lightboxCounter.textContent = (currentPhotoIndex + 1) + ' / ' + totalPhotos;
+              }
+              if (lightboxPrevBtn) {
+                lightboxPrevBtn.style.display = currentPhotoIndex === 0 ? 'none' : 'flex';
+              }
+              if (lightboxNextBtn) {
+                lightboxNextBtn.style.display = currentPhotoIndex === totalPhotos - 1 ? 'none' : 'flex';
+              }
+            }
+          }
+
+          function showNextPhoto() {
+            if (currentPhotoIndex < totalPhotos - 1) {
+              currentPhotoIndex++;
+              updateLightboxImage();
+            }
+          }
+
+          function showPrevPhoto() {
+            if (currentPhotoIndex > 0) {
+              currentPhotoIndex--;
+              updateLightboxImage();
+            }
+          }
+
+          function closeLightbox() {
+            if (!lightbox) return;
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+            if (lightboxImage) {
+              lightboxImage.src = '';
+            }
+          }
+
+          // Open lightbox
+          updateLightboxImage();
+          lightbox.classList.add('active');
+          document.body.style.overflow = 'hidden';
+
+          // Setup event listeners
+          if (lightboxCloseBtn) {
+            lightboxCloseBtn.onclick = closeLightbox;
+          }
+          if (lightboxOverlay) {
+            lightboxOverlay.onclick = closeLightbox;
+          }
+          if (lightboxNextBtn) {
+            lightboxNextBtn.onclick = showNextPhoto;
+          }
+          if (lightboxPrevBtn) {
+            lightboxPrevBtn.onclick = showPrevPhoto;
+          }
+
+          // Keyboard navigation
+          function handleKeyboard(e) {
+            if (!lightbox.classList.contains('active')) return;
+            
+            if (e.key === 'Escape') {
+              e.preventDefault();
+              closeLightbox();
+              document.removeEventListener('keydown', handleKeyboard);
+            } else if (e.key === 'ArrowRight') {
+              e.preventDefault();
+              showNextPhoto();
+            } else if (e.key === 'ArrowLeft') {
+              e.preventDefault();
+              showPrevPhoto();
+            }
+          }
+          
+          document.addEventListener('keydown', handleKeyboard);
         }
+
+        // Check if user is a registered member
+        function isUserMember() {
+          const memberships = JSON.parse(localStorage.getItem('nsm_memberships') || '[]');
+          return memberships.length > 0;
+        }
+
+        // Function to navigate to member page
+        function navigateToMemberPage() {
+          const memberNavLink = document.querySelector('a[data-page="member"]');
+          if (memberNavLink) {
+            memberNavLink.click();
+          } else {
+            const memberPage = document.getElementById('page-member');
+            if (memberPage) {
+              const pageSections = document.querySelectorAll('.page-section');
+              pageSections.forEach(section => section.classList.remove('visible'));
+              memberPage.classList.add('visible');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }
+        }
+
+        // Event photos data structure
+        const eventPhotos = {
+          // NSMOSA Events (School Events)
+          'annual-day': {
+            title: 'Annual Day Celebration',
+            photos: [
+              '/images/HOME PAGE PHOTOS NSM/middel main box.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event2.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 1.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 3.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 4.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 5.jpg'
+            ]
+          },
+          'science-exhibition': {
+            title: 'Science Exhibition',
+            photos: [
+              '/images/HOME PAGE PHOTOS NSM/middel main box 1.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event2.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 1.jpg'
+            ]
+          },
+          'sports-meet': {
+            title: 'Sports Meet',
+            photos: [
+              '/images/HOME PAGE PHOTOS NSM/middel main box 2.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event2.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 3.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 4.jpg'
+            ]
+          },
+          'graduation-ceremony': {
+            title: 'Graduation Ceremony',
+            photos: [
+              '/images/HOME PAGE PHOTOS NSM/middel main box 3.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 1.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 5.jpg'
+            ]
+          },
+          'literary-fest': {
+            title: 'Literary Fest',
+            photos: [
+              '/images/HOME PAGE PHOTOS NSM/photo gallery.jpg',
+              '/images/HOME PAGE PHOTOS NSM/photo gallery1.jpg',
+              '/images/HOME PAGE PHOTOS NSM/photo gallery 2.jpg',
+              '/images/HOME PAGE PHOTOS NSM/photo gallery 3.jpg',
+              '/images/HOME PAGE PHOTOS NSM/photo gallery 4.jpg'
+            ]
+          },
+          'founders-day': {
+            title: "Founder's Day",
+            photos: [
+              '/images/HOME PAGE PHOTOS NSM/photo gallery1.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event2.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 1.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 3.jpg'
+            ]
+          },
+          // Social Events
+          'alumni-reunion': {
+            title: 'Alumni Reunion 2025',
+            photos: [
+              '/images/HOME PAGE PHOTOS NSM/event.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event2.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 1.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 3.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 4.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 5.jpg',
+              '/images/HOME PAGE PHOTOS NSM/photo gallery.jpg'
+            ]
+          },
+          'networking-mixer': {
+            title: 'Networking Mixer',
+            photos: [
+              '/images/HOME PAGE PHOTOS NSM/event 1.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event2.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 3.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 4.jpg'
+            ]
+          },
+          'annual-alumni-dinner': {
+            title: 'Annual Alumni Dinner',
+            photos: [
+              '/images/HOME PAGE PHOTOS NSM/event2.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 1.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 5.jpg',
+              '/images/HOME PAGE PHOTOS NSM/photo gallery.jpg',
+              '/images/HOME PAGE PHOTOS NSM/photo gallery1.jpg'
+            ]
+          },
+          'sports-day-alumni': {
+            title: 'Sports Day Alumni',
+            photos: [
+              '/images/HOME PAGE PHOTOS NSM/event 3.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event2.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 4.jpg',
+              '/images/HOME PAGE PHOTOS NSM/middel main box 2.jpg'
+            ]
+          },
+          'cultural-evening': {
+            title: 'Cultural Evening',
+            photos: [
+              '/images/HOME PAGE PHOTOS NSM/event 4.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 1.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 5.jpg',
+              '/images/HOME PAGE PHOTOS NSM/photo gallery.jpg',
+              '/images/HOME PAGE PHOTOS NSM/photo gallery 2.jpg'
+            ]
+          },
+          'alumni-meet-greet': {
+            title: 'Alumni Meet & Greet',
+            photos: [
+              '/images/HOME PAGE PHOTOS NSM/event 5.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event2.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 1.jpg',
+              '/images/HOME PAGE PHOTOS NSM/event 3.jpg',
+              '/images/HOME PAGE PHOTOS NSM/photo gallery1.jpg'
+            ]
+          }
+        };
+
+        // Get modal elements
+        const eventPhotosModal = document.getElementById('event-photos-modal');
+        const eventPhotosTitle = document.getElementById('event-photos-title');
+        const eventPhotosGrid = document.getElementById('event-photos-grid');
+        const eventPhotosCloseBtn = document.getElementById('event-photos-close-btn');
+        const eventPhotosOverlay = eventPhotosModal?.querySelector('.modal-overlay-event-photos');
+
+        // Open event photos modal
+        function openEventPhotosModal(eventId) {
+          if (!eventPhotosModal || !eventPhotosGrid || !eventPhotosTitle) return;
+
+          const eventData = eventPhotos[eventId];
+          if (!eventData) return;
+
+          // Update title
+          eventPhotosTitle.textContent = eventData.title + ' - Photos';
+
+          // Clear grid
+          eventPhotosGrid.innerHTML = '';
+
+          // Add photos to grid
+          eventData.photos.forEach((photoUrl, index) => {
+            const photoItem = document.createElement('div');
+            photoItem.className = 'event-photo-item';
+            photoItem.innerHTML = `
+              <img 
+                src="${photoUrl}" 
+                alt="${eventData.title} Photo ${index + 1}" 
+                loading="lazy"
+                data-photo-index="${index}"
+                data-photo-url="${photoUrl}"
+              />
+            `;
+            eventPhotosGrid.appendChild(photoItem);
+          });
+
+          // Add click handlers to photos for full screen view
+          const photoItems = eventPhotosGrid.querySelectorAll('.event-photo-item img');
+          photoItems.forEach((img) => {
+            img.style.cursor = 'pointer';
+            img.addEventListener('click', function() {
+              const allPhotos = eventData.photos;
+              const currentIndex = parseInt(img.dataset.photoIndex || '0', 10);
+              if (typeof openPhotoLightbox === 'function') {
+                openPhotoLightbox(allPhotos, currentIndex);
+              }
+            });
+          });
+
+          // Show modal
+          eventPhotosModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+
+        // Close event photos modal
+        function closeEventPhotosModal() {
+          if (!eventPhotosModal) return;
+          eventPhotosModal.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+
+        // Setup event card click handlers using event delegation
+        let eventHandlerAttached = false;
+        function setupEventCardHandlers() {
+          // Use event delegation on the events page container
+          const eventsPage = document.getElementById('page-events');
+          if (!eventsPage || eventHandlerAttached) return;
+          
+          // Add event delegation listener
+          eventsPage.addEventListener('click', function(e) {
+            const target = e.target;
+            
+            // Check if clicking directly on an event card image
+            if (target.tagName === 'IMG' && target.closest('.event-card[data-event-id]')) {
+              e.preventDefault();
+              e.stopPropagation();
+              
+              const card = target.closest('.event-card[data-event-id]');
+              const eventId = card ? card.getAttribute('data-event-id') : null;
+              
+              if (eventId && eventPhotos[eventId]) {
+                // Get the event photos
+                const eventData = eventPhotos[eventId];
+                const clickedImageSrc = target.src || target.getAttribute('src') || '';
+                
+                // Extract filename from the clicked image src (handle both absolute and relative URLs)
+                const clickedFilename = clickedImageSrc.split('/').pop().split('?')[0].toLowerCase();
+                
+                // Find the index of the clicked image in the photos array
+                let photoIndex = -1;
+                eventData.photos.forEach((url, index) => {
+                  const urlFilename = url.split('/').pop().split('?')[0].toLowerCase();
+                  // Match by filename or check if URLs are similar
+                  if (clickedFilename === urlFilename || 
+                      clickedImageSrc.includes(urlFilename) || 
+                      url.includes(clickedFilename) ||
+                      clickedImageSrc.endsWith(url) ||
+                      url.endsWith(clickedFilename)) {
+                    photoIndex = index;
+                  }
+                });
+                
+                // Open lightbox with all event photos, starting at the clicked image (or first if not found)
+                const startIndex = photoIndex >= 0 ? photoIndex : 0;
+                
+                // Use our local lightbox function
+                openEventImageLightbox(eventData.photos, startIndex);
+                return;
+              }
+            }
+            
+            // Handle card click (not on image)
+            const card = target.closest ? target.closest('.event-card[data-event-id]') : null;
+            if (!card) return;
+            
+            // Don't trigger if clicking on links or buttons inside
+            if (target.closest && target.closest('a, button')) return;
+            
+            // Don't trigger if clicking on image (already handled above)
+            if (target.tagName === 'IMG') return;
+
+            const eventId = card.getAttribute('data-event-id');
+            if (!eventId) return;
+
+            // Check if user is a member
+            if (isUserMember()) {
+              // User is a member - show event photos
+              openEventPhotosModal(eventId);
+            } else {
+              // User is not a member - navigate to member page
+              navigateToMemberPage();
+            }
+          });
+          
+          // Add cursor pointer style to event card images
+          const eventCardImages = eventsPage.querySelectorAll('.event-card[data-event-id] img');
+          eventCardImages.forEach((img) => {
+            img.style.cursor = 'pointer';
+          });
+          
+          eventHandlerAttached = true;
+        }
+
+        // Close modal handlers
+        if (eventPhotosCloseBtn) {
+          eventPhotosCloseBtn.addEventListener('click', closeEventPhotosModal);
+        }
+
+        if (eventPhotosOverlay) {
+          eventPhotosOverlay.addEventListener('click', closeEventPhotosModal);
+        }
+
+        // Setup on page load
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(setupEventCardHandlers, 100);
+          });
+        } else {
+          setTimeout(setupEventCardHandlers, 100);
+        }
+
+        // Also setup when events page is shown
+        const eventsPageObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+              const target = mutation.target;
+              if (target && target.id === 'page-events' && target.classList.contains('visible')) {
+                // Reset flag to allow re-initialization
+                eventHandlerAttached = false;
+                setTimeout(setupEventCardHandlers, 100);
+              }
+            }
+          });
+        });
+
+        const eventsPage = document.getElementById('page-events');
+        if (eventsPage) {
+          eventsPageObserver.observe(eventsPage, {
+            attributes: true,
+            attributeFilter: ['class']
+          });
+        }
+        
+        // Also try to setup immediately if events page is already visible
+        setTimeout(function() {
+          const pageEvents = document.getElementById('page-events');
+          if (pageEvents && pageEvents.classList.contains('visible')) {
+            eventHandlerAttached = false;
+            setupEventCardHandlers();
+          }
+        }, 500);
       })();
     </script>
 

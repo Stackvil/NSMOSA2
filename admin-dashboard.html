@@ -896,6 +896,245 @@
     .loading {
       animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
+
+    /* Notification Badge */
+    .notification-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--danger-color);
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      border: 2px solid white;
+      box-shadow: var(--shadow-md);
+    }
+
+    .notification-icon-wrapper {
+      position: relative;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .notification-icon-wrapper:hover {
+      background: var(--gray-100);
+    }
+
+    /* Nav Badge */
+    .nav-badge {
+      background: var(--danger-color);
+      color: white;
+      border-radius: 12px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+
+    /* Approval Item Styles */
+    .approvals-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .approval-item {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--gray-200);
+      transition: all 0.3s ease;
+    }
+
+    .approval-item:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .approval-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--gray-100);
+    }
+
+    .approval-type {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .approval-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      font-size: 13px;
+      color: var(--gray-600);
+    }
+
+    .approval-content {
+      margin-bottom: 20px;
+    }
+
+    .approval-content h4 {
+      color: var(--gray-800);
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+
+    .approval-content p {
+      color: var(--gray-600);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .approval-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    /* Admin Item Styles */
+    .admins-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .admin-item {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--gray-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .admin-item:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .admin-info {
+      flex: 1;
+    }
+
+    .admin-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gray-800);
+      margin-bottom: 8px;
+    }
+
+    .admin-details {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 13px;
+      color: var(--gray-600);
+    }
+
+    .admin-details span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Pending Posts Styles */
+    .pending-posts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .pending-post-item {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--warning-color);
+      transition: all 0.3s ease;
+    }
+
+    .pending-post-item:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .pending-post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .pending-post-type {
+      background: var(--warning-color);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .pending-post-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--warning-color);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .pending-post-content {
+      color: var(--gray-600);
+      font-size: 14px;
+    }
+
+    /* Role Badge Styles */
+    .role-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .role-badge.super-admin {
+      background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+      color: white;
+    }
+
+    .role-badge.admin {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .role-badge.representative {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -905,9 +1144,16 @@
       NSM Alumni Admin Dashboard
     </h1>
     <div class="user-info">
+      <div class="notification-icon-wrapper" id="notification-wrapper" style="position: relative; cursor: pointer;">
+        <i class="fas fa-bell" style="font-size: 20px; color: var(--gray-600);"></i>
+        <span id="notification-badge" class="notification-badge" style="display: none; position: absolute; top: -8px; right: -8px; background: var(--danger-color); color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700;">0</span>
+      </div>
       <div class="user-badge">
         <i class="fas fa-user"></i>
-        <span id="admin-username">Admin</span>
+        <div style="display: flex; flex-direction: column; align-items: flex-start;">
+          <span id="admin-username">Admin</span>
+          <span id="admin-role" style="font-size: 11px; color: var(--gray-500); font-weight: 500;">Role</span>
+        </div>
       </div>
       <button class="logout-btn" id="logout-btn">
         <i class="fas fa-sign-out-alt"></i> Logout
@@ -981,6 +1227,16 @@
       </button>
       <button class="nav-tab-btn" data-page="homepage-photos">
         <i class="fas fa-home"></i> Homepage Photos
+      </button>
+      <button class="nav-tab-btn" data-page="approvals" style="display: none;">
+        <i class="fas fa-check-circle"></i> Pending Approvals
+        <span id="approvals-count-badge" class="nav-badge" style="display: none;">0</span>
+      </button>
+      <button class="nav-tab-btn" data-page="user-management" style="display: none;">
+        <i class="fas fa-user-shield"></i> User Management
+      </button>
+      <button class="nav-tab-btn" data-page="my-pending" style="display: none;">
+        <i class="fas fa-clock"></i> My Pending Posts
       </button>
       <button class="nav-tab-btn" data-page="users">
         <i class="fas fa-users"></i> User Activity
@@ -1410,6 +1666,86 @@
         </div>
       </div>
     </div>
+
+    <!-- Pending Approvals Page (Super Admin/Admin Only) -->
+    <div id="page-approvals" class="admin-page-section">
+      <div class="dashboard-card">
+        <div class="card-header">
+          <div class="card-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h2>Pending Approvals</h2>
+          <p style="color: var(--gray-500); font-size: 14px; margin-top: 8px;">Review and approve content submitted by Representative Admins</p>
+        </div>
+        <div id="pending-approvals-list" class="approvals-list" style="padding: 20px;">
+          <p style="text-align: center; color: #999; padding: 40px;">Loading approvals...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Management Page (Super Admin/Admin Only) -->
+    <div id="page-user-management" class="admin-page-section">
+      <div class="dashboard-grid">
+        <div class="dashboard-card">
+          <div class="card-header">
+            <div class="card-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <i class="fas fa-user-shield"></i>
+            </div>
+            <h2>Add Representative Admin</h2>
+          </div>
+          <form id="add-representative-admin-form" style="padding: 20px;">
+            <div class="form-group">
+              <label><i class="fas fa-user"></i> Full Name</label>
+              <input type="text" id="rep-admin-name" required placeholder="Enter full name">
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-at"></i> Username</label>
+              <input type="text" id="rep-admin-username" required placeholder="Enter username">
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-envelope"></i> Email</label>
+              <input type="email" id="rep-admin-email" required placeholder="Enter email address">
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-lock"></i> Password</label>
+              <input type="password" id="rep-admin-password" required placeholder="Enter password">
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-plus"></i> Add Representative Admin
+            </button>
+          </form>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="card-header">
+            <div class="card-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+              <i class="fas fa-users-cog"></i>
+            </div>
+            <h2>Representative Admins</h2>
+          </div>
+          <div id="representative-admins-list" class="admins-list" style="padding: 20px;">
+            <p style="text-align: center; color: #999; padding: 40px;">Loading admins...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Pending Posts (Representative Admin Only) -->
+    <div id="page-my-pending" class="admin-page-section">
+      <div class="dashboard-card">
+        <div class="card-header">
+          <div class="card-icon" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+            <i class="fas fa-clock"></i>
+          </div>
+          <h2>My Pending Posts</h2>
+          <p style="color: var(--gray-500); font-size: 14px; margin-top: 8px;">Track the status of your submitted content</p>
+        </div>
+        <div id="my-pending-posts-list" class="pending-posts-list" style="padding: 20px;">
+          <p style="text-align: center; color: #999; padding: 40px;">No pending posts</p>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script type="module" src="/src/admin.ts"></script>

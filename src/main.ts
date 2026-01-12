@@ -270,6 +270,39 @@ function initApp(): void {
             // Handle connect subpages - activate the correct tab
             const connectSubpage = link.dataset.connectSubpage;
             if (pageKey === 'connect' && connectSubpage) {
+              // Helper function to check if user is a member
+              function isUserMember(): boolean {
+                const memberships = JSON.parse(localStorage.getItem('nsm_memberships') || '[]');
+                return memberships.length > 0;
+              }
+
+              // Helper function to navigate to member page
+              function navigateToMemberPage(): void {
+                const memberNavLink = document.querySelector<HTMLAnchorElement>('a[data-page="member"]');
+                if (memberNavLink) {
+                  memberNavLink.click();
+                } else {
+                  // Fallback: navigate directly to member page
+                  const memberPage = document.getElementById('page-member');
+                  if (memberPage) {
+                    const pageSections = document.querySelectorAll('.page-section');
+                    pageSections.forEach((section) => section.classList.remove('visible'));
+                    memberPage.classList.add('visible');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }
+              }
+
+              // Check membership for restricted sections
+              const memberOnlySections = ['alumni-event', 'alumni-directory', 'business-directory'];
+              if (memberOnlySections.includes(connectSubpage)) {
+                if (!isUserMember()) {
+                  // User is not a member - navigate to member page
+                  navigateToMemberPage();
+                  return; // Don't show the section
+                }
+              }
+
               setTimeout(() => {
                 const connectTabs = document.querySelectorAll<HTMLButtonElement>('.gallery-tab[data-connect-type]');
                 const connectSections = document.querySelectorAll<HTMLElement>('.connect-section');
@@ -905,9 +938,42 @@ function initConnectTabs(): void {
   const connectTabs = document.querySelectorAll<HTMLButtonElement>('.gallery-tab[data-connect-type]');
   const connectSections = document.querySelectorAll<HTMLElement>('.connect-section');
 
+  // Helper function to check if user is a member
+  function isUserMember(): boolean {
+    const memberships = JSON.parse(localStorage.getItem('nsm_memberships') || '[]');
+    return memberships.length > 0;
+  }
+
+  // Helper function to navigate to member page
+  function navigateToMemberPage(): void {
+    const memberNavLink = document.querySelector<HTMLAnchorElement>('a[data-page="member"]');
+    if (memberNavLink) {
+      memberNavLink.click();
+    } else {
+      // Fallback: navigate directly to member page
+      const memberPage = document.getElementById('page-member');
+      if (memberPage) {
+        const pageSections = document.querySelectorAll('.page-section');
+        pageSections.forEach((section) => section.classList.remove('visible'));
+        memberPage.classList.add('visible');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+  }
+
   connectTabs.forEach((tab) => {
     tab.addEventListener('click', () => {
       const connectType = tab.dataset.connectType;
+
+      // Check membership for restricted sections
+      const memberOnlySections = ['alumni-event', 'alumni-directory', 'business-directory'];
+      if (memberOnlySections.includes(connectType || '')) {
+        if (!isUserMember()) {
+          // User is not a member - navigate to member page
+          navigateToMemberPage();
+          return; // Don't show the section
+        }
+      }
 
       // Update active tab
       connectTabs.forEach((t) => t.classList.remove('active'));
@@ -987,7 +1053,6 @@ function initYearPhotoGallery(): void {
     // Distribute NSM School images across years (1993-2025 = 33 years)
     // Each year gets a subset of images, cycling through the array
     const imagesPerYear = 6; // Show 6 images per year
-    const yearRange = 2025 - 1993 + 1; // 33 years
     const yearIndex = year - 1993; // Convert to 0-based index
     
     // Calculate starting index for this year
@@ -1070,6 +1135,26 @@ function initYearPhotoGallery(): void {
       openYearModal(newYear);
     }
   }
+
+  // Function to update photo counts in year cards
+  function updatePhotoCounts(): void {
+    const yearCards = document.querySelectorAll('.year-card[data-year][data-type="photo"]');
+    yearCards.forEach((card) => {
+      const year = parseInt((card as HTMLElement).dataset.year || '2025', 10);
+      const photos = generateYearPhotos(year);
+      const photoCount = photos.length;
+      const viewLink = card.querySelector('.view-link[data-year][data-type="photo"]');
+      if (viewLink) {
+        viewLink.textContent = photoCount.toString();
+      }
+    });
+  }
+
+  // Make updatePhotoCounts available globally
+  (window as any).updatePhotoCounts = updatePhotoCounts;
+
+  // Update photo counts on initialization
+  updatePhotoCounts();
 
   // Add event listeners
   viewLinks.forEach((link) => {
@@ -1176,7 +1261,6 @@ function initYearChapterGallery(): void {
     // Distribute NSM School images across years for all chapter types
     // Each year gets a subset of images, cycling through the array
     const imagesPerYear = 6; // Show 6 images per year
-    const yearRange = 2025 - 2016 + 1; // 10 years (2016-2025)
     const yearIndex = year - 2016; // Convert to 0-based index
     
     // Calculate starting index for this year
@@ -1995,7 +2079,50 @@ function initAdminIntegration(): void {
     }
   }
 
+  // Load footer events from localStorage
+  function loadFooterEvents(): void {
+    const footerEvents = localStorage.getItem('nsm_footer_events');
+    if (footerEvents) {
+      try {
+        const events = JSON.parse(footerEvents);
+        
+        // Update upcoming event
+        if (events.upcoming) {
+          const upcoming = events.upcoming;
+          const upcomingMonthEl = document.getElementById('footer-upcoming-month');
+          const upcomingDayEl = document.getElementById('footer-upcoming-day');
+          const upcomingYearEl = document.getElementById('footer-upcoming-year');
+          const upcomingTitleEl = document.getElementById('footer-upcoming-title-text');
+          
+          if (upcomingMonthEl && upcoming.month) upcomingMonthEl.textContent = upcoming.month.toUpperCase();
+          if (upcomingDayEl && upcoming.day) upcomingDayEl.textContent = upcoming.day;
+          if (upcomingYearEl && upcoming.year) upcomingYearEl.textContent = upcoming.year;
+          if (upcomingTitleEl && upcoming.title) upcomingTitleEl.textContent = upcoming.title;
+        }
+        
+        // Update past event
+        if (events.past) {
+          const past = events.past;
+          const pastMonthEl = document.getElementById('footer-past-month');
+          const pastDayEl = document.getElementById('footer-past-day');
+          const pastYearEl = document.getElementById('footer-past-year');
+          const pastTitleEl = document.getElementById('footer-past-title-text');
+          
+          if (pastMonthEl && past.month) pastMonthEl.textContent = past.month.toUpperCase();
+          if (pastDayEl && past.day) pastDayEl.textContent = past.day;
+          if (pastYearEl && past.year) pastYearEl.textContent = past.year;
+          if (pastTitleEl && past.title) pastTitleEl.textContent = past.title;
+        }
+      } catch (e) {
+        console.error('Error loading footer events:', e);
+      }
+    }
+  }
+
   loadAdminData();
+  
+  // Load footer events
+  loadFooterEvents();
 
   // Update hero section
   const heroTitle = document.getElementById('hero-title');
@@ -2083,6 +2210,12 @@ function initAdminIntegration(): void {
 
   displayLatestUpdates();
   displayEventPhotos();
+  
+  // Update photo counts when admin data loads
+  const updatePhotoCountsFunction = (window as any).updatePhotoCounts;
+  if (typeof updatePhotoCountsFunction === 'function') {
+    setTimeout(updatePhotoCountsFunction, 100);
+  }
 
   // Re-run when home page becomes visible
   const observer = new MutationObserver(() => {
@@ -2091,12 +2224,41 @@ function initAdminIntegration(): void {
       loadAdminData();
       displayLatestUpdates();
       displayEventPhotos();
+      // Update photo counts after admin data loads
+      const updateFn = (window as any).updatePhotoCounts;
+      if (typeof updateFn === 'function') {
+        setTimeout(updateFn, 100);
+      }
+    }
+  });
+  
+  // Update photo counts when gallery page becomes visible
+  const galleryObserver = new MutationObserver(() => {
+    const galleryPage = document.getElementById('page-gallery');
+    if (galleryPage && galleryPage.classList.contains('visible')) {
+      // Re-initialize photo gallery to update counts
+      setTimeout(() => {
+        const photoGallerySection = document.getElementById('photo-gallery-section');
+        if (photoGallerySection && photoGallerySection.classList.contains('active')) {
+          // Call updatePhotoCounts if available globally
+          const updateFunction = (window as any).updatePhotoCounts;
+          if (typeof updateFunction === 'function') {
+            updateFunction();
+          }
+        }
+      }, 100);
     }
   });
 
   const pageContent = document.querySelector('.page-content');
   if (pageContent) {
     observer.observe(pageContent, {
+      attributes: true,
+      attributeFilter: ['class'],
+      subtree: true,
+    });
+    
+    galleryObserver.observe(pageContent, {
       attributes: true,
       attributeFilter: ['class'],
       subtree: true,
@@ -2372,7 +2534,6 @@ function initMemberPage(): void {
     if (!memberPaymentSuccessSection) return;
 
     const transactionId = memberPaymentSuccessSection.dataset.transactionId || 'TXN' + Date.now();
-    const amount = '5000';
     const method = memberPaymentSuccessSection.dataset.method || 'Payment';
 
     // Get member details from form

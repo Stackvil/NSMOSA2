@@ -1,4 +1,42 @@
 // Admin Dashboard Functionality
+
+// User Role Types
+type AdminRole = 'super_admin' | 'admin' | 'representative_admin';
+
+interface AdminUser {
+  id: string;
+  username: string;
+  email: string;
+  password: string;
+  role: AdminRole;
+  name: string;
+  createdAt: number;
+  createdBy: string;
+}
+
+interface PendingApproval {
+  id: string;
+  type: 'update' | 'event_photo' | 'gallery_photo' | 'chapter_photo' | 'reunion_photo' | 'content';
+  data: any;
+  submittedBy: string;
+  submittedByName: string;
+  submittedAt: number;
+  status: 'pending' | 'approved' | 'rejected';
+  reviewedBy?: string;
+  reviewedAt?: number;
+  reviewNotes?: string;
+}
+
+interface AdminNotification {
+  id: string;
+  type: 'approval_request' | 'user_added' | 'content_approved' | 'content_rejected';
+  message: string;
+  link?: string;
+  createdAt: number;
+  read: boolean;
+  targetRoles?: AdminRole[];
+}
+
 interface Update {
   id: string;
   title: string;
@@ -44,6 +82,44 @@ interface ReunionPhoto {
   createdAt: number;
 }
 
+// ==================== PERMISSION SYSTEM ====================
+
+// Get current user role
+function getCurrentUserRole(): AdminRole | null {
+  return (localStorage.getItem('admin_role') as AdminRole) || null;
+}
+
+// Get current user ID
+function getCurrentUserId(): string | null {
+  return localStorage.getItem('admin_user_id') || null;
+}
+
+// Get current user info
+function getCurrentUser(): AdminUser | null {
+  const userId = getCurrentUserId();
+  if (!userId) return null;
+  
+  const users = JSON.parse(localStorage.getItem('nsm_admin_users') || '[]');
+  return users.find((u: AdminUser) => u.id === userId) || null;
+}
+
+// Check if user has full permissions (Super Admin or Admin)
+function hasFullPermissions(): boolean {
+  const role = getCurrentUserRole();
+  return role === 'super_admin' || role === 'admin';
+}
+
+// Check if user can manage other admins
+function canManageAdmins(): boolean {
+  return hasFullPermissions();
+}
+
+// Check if user needs approval for posts
+function needsApproval(): boolean {
+  const role = getCurrentUserRole();
+  return role === 'representative_admin';
+}
+
 // Check authentication
 function checkAuth(): boolean {
   const session = localStorage.getItem('admin_session');
@@ -57,16 +133,283 @@ function checkAuth(): boolean {
   return true;
 }
 
+// ==================== APPROVAL WORKFLOW ====================
+
+// Submit content for approval (for Representative Admins)
+function submitForApproval(type: PendingApproval['type'], data: any): void {
+  const currentUser = getCurrentUser();
+  if (!currentUser) return;
+
+  const approval: PendingApproval = {
+    id: Date.now().toString(),
+    type,
+    data,
+    submittedBy: currentUser.id,
+    submittedByName: currentUser.name || currentUser.username,
+    submittedAt: Date.now(),
+    status: 'pending',
+  };
+
+  const pendingApprovals = JSON.parse(localStorage.getItem('nsm_pending_approvals') || '[]');
+  pendingApprovals.push(approval);
+  localStorage.setItem('nsm_pending_approvals', JSON.stringify(pendingApprovals));
+
+  // Create notifications for Super Admin and Admin
+  createNotification('approval_request', `New ${type} submission from ${currentUser.name || currentUser.username} requires approval`, `#page-approvals`, ['super_admin', 'admin']);
+
+  showSuccess('Your submission has been sent for approval. You will be notified once it is reviewed.');
+}
+
+// Approve content
+function approveContent(approvalId: string): void {
+  const pendingApprovals = JSON.parse(localStorage.getItem('nsm_pending_approvals') || '[]');
+  const approval = pendingApprovals.find((a: PendingApproval) => a.id === approvalId);
+  if (!approval) return;
+
+  const currentUser = getCurrentUser();
+  if (!currentUser) return;
+
+  approval.status = 'approved';
+  approval.reviewedBy = currentUser.id;
+  approval.reviewedAt = Date.now();
+
+  // Save the approved content
+  saveApprovedContent(approval);
+
+  // Remove from pending
+  const filtered = pendingApprovals.filter((a: PendingApproval) => a.id !== approvalId);
+  localStorage.setItem('nsm_pending_approvals', JSON.stringify(filtered));
+
+  // Notify submitter
+  createNotification('content_approved', `Your ${approval.type} submission has been approved`, undefined, undefined, approval.submittedBy);
+
+  showSuccess('Content approved and published successfully!');
+  loadPendingApprovals();
+  updateNotificationBadge();
+}
+
+// Reject content
+function rejectContent(approvalId: string, notes?: string): void {
+  const pendingApprovals = JSON.parse(localStorage.getItem('nsm_pending_approvals') || '[]');
+  const approval = pendingApprovals.find((a: PendingApproval) => a.id === approvalId);
+  if (!approval) return;
+
+  const currentUser = getCurrentUser();
+  if (!currentUser) return;
+
+  approval.status = 'rejected';
+  approval.reviewedBy = currentUser.id;
+  approval.reviewedAt = Date.now();
+  approval.reviewNotes = notes || '';
+
+  // Remove from pending
+  const filtered = pendingApprovals.filter((a: PendingApproval) => a.id !== approvalId);
+  localStorage.setItem('nsm_pending_approvals', JSON.stringify(filtered));
+
+  // Notify submitter
+  createNotification('content_rejected', `Your ${approval.type} submission has been rejected${notes ? ': ' + notes : ''}`, undefined, undefined, approval.submittedBy);
+
+  showSuccess('Content rejected.');
+  loadPendingApprovals();
+  updateNotificationBadge();
+}
+
+// Save approved content to appropriate storage
+function saveApprovedContent(approval: PendingApproval): void {
+  switch (approval.type) {
+    case 'update':
+      const updates = JSON.parse(localStorage.getItem('nsm_updates') || '[]');
+      updates.push(approval.data);
+      localStorage.setItem('nsm_updates', JSON.stringify(updates));
+      break;
+    case 'event_photo':
+      const eventPhotos = JSON.parse(localStorage.getItem('nsm_event_photos') || '[]');
+      eventPhotos.push(approval.data);
+      localStorage.setItem('nsm_event_photos', JSON.stringify(eventPhotos));
+      break;
+    case 'gallery_photo':
+      const galleryPhotos = JSON.parse(localStorage.getItem('nsm_gallery_photos') || '[]');
+      galleryPhotos.push(approval.data);
+      localStorage.setItem('nsm_gallery_photos', JSON.stringify(galleryPhotos));
+      break;
+    case 'chapter_photo':
+      const chapterPhotos = JSON.parse(localStorage.getItem('nsm_chapter_photos') || '[]');
+      chapterPhotos.push(approval.data);
+      localStorage.setItem('nsm_chapter_photos', JSON.stringify(chapterPhotos));
+      break;
+    case 'reunion_photo':
+      const reunionPhotos = JSON.parse(localStorage.getItem('nsm_reunion_photos') || '[]');
+      reunionPhotos.push(approval.data);
+      localStorage.setItem('nsm_reunion_photos', JSON.stringify(reunionPhotos));
+      break;
+    case 'content':
+      // Handle content updates
+      if (approval.data.key && approval.data.value) {
+        if (approval.data.key === 'nsm_hero_content') {
+          // Parse JSON for hero content
+          try {
+            const heroData = JSON.parse(approval.data.value);
+            if (heroData.title) localStorage.setItem('nsm_hero_title', heroData.title);
+            if (heroData.quote) localStorage.setItem('nsm_hero_quote', heroData.quote);
+          } catch (e) {
+            localStorage.setItem(approval.data.key, approval.data.value);
+          }
+        } else {
+          localStorage.setItem(approval.data.key, approval.data.value);
+        }
+      }
+      break;
+  }
+  updateStatistics();
+}
+
+// ==================== NOTIFICATION SYSTEM ====================
+
+// Create notification
+function createNotification(type: AdminNotification['type'], message: string, link?: string, targetRoles?: AdminRole[], targetUserId?: string): void {
+  const notification: AdminNotification = {
+    id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+    type,
+    message,
+    link,
+    createdAt: Date.now(),
+    read: false,
+    targetRoles,
+  };
+
+  const notifications = JSON.parse(localStorage.getItem('nsm_admin_notifications') || '[]');
+  
+  // If targetUserId is specified, only send to that user
+  if (targetUserId) {
+    notification.targetRoles = undefined;
+    (notification as any).targetUserId = targetUserId;
+  }
+  
+  notifications.push(notification);
+  localStorage.setItem('nsm_admin_notifications', JSON.stringify(notifications));
+  updateNotificationBadge();
+}
+
+// Get unread notifications count
+function getUnreadNotificationsCount(): number {
+  const notifications = JSON.parse(localStorage.getItem('nsm_admin_notifications') || '[]');
+  const currentUser = getCurrentUser();
+  if (!currentUser) return 0;
+
+  return notifications.filter((n: AdminNotification) => {
+    if (n.read) return false;
+    if ((n as any).targetUserId) {
+      return (n as any).targetUserId === currentUser.id;
+    }
+    if (n.targetRoles) {
+      return n.targetRoles.includes(currentUser.role);
+    }
+    return true;
+  }).length;
+}
+
+// Update notification badge
+function updateNotificationBadge(): void {
+  const badge = document.getElementById('notification-badge');
+  const count = getUnreadNotificationsCount();
+  if (badge) {
+    badge.textContent = count.toString();
+    badge.style.display = count > 0 ? 'flex' : 'none';
+  }
+}
+
+// ==================== USER MANAGEMENT ====================
+
+// Add Representative Admin
+function addRepresentativeAdmin(username: string, email: string, password: string, name: string): void {
+  if (!canManageAdmins()) {
+    showSuccess('You do not have permission to manage admins.');
+    return;
+  }
+
+  const users = JSON.parse(localStorage.getItem('nsm_admin_users') || '[]');
+  
+  // Check if username already exists
+  if (users.some((u: AdminUser) => u.username === username)) {
+    showSuccess('Username already exists. Please choose a different username.');
+    return;
+  }
+
+  const currentUser = getCurrentUser();
+  const newUser: AdminUser = {
+    id: Date.now().toString(),
+    username,
+    email,
+    password, // In production, this should be hashed
+    role: 'representative_admin',
+    name,
+    createdAt: Date.now(),
+    createdBy: currentUser?.id || 'system',
+  };
+
+  users.push(newUser);
+  localStorage.setItem('nsm_admin_users', JSON.stringify(users));
+
+  // Notify new user (if they had a way to receive notifications)
+  createNotification('user_added', `You have been added as a Representative Admin`, undefined, ['representative_admin']);
+
+  showSuccess('Representative Admin added successfully!');
+  loadRepresentativeAdmins();
+}
+
+// Remove Representative Admin
+function removeRepresentativeAdmin(userId: string): void {
+  if (!canManageAdmins()) return;
+
+  const users = JSON.parse(localStorage.getItem('nsm_admin_users') || '[]');
+  const filtered = users.filter((u: AdminUser) => u.id !== userId && (u.role === 'super_admin' || u.role === 'admin'));
+  filtered.push(...users.filter((u: AdminUser) => u.id !== userId && u.role === 'representative_admin' && u.id !== userId));
+  localStorage.setItem('nsm_admin_users', JSON.stringify(users.filter((u: AdminUser) => u.id !== userId)));
+
+  showSuccess('Representative Admin removed successfully!');
+  loadRepresentativeAdmins();
+}
+
+// Get all Representative Admins
+function getRepresentativeAdmins(): AdminUser[] {
+  const users = JSON.parse(localStorage.getItem('nsm_admin_users') || '[]');
+  return users.filter((u: AdminUser) => u.role === 'representative_admin');
+}
+
+// ==================== DASHBOARD INITIALIZATION ====================
+
 // Initialize admin dashboard
 function initAdminDashboard(): void {
   if (!checkAuth()) return;
 
-  // Set username
-  const username = localStorage.getItem('admin_username') || 'Admin';
-  const usernameEl = document.getElementById('admin-username');
-  if (usernameEl) {
-    usernameEl.textContent = username;
+  const currentUser = getCurrentUser();
+  if (!currentUser) {
+    window.location.href = 'admin-login.html';
+    return;
   }
+
+  // Set username and role
+  const usernameEl = document.getElementById('admin-username');
+  const roleEl = document.getElementById('admin-role');
+  
+  if (usernameEl) {
+    usernameEl.textContent = currentUser.name || currentUser.username;
+  }
+  
+  if (roleEl) {
+    const roleLabels: Record<AdminRole, string> = {
+      super_admin: 'Super Admin',
+      admin: 'Admin',
+      representative_admin: 'Representative Admin',
+    };
+    roleEl.textContent = roleLabels[currentUser.role];
+  }
+
+  // Update notification badge
+  updateNotificationBadge();
+
+  // Show/hide sections based on role
+  updateUIForRole();
 
   // Logout functionality
   const logoutBtn = document.getElementById('logout-btn');
@@ -74,6 +417,8 @@ function initAdminDashboard(): void {
     logoutBtn.addEventListener('click', () => {
       localStorage.removeItem('admin_session');
       localStorage.removeItem('admin_username');
+      localStorage.removeItem('admin_user_id');
+      localStorage.removeItem('admin_role');
       localStorage.removeItem('admin_login_time');
       window.location.href = 'admin-login.html';
     });
@@ -97,15 +442,275 @@ function initAdminDashboard(): void {
   initContentForms();
   initHomepagePhotoForms();
 
+  // Initialize user management (for Super Admin/Admin)
+  if (canManageAdmins()) {
+    initUserManagement();
+    initApprovalManagement();
+  }
+
   // Load data
   loadUpdates();
   loadUserActivity();
   loadRegistrations();
   loadDonations();
   
+  // Load pending approvals (for Super Admin/Admin)
+  if (hasFullPermissions()) {
+    loadPendingApprovals();
+  }
+  
+  // Load my pending posts (for Representative Admin)
+  if (needsApproval()) {
+    loadMyPendingPosts();
+  }
+  
   // Update statistics
   updateStatistics();
 }
+
+// Load my pending posts (for Representative Admin)
+function loadMyPendingPosts(): void {
+  const container = document.getElementById('my-pending-posts-list');
+  if (!container) return;
+  
+  const currentUser = getCurrentUser();
+  if (!currentUser) return;
+  
+  const pendingApprovals = JSON.parse(localStorage.getItem('nsm_pending_approvals') || '[]');
+  const myPending = pendingApprovals.filter((a: PendingApproval) => 
+    a.submittedBy === currentUser.id && a.status === 'pending'
+  );
+  
+  if (myPending.length === 0) {
+    container.innerHTML = '<p style="text-align: center; color: #999; padding: 40px;">No pending posts. Your submissions will appear here.</p>';
+    return;
+  }
+  
+  const typeLabels: Record<PendingApproval['type'], string> = {
+    update: 'Update',
+    event_photo: 'Event Photo',
+    gallery_photo: 'Gallery Photo',
+    chapter_photo: 'Chapter Photo',
+    reunion_photo: 'Reunion Photo',
+    content: 'Content Update',
+  };
+  
+  container.innerHTML = myPending
+    .sort((a: PendingApproval, b: PendingApproval) => b.submittedAt - a.submittedAt)
+    .map((approval: PendingApproval) => `
+      <div class="pending-post-item">
+        <div class="pending-post-header">
+          <span class="pending-post-type">${typeLabels[approval.type]}</span>
+          <span class="pending-post-status">
+            <i class="fas fa-clock"></i> Pending Review
+          </span>
+        </div>
+        <div class="pending-post-content">
+          ${approval.type === 'update' ? `
+            <h4>${approval.data.title}</h4>
+            <p>${approval.data.content.substring(0, 150)}${approval.data.content.length > 150 ? '...' : ''}</p>
+          ` : approval.type.includes('photo') ? `
+            <p><strong>${approval.type === 'event_photo' ? `Event: ${approval.data.eventName}` : approval.type === 'gallery_photo' ? `Year: ${approval.data.year}` : approval.type === 'chapter_photo' ? `Chapter: ${approval.data.chapterType} - Year: ${approval.data.year}` : `Year: ${approval.data.year}`}</strong></p>
+            <p>Photos: ${approval.data.photos?.length || 0}</p>
+          ` : '<p>Content update</p>'}
+          <p style="margin-top: 8px; font-size: 12px; color: var(--gray-500);">
+            Submitted: ${new Date(approval.submittedAt).toLocaleString()}
+          </p>
+        </div>
+      </div>
+    `).join('');
+}
+
+// Update UI based on user role
+function updateUIForRole(): void {
+  const hasFull = hasFullPermissions();
+  const needsApprovalCheck = needsApproval();
+  
+  // Hide/show navigation items
+  const userManagementNav = document.querySelector('[data-page="user-management"]');
+  const approvalsNav = document.querySelector('[data-page="approvals"]');
+  const myPendingNav = document.querySelector('[data-page="my-pending"]');
+  
+  if (userManagementNav) {
+    (userManagementNav as HTMLElement).style.display = hasFull ? 'flex' : 'none';
+  }
+  if (approvalsNav) {
+    (approvalsNav as HTMLElement).style.display = hasFull ? 'flex' : 'none';
+  }
+  if (myPendingNav) {
+    (myPendingNav as HTMLElement).style.display = needsApprovalCheck ? 'flex' : 'none';
+  }
+  
+  // Update form labels to show approval status
+  if (needsApprovalCheck) {
+    const submitButtons = document.querySelectorAll('.btn-primary[type="submit"]');
+    submitButtons.forEach((btn) => {
+      const btnText = (btn as HTMLElement).textContent || '';
+      if (!btnText.includes('Submit for Approval') && !btnText.includes('Upload')) {
+        (btn as HTMLElement).textContent = btnText.replace('Add', 'Submit for Approval').replace('Upload', 'Submit for Approval');
+      }
+    });
+  }
+  
+  // Update approvals count badge
+  if (hasFull) {
+    const pendingApprovals = JSON.parse(localStorage.getItem('nsm_pending_approvals') || '[]');
+    const pendingCount = pendingApprovals.filter((a: PendingApproval) => a.status === 'pending').length;
+    const badge = document.getElementById('approvals-count-badge');
+    if (badge) {
+      badge.textContent = pendingCount.toString();
+      badge.style.display = pendingCount > 0 ? 'inline-flex' : 'none';
+    }
+  }
+  
+  // Add notification click handler
+  const notificationWrapper = document.getElementById('notification-wrapper');
+  if (notificationWrapper) {
+    notificationWrapper.addEventListener('click', () => {
+      if (hasFull) {
+        const approvalsNavBtn = document.querySelector('[data-page="approvals"]') as HTMLElement;
+        if (approvalsNavBtn) {
+          approvalsNavBtn.click();
+        }
+      } else if (needsApprovalCheck) {
+        const myPendingNavBtn = document.querySelector('[data-page="my-pending"]') as HTMLElement;
+        if (myPendingNavBtn) {
+          myPendingNavBtn.click();
+        }
+      }
+    });
+  }
+}
+
+// Load pending approvals (for Super Admin/Admin)
+function loadPendingApprovals(): void {
+  const container = document.getElementById('pending-approvals-list');
+  if (!container) return;
+  
+  const pendingApprovals = JSON.parse(localStorage.getItem('nsm_pending_approvals') || '[]');
+  const pending = pendingApprovals.filter((a: PendingApproval) => a.status === 'pending');
+  
+  if (pending.length === 0) {
+    container.innerHTML = '<p style="text-align: center; color: #999; padding: 40px;">No pending approvals</p>';
+    return;
+  }
+  
+  container.innerHTML = pending
+    .sort((a: PendingApproval, b: PendingApproval) => b.submittedAt - a.submittedAt)
+    .map((approval: PendingApproval) => {
+      const typeLabels: Record<PendingApproval['type'], string> = {
+        update: 'Update',
+        event_photo: 'Event Photo',
+        gallery_photo: 'Gallery Photo',
+        chapter_photo: 'Chapter Photo',
+        reunion_photo: 'Reunion Photo',
+        content: 'Content Update',
+      };
+      
+      return `
+        <div class="approval-item">
+          <div class="approval-header">
+            <div class="approval-type">${typeLabels[approval.type]}</div>
+            <div class="approval-meta">
+              <span>Submitted by: ${approval.submittedByName}</span>
+              <span>${new Date(approval.submittedAt).toLocaleString()}</span>
+            </div>
+          </div>
+          <div class="approval-content">
+            ${approval.type === 'update' ? `
+              <h4>${approval.data.title}</h4>
+              <p>${approval.data.content.substring(0, 200)}${approval.data.content.length > 200 ? '...' : ''}</p>
+            ` : approval.type.includes('photo') ? `
+              <p>${approval.type === 'event_photo' ? `Event: ${approval.data.eventName}` : ''}</p>
+              <p>Photos: ${approval.data.photos?.length || 0}</p>
+            ` : '<p>Content update</p>'}
+          </div>
+          <div class="approval-actions">
+            <button class="btn btn-success" onclick="approveContent('${approval.id}')">
+              <i class="fas fa-check"></i> Approve
+            </button>
+            <button class="btn btn-danger" onclick="rejectContentPrompt('${approval.id}')">
+              <i class="fas fa-times"></i> Reject
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+}
+
+// Load Representative Admins
+function loadRepresentativeAdmins(): void {
+  const container = document.getElementById('representative-admins-list');
+  if (!container) return;
+  
+  const admins = getRepresentativeAdmins();
+  
+  if (admins.length === 0) {
+    container.innerHTML = '<p style="text-align: center; color: #999; padding: 40px;">No Representative Admins yet</p>';
+    return;
+  }
+  
+  container.innerHTML = admins
+    .sort((a, b) => b.createdAt - a.createdAt)
+    .map((admin) => `
+      <div class="admin-item">
+        <div class="admin-info">
+          <div class="admin-name">${admin.name}</div>
+          <div class="admin-details">
+            <span>${admin.username}</span>
+            <span>${admin.email}</span>
+            <span>Added: ${new Date(admin.createdAt).toLocaleDateString()}</span>
+          </div>
+        </div>
+        <button class="btn btn-danger" onclick="removeRepresentativeAdminPrompt('${admin.id}')">
+          <i class="fas fa-trash"></i> Remove
+        </button>
+      </div>
+    `).join('');
+}
+
+// Initialize user management
+function initUserManagement(): void {
+  const form = document.getElementById('add-representative-admin-form') as HTMLFormElement;
+  if (!form) return;
+  
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const username = (document.getElementById('rep-admin-username') as HTMLInputElement).value.trim();
+    const email = (document.getElementById('rep-admin-email') as HTMLInputElement).value.trim();
+    const password = (document.getElementById('rep-admin-password') as HTMLInputElement).value;
+    const name = (document.getElementById('rep-admin-name') as HTMLInputElement).value.trim();
+    
+    if (!username || !email || !password || !name) {
+      showSuccess('Please fill in all fields');
+      return;
+    }
+    
+    addRepresentativeAdmin(username, email, password, name);
+    form.reset();
+  });
+  
+  loadRepresentativeAdmins();
+}
+
+// Initialize approval management
+function initApprovalManagement(): void {
+  // Approval functions are already defined above
+  loadPendingApprovals();
+}
+
+// Helper functions for global access
+(window as any).approveContent = approveContent;
+(window as any).rejectContentPrompt = (id: string) => {
+  const notes = prompt('Rejection reason (optional):');
+  rejectContent(id, notes || undefined);
+};
+(window as any).removeRepresentativeAdminPrompt = (id: string) => {
+  if (confirm('Are you sure you want to remove this Representative Admin?')) {
+    removeRepresentativeAdmin(id);
+  }
+};
 
 // Navigation between pages
 function initNavigation(): void {
@@ -370,8 +975,13 @@ function initUpdateForm(): void {
       createdAt: Date.now(),
     };
 
-    saveUpdate(update);
-    showSuccess('Update added successfully!');
+    // Check if approval is needed
+    if (needsApproval()) {
+      submitForApproval('update', update);
+    } else {
+      saveUpdate(update);
+      showSuccess('Update added successfully!');
+    }
     form.reset();
   });
 }
@@ -464,8 +1074,13 @@ function initEventPhotoForm(): void {
       createdAt: Date.now(),
     };
 
-    saveEventPhoto(eventPhoto);
-    showSuccess('Event photos uploaded successfully!');
+    // Check if approval is needed
+    if (needsApproval()) {
+      submitForApproval('event_photo', eventPhoto);
+    } else {
+      saveEventPhoto(eventPhoto);
+      showSuccess('Event photos uploaded successfully!');
+    }
     form.reset();
     document.getElementById('event-photo-preview')!.innerHTML = '';
   });
@@ -513,8 +1128,13 @@ function initGalleryPhotoForm(): void {
       createdAt: Date.now(),
     };
 
-    saveGalleryPhoto(galleryPhoto);
-    showSuccess('Gallery photos uploaded successfully!');
+    // Check if approval is needed
+    if (needsApproval()) {
+      submitForApproval('gallery_photo', galleryPhoto);
+    } else {
+      saveGalleryPhoto(galleryPhoto);
+      showSuccess('Gallery photos uploaded successfully!');
+    }
     form.reset();
     document.getElementById('gallery-photo-preview')!.innerHTML = '';
   });
@@ -564,8 +1184,13 @@ function initChapterPhotoForm(): void {
       createdAt: Date.now(),
     };
 
-    saveChapterPhoto(chapterPhoto);
-    showSuccess('Chapter photos uploaded successfully!');
+    // Check if approval is needed
+    if (needsApproval()) {
+      submitForApproval('chapter_photo', chapterPhoto);
+    } else {
+      saveChapterPhoto(chapterPhoto);
+      showSuccess('Chapter photos uploaded successfully!');
+    }
     form.reset();
     document.getElementById('chapter-photo-preview')!.innerHTML = '';
   });
@@ -612,8 +1237,13 @@ function initReunionPhotoForm(): void {
       createdAt: Date.now(),
     };
 
-    saveReunionPhoto(reunionPhoto);
-    showSuccess('Reunion photos uploaded successfully!');
+    // Check if approval is needed
+    if (needsApproval()) {
+      submitForApproval('reunion_photo', reunionPhoto);
+    } else {
+      saveReunionPhoto(reunionPhoto);
+      showSuccess('Reunion photos uploaded successfully!');
+    }
     form.reset();
     document.getElementById('reunion-photo-preview')!.innerHTML = '';
   });
@@ -641,14 +1271,23 @@ function initContentForms(): void {
       const heroTitle = (document.getElementById('hero-title') as HTMLInputElement).value;
       const heroQuote = (document.getElementById('hero-quote') as HTMLInputElement).value;
 
-      if (heroTitle) {
-        localStorage.setItem('nsm_hero_title', heroTitle);
-      }
-      if (heroQuote) {
-        localStorage.setItem('nsm_hero_quote', heroQuote);
-      }
+      const contentData = {
+        key: 'nsm_hero_content',
+        value: JSON.stringify({ title: heroTitle, quote: heroQuote }),
+      };
 
-      showSuccess('Home page content updated successfully!');
+      // Check if approval is needed
+      if (needsApproval()) {
+        submitForApproval('content', contentData);
+      } else {
+        if (heroTitle) {
+          localStorage.setItem('nsm_hero_title', heroTitle);
+        }
+        if (heroQuote) {
+          localStorage.setItem('nsm_hero_quote', heroQuote);
+        }
+        showSuccess('Home page content updated successfully!');
+      }
     });
   }
 
@@ -660,8 +1299,18 @@ function initContentForms(): void {
       const section = (document.getElementById('about-section') as HTMLSelectElement).value;
       const content = (document.getElementById('about-content') as HTMLTextAreaElement).value;
 
-      localStorage.setItem(`nsm_about_${section}`, content);
-      showSuccess('About page content updated successfully!');
+      const contentData = {
+        key: `nsm_about_${section}`,
+        value: content,
+      };
+
+      // Check if approval is needed
+      if (needsApproval()) {
+        submitForApproval('content', contentData);
+      } else {
+        localStorage.setItem(`nsm_about_${section}`, content);
+        showSuccess('About page content updated successfully!');
+      }
     });
   }
 }

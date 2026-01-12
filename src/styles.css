@@ -754,6 +754,7 @@ a {
   margin-bottom: 0;
   position: relative;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .home-info-box::before {
@@ -1734,46 +1735,107 @@ a {
 .register-now-badge {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 10px 18px;
-  border-radius: 25px;
+  gap: 10px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
+  padding: 12px 22px;
+  border-radius: 30px;
   color: var(--loyola-blue);
-  font-weight: 700;
-  font-size: 13px;
+  font-weight: 800;
+  font-size: 14px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  letter-spacing: 1px;
+  box-shadow: 
+    0 6px 20px rgba(0, 39, 77, 0.4),
+    0 3px 10px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(0, 39, 77, 0.2);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+.register-now-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.5s ease;
+}
+
+.register-now-badge:hover::before {
+  left: 100%;
+}
+
+.register-now-badge:hover {
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 
+    0 8px 25px rgba(0, 39, 77, 0.5),
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  border-color: rgba(0, 39, 77, 0.4);
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.98) 100%);
 }
 
 .register-now-badge i {
-  font-size: 14px;
+  font-size: 16px;
+  filter: drop-shadow(0 1px 2px rgba(0, 39, 77, 0.2));
 }
 
 .register-footer {
   text-align: center;
-  padding-top: 12px;
-  border-top: 1px solid #e0e0e0;
+  padding-top: 20px;
+  padding-bottom: 8px;
+  border-top: 2px solid rgba(0, 39, 77, 0.1);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(0, 39, 77, 0.02) 100%);
+  margin-top: 8px;
 }
 
 .register-now-btn {
-  background: linear-gradient(135deg, var(--loyola-blue) 0%, #17a2b8 100%);
+  background: linear-gradient(135deg, #00274d 0%, #004d99 50%, #0066cc 100%);
   color: #ffffff;
-  border: none;
-  border-radius: 30px;
-  padding: 14px 32px;
-  font-size: 14px;
-  font-weight: 700;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 35px;
+  padding: 18px 42px;
+  font-size: 16px;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 4px 16px rgba(0, 39, 77, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 
+    0 6px 20px rgba(0, 39, 77, 0.5),
+    0 3px 10px rgba(0, 102, 204, 0.4),
+    0 0 30px rgba(0, 102, 204, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
+  animation: pulseGlow 2.5s ease-in-out infinite;
+  z-index: 1;
+}
+
+/* Pulse glow animation to draw attention */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 
+      0 6px 20px rgba(0, 39, 77, 0.5),
+      0 3px 10px rgba(0, 102, 204, 0.4),
+      0 0 30px rgba(0, 102, 204, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    box-shadow: 
+      0 8px 28px rgba(0, 39, 77, 0.6),
+      0 4px 14px rgba(0, 102, 204, 0.6),
+      0 0 40px rgba(0, 102, 204, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
 }
 
 .register-now-btn::before {
@@ -1784,28 +1846,68 @@ a {
   width: 0;
   height: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.25);
   transform: translate(-50%, -50%);
   transition: width 0.6s ease, height 0.6s ease;
+  z-index: -1;
+}
+
+.register-now-btn::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(135deg, #0066cc, #17a2b8, #ffc107, #0066cc);
+  background-size: 300% 300%;
+  border-radius: 35px;
+  z-index: -2;
+  opacity: 0;
+  animation: shimmerBorder 3s ease-in-out infinite;
+  transition: opacity 0.3s ease;
+}
+
+@keyframes shimmerBorder {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .register-now-btn:hover::before {
-  width: 300px;
-  height: 300px;
+  width: 350px;
+  height: 350px;
+}
+
+.register-now-btn:hover::after {
+  opacity: 0.6;
 }
 
 .register-now-btn:hover {
-  transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 8px 24px rgba(0, 39, 77, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(135deg, #001d3b 0%, #118095 100%);
+  transform: translateY(-6px) scale(1.08);
+  box-shadow: 
+    0 12px 35px rgba(0, 39, 77, 0.6),
+    0 6px 18px rgba(0, 102, 204, 0.5),
+    0 0 50px rgba(0, 102, 204, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, #001d3b 0%, #003d7a 50%, #0059b3 100%);
+  border-color: rgba(255, 255, 255, 0.5);
+  animation: none;
 }
 
 .register-now-btn:active {
-  transform: translateY(-2px) scale(1.02);
+  transform: translateY(-3px) scale(1.05);
 }
 
 .register-now-btn i {
-  font-size: 14px;
+  font-size: 18px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
 }
 
 /* NSM Branding Box - Video & Photos */
@@ -3073,6 +3175,7 @@ a {
 }
 
 .event-card img {
+  cursor: pointer;
   width: 100%;
   display: block;
   margin-bottom: 10px;
@@ -3515,15 +3618,21 @@ a {
 
 .view-link {
   color: var(--loyola-blue);
-  font-size: 11px;
-  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: none;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 
 .view-link:hover {
-  color: #ffc107;
-  text-decoration: underline;
+  color: #ffffff;
+  background-color: var(--loyola-blue);
+  text-decoration: none;
+  transform: scale(1.05);
 }
 
 /* Year Photo Modal */
@@ -3838,6 +3947,125 @@ a {
   background: #cccccc;
   cursor: not-allowed;
   transform: none;
+}
+
+/* Event Photos Modal (Members Only) */
+.event-photos-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease;
+}
+
+.event-photos-modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay-event-photos {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
+}
+
+.modal-content-event-photos {
+  position: relative;
+  background: #ffffff;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 1200px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  z-index: 10001;
+  animation: slideUp 0.3s ease;
+}
+
+.modal-header-event-photos {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 2px solid #e0e0e0;
+  background: linear-gradient(135deg, var(--loyola-blue) 0%, #003d7a 100%);
+  border-radius: 12px 12px 0 0;
+}
+
+.modal-title-event-photos {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.modal-close-event-photos {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #ffffff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: all 0.3s ease;
+}
+
+.modal-close-event-photos:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.modal-body-event-photos {
+  padding: 30px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.event-photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.event-photo-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  aspect-ratio: 4/3;
+}
+
+.event-photo-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.event-photo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.event-photo-item img:hover {
+  transform: scale(1.05);
 }
 
 /* Video Gallery Styles */

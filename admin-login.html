@@ -219,11 +219,38 @@
   </div>
 
   <script type="module">
-    // Admin credentials (in production, this should be on a secure backend)
-    const ADMIN_CREDENTIALS = {
-      username: 'nsmadmin2024',
-      password: 'NSM@Admin#Secure2024!'
-    };
+    // Initialize admin users system
+    function initializeAdminUsers() {
+      // Check if admin users exist, if not, create default ones
+      if (!localStorage.getItem('nsm_admin_users')) {
+        const defaultUsers = [
+          {
+            id: '1',
+            username: 'superadmin',
+            email: 'superadmin@nsmosa.org',
+            password: 'SuperAdmin@2024!', // In production, this should be hashed
+            role: 'super_admin',
+            name: 'Super Administrator',
+            createdAt: Date.now(),
+            createdBy: 'system'
+          },
+          {
+            id: '2',
+            username: 'admin',
+            email: 'admin@nsmosa.org',
+            password: 'Admin@2024!', // In production, this should be hashed
+            role: 'admin',
+            name: 'Administrator',
+            createdAt: Date.now(),
+            createdBy: 'system'
+          }
+        ];
+        localStorage.setItem('nsm_admin_users', JSON.stringify(defaultUsers));
+      }
+    }
+
+    // Initialize on page load
+    initializeAdminUsers();
 
     const loginForm = document.getElementById('login-form');
     const errorMessage = document.getElementById('error-message');
@@ -238,12 +265,19 @@
       errorMessage.classList.remove('show');
       errorMessage.textContent = '';
 
-      // Validate credentials
-      if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+      // Get admin users
+      const adminUsers = JSON.parse(localStorage.getItem('nsm_admin_users') || '[]');
+      
+      // Find user by username
+      const user = adminUsers.find(u => u.username === username);
+      
+      if (user && user.password === password) {
         // Create session token
         const sessionToken = btoa(`${username}:${Date.now()}:${Math.random()}`);
         localStorage.setItem('admin_session', sessionToken);
         localStorage.setItem('admin_username', username);
+        localStorage.setItem('admin_user_id', user.id);
+        localStorage.setItem('admin_role', user.role);
         localStorage.setItem('admin_login_time', Date.now().toString());
 
         // Redirect to dashboard
@@ -268,12 +302,16 @@
       } else {
         localStorage.removeItem('admin_session');
         localStorage.removeItem('admin_username');
+        localStorage.removeItem('admin_user_id');
+        localStorage.removeItem('admin_role');
         localStorage.removeItem('admin_login_time');
       }
     }
   </script>
 </body>
 </html>
+
+
 
 
 

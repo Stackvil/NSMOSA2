@@ -124,6 +124,13 @@ a {
   transform: translateY(-1px);
 }
 
+.signin-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
 .btn-signin {
   display: inline-flex;
   align-items: center;
@@ -144,6 +151,29 @@ a {
   background-color: #001d3b;
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+}
+
+.already-member-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--loyola-blue);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.already-member-link:hover {
+  opacity: 1;
+  color: #001d3b;
+  text-decoration: underline;
+}
+
+.already-member-link i {
+  font-size: 10px;
+  color: #10b981;
 }
 
 /* Main Nav */

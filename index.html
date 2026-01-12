@@ -18,74 +18,117 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <!-- Main Stylesheet - Load synchronously to prevent FOUC -->
+    <!-- Note: In production, this will be handled by Vite build -->
+    <link rel="stylesheet" href="/src/styles.css" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="/src/styles.css" /></noscript>
     <!-- Razorpay SDK - Add your Razorpay key later -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <!-- face-api.js for face detection -->
     <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.14/dist/face-api.min.js"></script>
     <style>
       /* Prevent FOUC - Hide content until styles are loaded */
-      body {
-        visibility: hidden;
-        opacity: 0;
-        transition: opacity 0.3s ease-in;
-      }
-      body.loaded {
-        visibility: visible;
-        opacity: 1;
-      }
-      /* Ensure layout doesn't shift */
       html {
         overflow-x: hidden;
       }
+      body {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease-in;
+        min-height: 100vh;
+      }
+      body.loaded {
+        opacity: 1;
+        visibility: visible;
+      }
     </style>
     <script>
-      // Prevent FOUC - Show content once styles are loaded
+      // Enhanced FOUC Prevention - Wait for all CSS and fonts to load
       (function() {
+        var contentShown = false;
+        
         function showContent() {
-          document.body.classList.add('loaded');
+          if (!contentShown) {
+            contentShown = true;
+            document.body.classList.add('loaded');
+          }
         }
         
-        // Check if CSS is loaded by checking computed styles
+        // Check if CSS file is loaded by testing a known style
         function checkCSSLoaded() {
-          if (document.styleSheets.length > 0) {
-            try {
-              // Try to access a stylesheet to see if it's loaded
-              var testSheet = document.styleSheets[0];
-              if (testSheet && testSheet.cssRules) {
-                showContent();
-                return true;
-              }
-            } catch(e) {
-              // Cross-origin stylesheet, continue checking
-            }
+          try {
+            // Test if our main CSS is loaded by checking for a common style
+            var testEl = document.createElement('div');
+            testEl.className = 'container';
+            testEl.style.position = 'absolute';
+            testEl.style.visibility = 'hidden';
+            document.body.appendChild(testEl);
+            
+            var computedStyle = window.getComputedStyle(testEl);
+            // If styles are applied (not just defaults), CSS is loaded
+            var hasStyles = computedStyle.display !== 'inline' || 
+                           computedStyle.width !== 'auto' ||
+                           computedStyle.maxWidth !== 'none';
+            
+            document.body.removeChild(testEl);
+            return hasStyles;
+          } catch(e) {
+            return false;
           }
-          return false;
         }
         
-        // Try multiple methods to detect when CSS is loaded
-        if (document.readyState === 'complete' || document.readyState === 'interactive') {
-          if (checkCSSLoaded()) {
-            return;
+        // Wait for fonts to load
+        function waitForFonts() {
+          if (document.fonts && document.fonts.ready) {
+            return document.fonts.ready;
           }
-          // If DOM is ready but CSS not detected, wait a bit
-          setTimeout(function() {
-            showContent();
-          }, 100);
-        } else {
-          document.addEventListener('DOMContentLoaded', function() {
-            if (checkCSSLoaded()) {
-              return;
+          return Promise.resolve();
+        }
+        
+        // Main function to show content when ready
+        function initContentDisplay() {
+          // Wait for fonts first
+          waitForFonts().then(function() {
+            // Check if CSS is loaded
+            var cssCheckInterval = setInterval(function() {
+              if (checkCSSLoaded() || document.styleSheets.length >= 3) {
+                clearInterval(cssCheckInterval);
+                showContent();
+              }
+            }, 10);
+            
+            // Fallback: show after DOM and window load
+            var domReady = document.readyState === 'complete' || 
+                          document.readyState === 'interactive';
+            
+            if (domReady) {
+              window.addEventListener('load', function() {
+                clearInterval(cssCheckInterval);
+                setTimeout(showContent, 50);
+              });
+            } else {
+              document.addEventListener('DOMContentLoaded', function() {
+                window.addEventListener('load', function() {
+                  clearInterval(cssCheckInterval);
+                  setTimeout(showContent, 50);
+                });
+              });
             }
+            
+            // Ultimate fallback - always show after max delay
             setTimeout(function() {
+              clearInterval(cssCheckInterval);
               showContent();
-            }, 100);
+            }, 500);
           });
         }
         
-        // Fallback: always show content after maximum delay
-        setTimeout(function() {
-          showContent();
-        }, 300);
+        // Start the process
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initContentDisplay);
+        } else {
+          initContentDisplay();
+        }
       })();
     </script>
     <script type="module" src="/src/main.ts"></script>
@@ -130,10 +173,15 @@
               <i class="fab fa-youtube"></i>
             </a>
           </div>
-          <button class="btn-signin">
-            <i class="far fa-user"></i>
-            <span>Sign In</span>
-          </button>
+          <div class="signin-wrapper">
+            <button class="btn-signin">
+              <i class="far fa-user"></i>
+              <span>Sign In</span>
+            </button>
+            <a href="#" class="already-member-link" id="already-member-link">
+              <i class="fas fa-check-circle"></i> Already a Member?
+            </a>
+          </div>
         </div>
       </div>
 
@@ -12497,10 +12545,57 @@
     <!-- Auth Modal JavaScript -->
     <script>
       document.addEventListener('DOMContentLoaded', function() {
+        // Initialize existing members data (for demo - in production, this would come from backend)
+        function initializeExistingMembers() {
+          if (!localStorage.getItem('nsm_existing_members')) {
+            // Sample existing members data
+            const existingMembers = [
+              {
+                id: '1',
+                name: 'John Doe',
+                email: 'john.doe@example.com',
+                password: 'Member@2024',
+                phone: '+91 9876543210',
+                membershipDate: '2023-01-15',
+                membershipId: 'NSMOSA-2023-001',
+                status: 'active',
+                paid: true
+              },
+              {
+                id: '2',
+                name: 'Jane Smith',
+                email: 'jane.smith@example.com',
+                password: 'Member@2024',
+                phone: '+91 9876543211',
+                membershipDate: '2023-03-20',
+                membershipId: 'NSMOSA-2023-002',
+                status: 'active',
+                paid: true
+              },
+              {
+                id: '3',
+                name: 'Robert Johnson',
+                email: 'robert.j@example.com',
+                password: 'Member@2024',
+                phone: '+91 9876543212',
+                membershipDate: '2022-11-10',
+                membershipId: 'NSMOSA-2022-045',
+                status: 'active',
+                paid: true
+              }
+            ];
+            localStorage.setItem('nsm_existing_members', JSON.stringify(existingMembers));
+          }
+        }
+        
+        // Initialize existing members on page load
+        initializeExistingMembers();
+
         // Get modal elements
         const loginModal = document.getElementById('login-modal');
         const registerModal = document.getElementById('register-modal');
         const signInBtn = document.querySelector('.btn-signin');
+        const alreadyMemberLink = document.getElementById('already-member-link');
         const loginCloseBtn = document.getElementById('login-close-btn');
         const registerCloseBtn = document.getElementById('register-close-btn');
         const showRegisterLink = document.getElementById('show-register-link');
@@ -12508,11 +12603,148 @@
         const forgotPasswordLink = document.getElementById('forgot-password-link');
 
         // Open login modal
-        function openLoginModal() {
+        function openLoginModal(prefillEmail = null, prefillPassword = null) {
           if (loginModal) {
             loginModal.classList.add('active');
             document.body.style.overflow = 'hidden';
+            
+            // Pre-fill form if credentials provided
+            if (prefillEmail && prefillPassword) {
+              const emailInput = document.getElementById('login-email');
+              const passwordInput = document.getElementById('login-password');
+              if (emailInput) emailInput.value = prefillEmail;
+              if (passwordInput) passwordInput.value = prefillPassword;
+              
+              // Highlight the fields to show they're pre-filled
+              if (emailInput) emailInput.style.backgroundColor = '#e8f5e9';
+              if (passwordInput) passwordInput.style.backgroundColor = '#e8f5e9';
+              
+              setTimeout(() => {
+                if (emailInput) emailInput.style.backgroundColor = '';
+                if (passwordInput) passwordInput.style.backgroundColor = '';
+              }, 2000);
+            }
           }
+        }
+        
+        // Show congratulations modal for existing members
+        function showCongratulationsModal(memberData) {
+          // Create congratulations modal
+          const congratsModal = document.createElement('div');
+          congratsModal.id = 'congratulations-modal';
+          congratsModal.className = 'auth-modal';
+          congratsModal.innerHTML = `
+            <div class="modal-overlay-auth"></div>
+            <div class="auth-modal-content" style="max-width: 500px; text-align: center;">
+              <div class="auth-modal-header">
+                <div style="width: 80px; height: 80px; margin: 0 auto 20px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: scaleIn 0.5s ease;">
+                  <i class="fas fa-check" style="font-size: 40px; color: white;"></i>
+                </div>
+                <h2 class="auth-modal-title" style="color: #10b981; margin-bottom: 10px;">🎉 Congratulations!</h2>
+                <p class="auth-modal-subtitle" style="font-size: 18px; color: #374151; margin-bottom: 20px;">
+                  You are already a member of NSMOSA!
+                </p>
+                <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 12px; padding: 20px; margin: 20px 0; text-align: left;">
+                  <p style="margin: 8px 0; color: #374151;"><strong>Name:</strong> ${memberData.name}</p>
+                  <p style="margin: 8px 0; color: #374151;"><strong>Membership ID:</strong> ${memberData.membershipId}</p>
+                  <p style="margin: 8px 0; color: #374151;"><strong>Member Since:</strong> ${new Date(memberData.membershipDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                  <p style="margin: 8px 0; color: #10b981; font-weight: 600;"><i class="fas fa-check-circle"></i> Full Access Granted</p>
+                </div>
+                <p style="color: #6b7280; font-size: 14px; margin-bottom: 20px;">
+                  Thank you for being a valued member. You now have access to all exclusive features!
+                </p>
+                <button class="auth-submit-btn" id="congrats-close-btn" style="width: 100%; margin-top: 10px;">
+                  <span>Continue to Website</span>
+                  <i class="fas fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+          `;
+          
+          // Add animation styles
+          const style = document.createElement('style');
+          style.textContent = `
+            @keyframes scaleIn {
+              from {
+                transform: scale(0);
+                opacity: 0;
+              }
+              to {
+                transform: scale(1);
+                opacity: 1;
+              }
+            }
+            #congratulations-modal {
+              z-index: 10000;
+            }
+          `;
+          document.head.appendChild(style);
+          
+          document.body.appendChild(congratsModal);
+          congratsModal.classList.add('active');
+          
+          // Close modal handlers
+          const closeBtn = document.getElementById('congrats-close-btn');
+          const overlay = congratsModal.querySelector('.modal-overlay-auth');
+          
+          function closeCongratsModal() {
+            congratsModal.classList.remove('active');
+            setTimeout(() => {
+              document.body.removeChild(congratsModal);
+              document.head.removeChild(style);
+            }, 300);
+          }
+          
+          if (closeBtn) {
+            closeBtn.addEventListener('click', closeCongratsModal);
+          }
+          
+          if (overlay) {
+            overlay.addEventListener('click', closeCongratsModal);
+          }
+        }
+        
+        // Handle "Already a Member" link click
+        if (alreadyMemberLink) {
+          alreadyMemberLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Get existing members
+            const existingMembers = JSON.parse(localStorage.getItem('nsm_existing_members') || '[]');
+            
+            if (existingMembers.length === 0) {
+              alert('No existing members found. Please contact admin@nsmalumni.org for your login credentials.');
+              return;
+            }
+            
+            // For demo: use the first member (in production, you'd show a list or search)
+            // In a real scenario, you might show a form to enter membership ID or email
+            const member = existingMembers[0]; // Using first member for demo
+            
+            // Open login modal with pre-filled credentials
+            openLoginModal(member.email, member.password);
+            
+            // Show a message that credentials are pre-filled
+            setTimeout(() => {
+              const emailInput = document.getElementById('login-email');
+              if (emailInput) {
+                emailInput.focus();
+                // Show a tooltip or message
+                const tooltip = document.createElement('div');
+                tooltip.style.cssText = 'position: absolute; top: -40px; left: 0; background: #10b981; color: white; padding: 8px 12px; border-radius: 6px; font-size: 12px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
+                tooltip.textContent = '✓ Your credentials are pre-filled!';
+                tooltip.id = 'prefill-tooltip';
+                emailInput.parentElement.style.position = 'relative';
+                emailInput.parentElement.appendChild(tooltip);
+                
+                setTimeout(() => {
+                  if (tooltip.parentElement) {
+                    tooltip.parentElement.removeChild(tooltip);
+                  }
+                }, 3000);
+              }
+            }, 300);
+          });
         }
 
         // Close login modal
@@ -12942,7 +13174,66 @@
             const email = loginEmailInput.value.trim();
             const password = loginPasswordInput.value;
 
-            // Check credentials from localStorage
+            // First check if this is an existing member
+            const existingMembers = JSON.parse(localStorage.getItem('nsm_existing_members') || '[]');
+            const existingMember = existingMembers.find(member => 
+              member.email === email && member.password === password
+            );
+
+            if (existingMember) {
+              // Existing member login - show congratulations and grant full access
+              window.isUserLoggedIn = true;
+              sessionStorage.setItem('nsm_user_logged_in', 'true');
+              sessionStorage.setItem('nsm_user_email', email);
+              sessionStorage.setItem('nsm_user_name', existingMember.name);
+              sessionStorage.setItem('nsm_existing_member', 'true');
+              
+              // Grant membership access automatically (they already paid)
+              const memberships = JSON.parse(localStorage.getItem('nsm_memberships') || '[]');
+              const hasMembership = memberships.some(m => m.email === email);
+              
+              if (!hasMembership) {
+                // Add them to memberships if not already there
+                memberships.push({
+                  id: existingMember.id,
+                  name: existingMember.name,
+                  email: existingMember.email,
+                  amount: '5000',
+                  method: 'Previous Payment',
+                  transactionId: existingMember.membershipId,
+                  timestamp: new Date(existingMember.membershipDate).getTime(),
+                  existingMember: true
+                });
+                localStorage.setItem('nsm_memberships', JSON.stringify(memberships));
+              }
+              
+              // Track login activity
+              const logins = JSON.parse(localStorage.getItem('nsm_user_logins') || '[]');
+              logins.push({
+                email: email,
+                method: 'Password',
+                timestamp: Date.now(),
+                type: 'existing_member'
+              });
+              localStorage.setItem('nsm_user_logins', JSON.stringify(logins));
+              
+              // Close login modal
+              closeLoginModal();
+              
+              // Show congratulations modal
+              setTimeout(() => {
+                showCongratulationsModal(existingMember);
+              }, 300);
+              
+              // Call login success handler if it exists
+              if (typeof handleLoginSuccess === 'function') {
+                handleLoginSuccess();
+              }
+              
+              return; // Exit early for existing members
+            }
+
+            // Check regular credentials from localStorage
             const credentials = JSON.parse(localStorage.getItem('nsm_credentials') || '[]');
             const user = credentials.find(cred => cred.email === email && cred.password === password);
 

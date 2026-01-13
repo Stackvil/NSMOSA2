@@ -89,6 +89,7 @@ function initApp(): void {
     if (pageKey === 'home') {
       setTimeout(() => {
         initImageSliders();
+        initModernHomeAnimations();
       }, 100);
     }
 
@@ -2269,21 +2270,22 @@ function initAdminIntegration(): void {
 // Wait for DOM to be ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    initAdminIntegration();
-    initApp();
-    initGalleryTabs();
-    initReunionTabs();
-    initConnectTabs();
-    initChapterTabs();
-    initYearPhotoGallery();
-    initYearVideoGallery();
-    initYearChapterGallery();
-    initYearNostalgiaGallery();
-    initYearShopGallery();
-    initYearReunionGallery();
-    initContactForm();
-    initGlobe3DEffect();
-    initSchoolPhotosGallery();
+  initAdminIntegration();
+  initApp();
+  initGalleryTabs();
+  initReunionTabs();
+  initConnectTabs();
+  initChapterTabs();
+  initYearPhotoGallery();
+  initYearVideoGallery();
+  initYearChapterGallery();
+  initYearNostalgiaGallery();
+  initYearShopGallery();
+  initYearReunionGallery();
+  initContactForm();
+  initGlobe3DEffect();
+  initSchoolPhotosGallery();
+  initModernHomeAnimations();
   });
 } else {
   initAdminIntegration();
@@ -2305,6 +2307,100 @@ if (document.readyState === 'loading') {
   initGlobe3DEffect();
   initEventsTabs();
   initSchoolPhotosGallery();
+  initModernHomeAnimations();
+}
+
+// Initialize Modern Home Page Animations
+function initModernHomeAnimations(): void {
+  // Stats counter animation
+  function animateCounter(element: HTMLElement, target: number): void {
+    const duration = 2000; // 2 seconds
+    const increment = target / (duration / 16); // 60fps
+    let current = 0;
+
+    const updateCounter = (): void => {
+      current += increment;
+      if (current < target) {
+        element.textContent = Math.floor(current).toString();
+        requestAnimationFrame(updateCounter);
+      } else {
+        element.textContent = target.toString();
+      }
+    };
+
+    updateCounter();
+  }
+
+  // Intersection Observer for scroll-triggered animations
+  const observerOptions = {
+    threshold: 0.3,
+    rootMargin: '0px 0px -100px 0px'
+  };
+
+  // Animate metrics section
+  const metricsSection = document.querySelector<HTMLElement>('.home-metrics-section');
+  if (metricsSection) {
+    const metricsObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const metricValues = entry.target.querySelectorAll<HTMLElement>('.metric-value');
+          metricValues.forEach((metricValue) => {
+            const target = metricValue.getAttribute('data-target');
+            if (target) {
+              animateCounter(metricValue, parseInt(target, 10));
+            }
+          });
+          metricsObserver.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    
+    metricsObserver.observe(metricsSection);
+  }
+
+  // Animate featured cards
+  const featuredCards = document.querySelectorAll<HTMLElement>('.featured-card');
+  featuredCards.forEach((card, index) => {
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const target = entry.target as HTMLElement;
+          target.style.opacity = '0';
+          target.style.transform = 'translateY(30px)';
+          setTimeout(() => {
+            target.style.transition = 'all 0.6s ease';
+            target.style.opacity = '1';
+            target.style.transform = 'translateY(0)';
+          }, index * 100);
+          cardObserver.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    
+    cardObserver.observe(card);
+  });
+
+  // Animate service items
+  const serviceItems = document.querySelectorAll<HTMLElement>('.service-item');
+  serviceItems.forEach((item, index) => {
+    const itemObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const target = entry.target as HTMLElement;
+          target.style.opacity = '0';
+          target.style.transform = 'scale(0.9)';
+          setTimeout(() => {
+            target.style.transition = 'all 0.5s ease';
+            target.style.opacity = '1';
+            target.style.transform = 'scale(1)';
+          }, index * 50);
+          itemObserver.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    
+    itemObserver.observe(item);
+  });
 }
 
 // Initialize Events Tabs

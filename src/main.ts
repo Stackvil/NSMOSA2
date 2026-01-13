@@ -90,6 +90,7 @@ function initApp(): void {
       setTimeout(() => {
         initImageSliders();
         initModernHomeAnimations();
+        initHeroImageSlider();
       }, 100);
     }
 
@@ -2401,6 +2402,188 @@ function initModernHomeAnimations(): void {
     
     itemObserver.observe(item);
   });
+
+  // Animate showcase image items (Celebrating Our Alumni section)
+  const showcaseImageItems = document.querySelectorAll<HTMLElement>('.showcase-image-item');
+  showcaseImageItems.forEach((item, index) => {
+    const imageObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const target = entry.target as HTMLElement;
+          // Add animate-in class with staggered delay
+          setTimeout(() => {
+            target.classList.add('animate-in');
+          }, index * 150); // Staggered animation: 0ms, 150ms, 300ms
+          imageObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.2,
+      rootMargin: '0px 0px -50px 0px'
+    });
+    
+    imageObserver.observe(item);
+  });
+
+  // Animate value cards
+  const valueCards = document.querySelectorAll<HTMLElement>('.value-card');
+  valueCards.forEach((card, index) => {
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const target = entry.target as HTMLElement;
+          setTimeout(() => {
+            target.style.opacity = '0';
+            target.style.transform = 'translateY(30px)';
+            target.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            requestAnimationFrame(() => {
+              target.style.opacity = '1';
+              target.style.transform = 'translateY(0)';
+            });
+          }, index * 100);
+          cardObserver.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    
+    cardObserver.observe(card);
+  });
+
+  // Animate service professional cards
+  const serviceProfessionalCards = document.querySelectorAll<HTMLElement>('.service-professional-card');
+  serviceProfessionalCards.forEach((card, index) => {
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const target = entry.target as HTMLElement;
+          setTimeout(() => {
+            target.style.opacity = '0';
+            target.style.transform = 'translateY(20px) scale(0.95)';
+            target.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            requestAnimationFrame(() => {
+              target.style.opacity = '1';
+              target.style.transform = 'translateY(0) scale(1)';
+            });
+          }, index * 80);
+          cardObserver.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    
+    cardObserver.observe(card);
+  });
+
+  // Animate gallery items
+  const galleryItems = document.querySelectorAll<HTMLElement>('.gallery-item-professional');
+  galleryItems.forEach((item, index) => {
+    const galleryObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const target = entry.target as HTMLElement;
+          setTimeout(() => {
+            target.style.opacity = '0';
+            target.style.transform = 'scale(0.9)';
+            target.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+            requestAnimationFrame(() => {
+              target.style.opacity = '1';
+              target.style.transform = 'scale(1)';
+            });
+          }, index * 100);
+          galleryObserver.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    
+    galleryObserver.observe(item);
+  });
+}
+
+// Initialize Hero Image Slider
+function initHeroImageSlider(): void {
+  const sliderWrapper = document.querySelector<HTMLElement>('.hero-slider-wrapper');
+  const slides = document.querySelectorAll<HTMLElement>('.hero-slide');
+  const dots = document.querySelectorAll<HTMLElement>('.hero-dot');
+  const prevBtn = document.querySelector<HTMLElement>('.hero-slider-prev');
+  const nextBtn = document.querySelector<HTMLElement>('.hero-slider-next');
+
+  if (!sliderWrapper || slides.length === 0) return;
+
+  let currentSlide = 0;
+  let sliderInterval: number | null = null;
+
+  function showSlide(index: number): void {
+    // Update active slide
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+    });
+
+    // Update active dot
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+
+    currentSlide = index;
+  }
+
+  function nextSlide(): void {
+    const nextIndex = (currentSlide + 1) % slides.length;
+    showSlide(nextIndex);
+  }
+
+  function prevSlide(): void {
+    const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+    showSlide(prevIndex);
+  }
+
+  function startAutoSlide(): void {
+    if (sliderInterval !== null) {
+      clearInterval(sliderInterval);
+    }
+    // Auto-transition every 3 seconds for smooth continuous flow
+    sliderInterval = window.setInterval(nextSlide, 3000);
+  }
+
+  function stopAutoSlide(): void {
+    if (sliderInterval !== null) {
+      clearInterval(sliderInterval);
+      sliderInterval = null;
+    }
+  }
+
+  // Initialize first slide and start auto-transition immediately
+  showSlide(0);
+  // Start auto-transition right away
+  startAutoSlide();
+
+  // Navigation buttons - restart auto after manual navigation
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      nextSlide();
+      stopAutoSlide();
+      startAutoSlide();
+    });
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      prevSlide();
+      stopAutoSlide();
+      startAutoSlide();
+    });
+  }
+
+  // Dot navigation - restart auto after manual navigation
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      showSlide(index);
+      stopAutoSlide();
+      startAutoSlide();
+    });
+  });
+
+  // Optional: Pause on hover (can be removed for continuous auto-transition)
+  sliderWrapper.addEventListener('mouseenter', stopAutoSlide);
+  sliderWrapper.addEventListener('mouseleave', startAutoSlide);
 }
 
 // Initialize Events Tabs

@@ -169,7 +169,7 @@ function initApp(): void {
           if (isValidPageKey(pageKey)) {
             setActivePage(pageKey);
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            
+
             // Handle gallery subpages - activate the correct tab
             const subpage = link.dataset.subpage;
             if (pageKey === 'gallery' && subpage) {
@@ -181,11 +181,11 @@ function initApp(): void {
                 else if (subpage === 'chapter-gallery') galleryType = 'chapter';
                 else if (subpage === 'nostalgia-gallery') galleryType = 'nostalgia';
                 else if (subpage === 'shop-gallery') galleryType = 'shop';
-                
+
                 if (galleryType) {
                   const galleryTabs = document.querySelectorAll<HTMLButtonElement>('.gallery-tab');
                   const gallerySections = document.querySelectorAll<HTMLElement>('.gallery-section');
-                  
+
                   // Update active tab
                   galleryTabs.forEach((tab) => {
                     if (tab.dataset.galleryType === galleryType) {
@@ -194,13 +194,13 @@ function initApp(): void {
                       tab.classList.remove('active');
                     }
                   });
-                  
+
                   // Update active section
                   gallerySections.forEach((section) => section.classList.remove('active'));
                   const targetSection = document.getElementById(`${galleryType}-gallery-section`);
                   if (targetSection) {
                     targetSection.classList.add('active');
-                    
+
                     // If video gallery, populate videos
                     if (galleryType === 'video') {
                       setTimeout(() => {
@@ -218,11 +218,11 @@ function initApp(): void {
                 let reunionType = '';
                 if (subpage === 'about-reunion') reunionType = 'about';
                 else if (subpage === 'reunion-gallery') reunionType = 'gallery';
-                
+
                 if (reunionType) {
                   const reunionTabs = document.querySelectorAll<HTMLButtonElement>('.gallery-tab[data-reunion-type]');
                   const reunionSections = document.querySelectorAll<HTMLElement>('.reunion-section');
-                  
+
                   // Update active tab
                   reunionTabs.forEach((tab) => {
                     if (tab.dataset.reunionType === reunionType) {
@@ -231,7 +231,7 @@ function initApp(): void {
                       tab.classList.remove('active');
                     }
                   });
-                  
+
                   // Update active section
                   reunionSections.forEach((section) => section.classList.remove('active'));
                   let targetSectionId = '';
@@ -268,7 +268,7 @@ function initApp(): void {
           if (isValidPageKey(pageKey)) {
             setActivePage(pageKey);
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            
+
             // Handle connect subpages - activate the correct tab
             const connectSubpage = link.dataset.connectSubpage;
             if (pageKey === 'connect' && connectSubpage) {
@@ -308,10 +308,10 @@ function initApp(): void {
               setTimeout(() => {
                 const connectTabs = document.querySelectorAll<HTMLButtonElement>('.gallery-tab[data-connect-type]');
                 const connectSections = document.querySelectorAll<HTMLElement>('.connect-section');
-                
+
                 // Map subpage to connect type
                 let connectType = connectSubpage;
-                
+
                 // Update active tab
                 connectTabs.forEach((tab) => {
                   if (tab.dataset.connectType === connectType) {
@@ -320,7 +320,7 @@ function initApp(): void {
                     tab.classList.remove('active');
                   }
                 });
-                
+
                 // Update active section
                 connectSections.forEach((section) => section.classList.remove('active'));
                 const targetSectionId = `${connectType}-connect-section`;
@@ -456,6 +456,25 @@ function initApp(): void {
     });
   });
 
+  // Mobile Menu Toggle
+  const hamburgerMenu = document.querySelector('.hamburger-menu');
+  const navMenu = document.querySelector('.nav-menu');
+
+  if (hamburgerMenu && navMenu) {
+    hamburgerMenu.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+      hamburgerMenu.classList.toggle('active');
+    });
+
+    // Close menu when clicking a link
+    navMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        hamburgerMenu.classList.remove('active');
+      });
+    });
+  }
+
   // Initialize with 'about' page
   setActivePage('home');
 }
@@ -566,7 +585,7 @@ function initImageSliders(): void {
   // Home page slider
   const homeSlides = document.querySelectorAll<HTMLElement>('.home-slide');
   const homeDots = document.querySelectorAll<HTMLElement>('.home-dot');
-  
+
   if (homeSlides.length > 0) {
     // Clear any existing interval
     if (homeSliderInterval !== null) {
@@ -617,7 +636,7 @@ function initImageSliders(): void {
   const centerDots = document.querySelectorAll<HTMLElement>('.center-dot');
   const prevCenter = document.querySelector<HTMLElement>('.prev-center');
   const nextCenter = document.querySelector<HTMLElement>('.next-center');
-  
+
   if (centerSlides.length > 0) {
     let centerSliderInterval: number | null = null;
     let centerSlideIndex = 0;
@@ -697,7 +716,7 @@ function initImageSliders(): void {
   const indicators = document.querySelectorAll<HTMLElement>('.indicator');
   const prevArrow = document.querySelector<HTMLElement>('.prev-arrow');
   const nextArrow = document.querySelector<HTMLElement>('.next-arrow');
-  
+
   if (sliderContainerModern && slidesModern.length > 0) {
     // Clear any existing interval
     if (sliderInterval !== null) {
@@ -806,7 +825,7 @@ function initImageSliders(): void {
   const sliderContainer = document.querySelector('.slider-container');
   const slides = document.querySelectorAll<HTMLElement>('.slide');
   const dots = document.querySelectorAll<HTMLElement>('.dot');
-  
+
   if (sliderContainer && slides.length > 0 && slidesModern.length === 0) {
     // Clear any existing interval
     if (sliderInterval !== null) {
@@ -879,7 +898,7 @@ function initGalleryTabs(): void {
       const targetSection = document.getElementById(`${galleryType}-gallery-section`);
       if (targetSection) {
         targetSection.classList.add('active');
-        
+
         // If video gallery is activated, populate videos
         if (galleryType === 'video') {
           setTimeout(() => {
@@ -915,7 +934,7 @@ function initReunionTabs(): void {
       const targetSection = document.getElementById(targetSectionId);
       if (targetSection) {
         targetSection.classList.add('active');
-        
+
         // Force images to load when gallery section is shown
         if (reunionType === 'gallery') {
           setTimeout(() => {
@@ -1051,22 +1070,22 @@ function initYearPhotoGallery(): void {
     if (adminPhotos && adminPhotos.length > 0) {
       return adminPhotos;
     }
-    
+
     // Distribute NSM School images across years (1993-2025 = 33 years)
     // Each year gets a subset of images, cycling through the array
     const imagesPerYear = 6; // Show 6 images per year
     const yearIndex = year - 1993; // Convert to 0-based index
-    
+
     // Calculate starting index for this year
     const startIndex = (yearIndex * imagesPerYear) % nsmSchoolImages.length;
-    
+
     // Get images for this year (cycling through the array)
     const yearImages: string[] = [];
     for (let i = 0; i < imagesPerYear; i++) {
       const imageIndex = (startIndex + i) % nsmSchoolImages.length;
       yearImages.push(nsmSchoolImages[imageIndex]);
     }
-    
+
     return yearImages;
   }
 
@@ -1094,7 +1113,7 @@ function initYearPhotoGallery(): void {
     // Add click handlers to photos for full screen view using event delegation
     const photoItems = photosGrid.querySelectorAll<HTMLImageElement>('.year-photo-item img');
     const allPhotos = Array.from(photoItems).map((i) => i.dataset.photoUrl || i.src);
-    
+
     // Use event delegation on the grid container instead of individual images
     photosGrid.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
@@ -1106,7 +1125,7 @@ function initYearPhotoGallery(): void {
         openPhotoLightbox(allPhotos, currentIndex);
       }
     });
-    
+
     // Set cursor style
     photoItems.forEach((img) => {
       img.style.cursor = 'pointer';
@@ -1264,7 +1283,7 @@ function initYearChapterGallery(): void {
     // Each year gets a subset of images, cycling through the array
     const imagesPerYear = 6; // Show 6 images per year
     const yearIndex = year - 2016; // Convert to 0-based index
-    
+
     // Calculate starting index for this year
     // Use different offsets for different chapter types to show variety
     let baseOffset = 0;
@@ -1275,16 +1294,16 @@ function initYearChapterGallery(): void {
     } else {
       baseOffset = Math.floor(nsmSchoolImages.length / 2); // Start from middle for 'all'
     }
-    
+
     const startIndex = (baseOffset + yearIndex * imagesPerYear) % nsmSchoolImages.length;
-    
+
     // Get images for this year (cycling through the array)
     const yearImages: string[] = [];
     for (let i = 0; i < imagesPerYear; i++) {
       const imageIndex = (startIndex + i) % nsmSchoolImages.length;
       yearImages.push(nsmSchoolImages[imageIndex]);
     }
-    
+
     return yearImages;
   }
 
@@ -1315,7 +1334,7 @@ function initYearChapterGallery(): void {
     // Add click handlers to photos for full screen view using event delegation
     const photoItems = photosGrid.querySelectorAll<HTMLImageElement>('.year-photo-item img');
     const allPhotos = Array.from(photoItems).map((i) => i.dataset.photoUrl || i.src);
-    
+
     // Use event delegation on the grid container instead of individual images
     photosGrid.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
@@ -1327,7 +1346,7 @@ function initYearChapterGallery(): void {
         openPhotoLightbox(allPhotos, currentIndex);
       }
     });
-    
+
     // Set cursor style
     photoItems.forEach((img) => {
       img.style.cursor = 'pointer';
@@ -1511,7 +1530,7 @@ function initYearReunionGallery(): void {
     if (adminPhotos && adminPhotos.length > 0) {
       return adminPhotos;
     }
-    
+
     // Reunion-specific photos - people gathering, celebrations, group photos
     const baseImages = [
       '1522202176988-66273c2fd55f', // Group meeting
@@ -1553,7 +1572,7 @@ function initYearReunionGallery(): void {
     // Add click handlers to photos for full screen view using event delegation
     const photoItems = photosGrid.querySelectorAll<HTMLImageElement>('.year-photo-item img');
     const allPhotos = Array.from(photoItems).map((i) => i.dataset.photoUrl || i.src);
-    
+
     // Use event delegation on the grid container instead of individual images
     photosGrid.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
@@ -1565,7 +1584,7 @@ function initYearReunionGallery(): void {
         openPhotoLightbox(allPhotos, currentIndex);
       }
     });
-    
+
     // Set cursor style
     photoItems.forEach((img) => {
       img.style.cursor = 'pointer';
@@ -1622,7 +1641,7 @@ let isLightboxOpen = false;
 function openPhotoLightbox(photos: string[], currentIndex: number): void {
   // Prevent opening if already open
   if (isLightboxOpen) return;
-  
+
   const lightbox = document.getElementById('photo-lightbox');
   const lightboxImage = document.getElementById('lightbox-image') as HTMLImageElement;
   const lightboxCounter = document.getElementById('lightbox-counter');
@@ -1640,7 +1659,7 @@ function openPhotoLightbox(photos: string[], currentIndex: number): void {
     if (lightboxImage && photos[currentPhotoIndex]) {
       // Show loading state
       lightboxImage.style.opacity = '0.5';
-      
+
       // Preload image before setting src to prevent hanging
       const img = new Image();
       img.onload = () => {
@@ -1655,7 +1674,7 @@ function openPhotoLightbox(photos: string[], currentIndex: number): void {
         }
       };
       img.src = photos[currentPhotoIndex];
-      
+
       // Update UI immediately
       if (lightboxCounter) {
         lightboxCounter.textContent = `${currentPhotoIndex + 1} / ${totalPhotos}`;
@@ -1685,17 +1704,17 @@ function openPhotoLightbox(photos: string[], currentIndex: number): void {
 
   function closeLightbox(): void {
     if (!lightbox || !isLightboxOpen) return;
-    
+
     isLightboxOpen = false;
     lightbox.classList.remove('active');
     document.body.style.overflow = '';
-    
+
     // Remove keyboard listener
     if (lightboxKeyboardHandler) {
       document.removeEventListener('keydown', lightboxKeyboardHandler);
       lightboxKeyboardHandler = null;
     }
-    
+
     // Clear image src to free memory
     if (lightboxImage) {
       lightboxImage.src = '';
@@ -1734,7 +1753,7 @@ function openPhotoLightbox(photos: string[], currentIndex: number): void {
   // Keyboard navigation - single handler
   lightboxKeyboardHandler = (e: KeyboardEvent): void => {
     if (!isLightboxOpen || !lightbox.classList.contains('active')) return;
-    
+
     if (e.key === 'Escape') {
       e.preventDefault();
       closeLightbox();
@@ -1852,17 +1871,17 @@ function initYearShopGallery(): void {
 function initSchoolPhotosGallery(): void {
   const gallery = document.querySelector('.school-photos-grid');
   if (!gallery) return;
-  
+
   // Check if already initialized
   if (gallery.hasAttribute('data-lightbox-initialized')) return;
   gallery.setAttribute('data-lightbox-initialized', 'true');
-  
+
   const photoItems = gallery.querySelectorAll<HTMLImageElement>('.school-photo-item img');
   if (photoItems.length === 0) return;
-  
+
   // Get all photo URLs
   const allPhotos = Array.from(photoItems).map((img) => img.src);
-  
+
   // Use event delegation - single listener on the grid
   gallery.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
@@ -1876,7 +1895,7 @@ function initSchoolPhotosGallery(): void {
       }
     }
   });
-  
+
   // Set cursor style
   photoItems.forEach((img) => {
     img.style.cursor = 'pointer';
@@ -1887,7 +1906,7 @@ function initSchoolPhotosGallery(): void {
 function initGlobe3DEffect(): void {
   const globeImage = document.querySelector<HTMLImageElement>('.about-globe-image');
   const imageContainer = document.querySelector<HTMLElement>('.about-image-content');
-  
+
   if (!globeImage || !imageContainer) return;
 
   let mouseX = 0;
@@ -1902,10 +1921,10 @@ function initGlobe3DEffect(): void {
     const rect = imageContainer.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-    
+
     mouseX = e.clientX - centerX;
     mouseY = e.clientY - centerY;
-    
+
     // Calculate rotation based on mouse position (max 15 degrees)
     targetRotateY = (mouseX / rect.width) * 15;
     targetRotateX = -(mouseY / rect.height) * 15;
@@ -1925,16 +1944,16 @@ function initGlobe3DEffect(): void {
     const containerTop = containerRect.top;
     const containerBottom = containerRect.bottom;
     const containerHeight = containerRect.height;
-    
+
     // Calculate how much of the container is visible
     const viewportTop = window.scrollY;
     const viewportBottom = window.scrollY + windowHeight;
-    
+
     // Calculate scroll progress through the container
     // When container enters viewport from bottom, progress goes from 0 to 1
     // When container exits viewport from top, progress goes from 1 to 2
     let scrollProgress = 0;
-    
+
     if (containerBottom > viewportTop && containerTop < viewportBottom) {
       // Container is in viewport
       const visibleTop = Math.max(containerTop, viewportTop);
@@ -1948,19 +1967,19 @@ function initGlobe3DEffect(): void {
       // Container is above viewport
       scrollProgress = 1;
     }
-    
+
     // Map scroll progress to vertical movement within white space
     // Move from -30px (up) to +30px (down) as you scroll
     const maxMovement = 30; // pixels of movement within white space
     const translateY = (scrollProgress - 0.5) * 2 * maxMovement;
-    
+
     // Optional: Keep some rotation for 3D effect
     const scrollRotateX = (scrollProgress - 0.5) * 5;
-    
+
     // Combine scroll and mouse effects
     const finalRotateX = currentRotateX + scrollRotateX * 0.2;
     const finalRotateY = currentRotateY;
-    
+
     // Apply transform with vertical movement within container
     globeImage.style.transform = `perspective(1000px) rotateX(${finalRotateX}deg) rotateY(${finalRotateY}deg) translateY(${translateY}px) translateZ(0)`;
   }
@@ -1970,7 +1989,7 @@ function initGlobe3DEffect(): void {
     // Smooth interpolation for mouse-based rotation
     currentRotateX += (targetRotateX - currentRotateX) * 0.1;
     currentRotateY += (targetRotateY - currentRotateY) * 0.1;
-    
+
     handleScroll();
     requestAnimationFrame(animate);
   }
@@ -1989,7 +2008,7 @@ function initContactForm(): void {
 
   contactForm.addEventListener('submit', (e: Event) => {
     e.preventDefault();
-    
+
     const formData = new FormData(contactForm);
     const formObject: Record<string, string> = {};
     formData.forEach((value, key) => {
@@ -1999,7 +2018,7 @@ function initContactForm(): void {
     // Show success message (in a real app, this would send to a server)
     const submitBtn = contactForm.querySelector('.submit-btn') as HTMLButtonElement;
     const originalText = submitBtn.innerHTML;
-    
+
     submitBtn.innerHTML = '<i class="fas fa-check"></i> Submitted!';
     submitBtn.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
     submitBtn.disabled = true;
@@ -2010,7 +2029,7 @@ function initContactForm(): void {
       submitBtn.innerHTML = originalText;
       submitBtn.style.background = '';
       submitBtn.disabled = false;
-      
+
       // Show alert (in production, this would be a proper notification)
       alert('Thank you for your message! We will get back to you soon.');
     }, 2000);
@@ -2087,7 +2106,7 @@ function initAdminIntegration(): void {
     if (footerEvents) {
       try {
         const events = JSON.parse(footerEvents);
-        
+
         // Update upcoming event
         if (events.upcoming) {
           const upcoming = events.upcoming;
@@ -2095,13 +2114,13 @@ function initAdminIntegration(): void {
           const upcomingDayEl = document.getElementById('footer-upcoming-day');
           const upcomingYearEl = document.getElementById('footer-upcoming-year');
           const upcomingTitleEl = document.getElementById('footer-upcoming-title-text');
-          
+
           if (upcomingMonthEl && upcoming.month) upcomingMonthEl.textContent = upcoming.month.toUpperCase();
           if (upcomingDayEl && upcoming.day) upcomingDayEl.textContent = upcoming.day;
           if (upcomingYearEl && upcoming.year) upcomingYearEl.textContent = upcoming.year;
           if (upcomingTitleEl && upcoming.title) upcomingTitleEl.textContent = upcoming.title;
         }
-        
+
         // Update past event
         if (events.past) {
           const past = events.past;
@@ -2109,7 +2128,7 @@ function initAdminIntegration(): void {
           const pastDayEl = document.getElementById('footer-past-day');
           const pastYearEl = document.getElementById('footer-past-year');
           const pastTitleEl = document.getElementById('footer-past-title-text');
-          
+
           if (pastMonthEl && past.month) pastMonthEl.textContent = past.month.toUpperCase();
           if (pastDayEl && past.day) pastDayEl.textContent = past.day;
           if (pastYearEl && past.year) pastYearEl.textContent = past.year;
@@ -2122,7 +2141,7 @@ function initAdminIntegration(): void {
   }
 
   loadAdminData();
-  
+
   // Load footer events
   loadFooterEvents();
 
@@ -2142,7 +2161,7 @@ function initAdminIntegration(): void {
   function displayLatestUpdates(): void {
     const updates = localStorage.getItem('nsm_updates');
     if (!updates) return;
-    
+
     const updatesList = JSON.parse(updates);
     if (updatesList.length === 0) return;
 
@@ -2190,7 +2209,7 @@ function initAdminIntegration(): void {
   function displayEventPhotos(): void {
     const eventPhotos = localStorage.getItem('nsm_event_photos');
     if (!eventPhotos) return;
-    
+
     const eventsList = JSON.parse(eventPhotos);
     if (eventsList.length === 0) return;
 
@@ -2212,7 +2231,7 @@ function initAdminIntegration(): void {
 
   displayLatestUpdates();
   displayEventPhotos();
-  
+
   // Update photo counts when admin data loads
   const updatePhotoCountsFunction = (window as any).updatePhotoCounts;
   if (typeof updatePhotoCountsFunction === 'function') {
@@ -2233,7 +2252,7 @@ function initAdminIntegration(): void {
       }
     }
   });
-  
+
   // Update photo counts when gallery page becomes visible
   const galleryObserver = new MutationObserver(() => {
     const galleryPage = document.getElementById('page-gallery');
@@ -2259,7 +2278,7 @@ function initAdminIntegration(): void {
       attributeFilter: ['class'],
       subtree: true,
     });
-    
+
     galleryObserver.observe(pageContent, {
       attributes: true,
       attributeFilter: ['class'],
@@ -2268,25 +2287,32 @@ function initAdminIntegration(): void {
   }
 }
 
+// Initialize Global Animations
+import { initAnimations } from './animations';
+
 // Wait for DOM to be ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-  initAdminIntegration();
-  initApp();
-  initGalleryTabs();
-  initReunionTabs();
-  initConnectTabs();
-  initChapterTabs();
-  initYearPhotoGallery();
-  initYearVideoGallery();
-  initYearChapterGallery();
-  initYearNostalgiaGallery();
-  initYearShopGallery();
-  initYearReunionGallery();
-  initContactForm();
-  initGlobe3DEffect();
-  initSchoolPhotosGallery();
-  initModernHomeAnimations();
+    // Initialize Global Animations
+    initAnimations();
+
+    // ... rest of existing code ...
+    initAdminIntegration();
+    initApp();
+    initGalleryTabs();
+    initReunionTabs();
+    initConnectTabs();
+    initChapterTabs();
+    initYearPhotoGallery();
+    initYearVideoGallery();
+    initYearChapterGallery();
+    initYearNostalgiaGallery();
+    initYearShopGallery();
+    initYearReunionGallery();
+    initContactForm();
+    initGlobe3DEffect();
+    initSchoolPhotosGallery();
+    initModernHomeAnimations();
   });
 } else {
   initAdminIntegration();
@@ -2355,7 +2381,7 @@ function initModernHomeAnimations(): void {
         }
       });
     }, observerOptions);
-    
+
     metricsObserver.observe(metricsSection);
   }
 
@@ -2377,7 +2403,7 @@ function initModernHomeAnimations(): void {
         }
       });
     }, observerOptions);
-    
+
     cardObserver.observe(card);
   });
 
@@ -2399,7 +2425,7 @@ function initModernHomeAnimations(): void {
         }
       });
     }, observerOptions);
-    
+
     itemObserver.observe(item);
   });
 
@@ -2421,7 +2447,7 @@ function initModernHomeAnimations(): void {
       threshold: 0.2,
       rootMargin: '0px 0px -50px 0px'
     });
-    
+
     imageObserver.observe(item);
   });
 
@@ -2445,7 +2471,7 @@ function initModernHomeAnimations(): void {
         }
       });
     }, observerOptions);
-    
+
     cardObserver.observe(card);
   });
 
@@ -2469,7 +2495,7 @@ function initModernHomeAnimations(): void {
         }
       });
     }, observerOptions);
-    
+
     cardObserver.observe(card);
   });
 
@@ -2493,7 +2519,7 @@ function initModernHomeAnimations(): void {
         }
       });
     }, observerOptions);
-    
+
     galleryObserver.observe(item);
   });
 }
@@ -2595,7 +2621,7 @@ function initEventsTabs(): void {
   eventTabBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
       const eventType = btn.getAttribute('data-event-type');
-      
+
       // Update active tab
       eventTabBtns.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
@@ -2715,7 +2741,7 @@ function initMemberPage(): void {
     if (paymentSection) {
       paymentSection.style.display = 'block';
       paymentSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      
+
       // Update QR code with fixed amount
       const qrCodeImg = document.getElementById('member-qr-code') as HTMLImageElement | null;
       if (qrCodeImg) {
@@ -2739,7 +2765,7 @@ function initMemberPage(): void {
   paymentTabBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
       const method = btn.getAttribute('data-payment-method');
-      
+
       paymentTabBtns.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
 
@@ -2769,7 +2795,7 @@ function initMemberPage(): void {
     const txnIdEl = document.getElementById('member-payment-success-txn-id');
     const amountEl = document.getElementById('member-payment-success-amount');
     const amount = '5000';
-    
+
     if (txnIdEl) txnIdEl.textContent = transactionId;
     if (amountEl) amountEl.textContent = '₹5,000';
 
@@ -2925,16 +2951,16 @@ function initMemberPage(): void {
     razorpayPayBtn.addEventListener('click', () => {
       const amount = '5000';
       const amountInPaise = Math.round(parseFloat(amount) * 100);
-      
+
       // Razorpay Key - Replace with your actual Razorpay key
       const RAZORPAY_KEY_ID = 'YOUR_RAZORPAY_KEY_ID'; // TODO: Add your Razorpay Key ID here
-      
+
       // Check if Razorpay is loaded
       if (typeof (window as any).Razorpay === 'undefined') {
         alert('Razorpay SDK is not loaded. Please check your internet connection.');
         return;
       }
-      
+
       // If key is not set, show alert and use simulation
       if (RAZORPAY_KEY_ID === 'YOUR_RAZORPAY_KEY_ID') {
         if (confirm(`Razorpay key not configured. Simulating payment of ₹5,000?`)) {
@@ -2945,7 +2971,7 @@ function initMemberPage(): void {
         }
         return;
       }
-      
+
       // Initialize Razorpay checkout
       const Razorpay = (window as any).Razorpay;
       const options = {
@@ -2954,7 +2980,7 @@ function initMemberPage(): void {
         currency: 'INR',
         name: 'NSMOSA',
         description: 'Membership Registration Fee',
-        handler: function(response: any) {
+        handler: function (response: any) {
           const transactionId = response.razorpay_payment_id || 'RZP' + Date.now();
           showMemberPaymentSuccess(transactionId, 'Razorpay');
         },
@@ -2962,7 +2988,7 @@ function initMemberPage(): void {
           color: '#ff6b9d'
         }
       };
-      
+
       const razorpay = new Razorpay(options);
       razorpay.open();
     });
@@ -2973,16 +2999,16 @@ function initMemberPage(): void {
 function initFAQPage(): void {
   // FAQ Accordion
   const faqItems = document.querySelectorAll<HTMLElement>('.faq-item');
-  
+
   faqItems.forEach((item) => {
     const question = item.querySelector<HTMLElement>('.faq-question');
     if (question) {
       question.addEventListener('click', () => {
         const isActive = item.classList.contains('active');
-        
+
         // Close all items
         faqItems.forEach((i) => i.classList.remove('active'));
-        
+
         // Toggle current item
         if (!isActive) {
           item.classList.add('active');
@@ -3032,7 +3058,7 @@ function initFAQPage(): void {
     btn.addEventListener('click', () => {
       faqCategoryBtns.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
-      
+
       const category = btn.getAttribute('data-category') || 'all';
       const searchTerm = faqSearchInput?.value.toLowerCase() || '';
       filterFAQs(searchTerm, category);

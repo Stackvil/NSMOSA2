@@ -36,7 +36,7 @@ export function initAnimations() {
 
 function initNavbarScroll() {
     const navbar = document.querySelector('.main-nav');
-    const topHeader = document.querySelector('.top-header');
+
 
     if (!navbar) return;
 
